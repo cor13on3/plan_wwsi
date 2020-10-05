@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Test2.Data;
@@ -9,9 +10,10 @@ using Test2.Data;
 namespace Test2.Migrations
 {
     [DbContext(typeof(PlanContext))]
-    partial class PlanContextModelSnapshot : ModelSnapshot
+    [Migration("20201001184929_DzienTyg")]
+    partial class DzienTyg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,18 +21,18 @@ namespace Test2.Migrations
                 .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Test2.Entities.Grupa", b =>
+            modelBuilder.Entity("Test2.Models.Grupa", b =>
                 {
                     b.Property<string>("NrGrupy")
                         .HasColumnType("text");
 
-                    b.Property<int>("Semestr")
+                    b.Property<short>("Semestr")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("Stopien")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StopienStudiow")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TrybStudiow")
+                    b.Property<int>("Tryb")
                         .HasColumnType("integer");
 
                     b.HasKey("NrGrupy");
@@ -38,10 +40,10 @@ namespace Test2.Migrations
                     b.ToTable("Grupa");
                 });
 
-            modelBuilder.Entity("Test2.Entities.GrupaZjazd", b =>
+            modelBuilder.Entity("Test2.Models.GrupaZjazd", b =>
                 {
-                    b.Property<int>("NrZjazdu")
-                        .HasColumnType("integer");
+                    b.Property<short>("NrZjazdu")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("IdZjazdu")
                         .HasColumnType("integer");
@@ -61,21 +63,24 @@ namespace Test2.Migrations
                     b.ToTable("GrupaZjazd");
                 });
 
-            modelBuilder.Entity("Test2.Entities.Lekcja", b =>
+            modelBuilder.Entity("Test2.Models.Lekcja", b =>
                 {
                     b.Property<int>("IdLekcji")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("GodzinaDo")
-                        .HasColumnType("text");
+                    b.Property<TimeSpan>("CzasDo")
+                        .HasColumnType("interval");
 
-                    b.Property<string>("GodzinaOd")
-                        .HasColumnType("text");
+                    b.Property<TimeSpan>("CzasOd")
+                        .HasColumnType("interval");
 
-                    b.Property<int>("IdPrzedmiotu")
-                        .HasColumnType("integer");
+                    b.Property<bool>("CzyOdpracowanie")
+                        .HasColumnType("boolean");
+
+                    b.Property<short>("IdPrzedmiotu")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("IdSali")
                         .HasColumnType("integer");
@@ -94,16 +99,13 @@ namespace Test2.Migrations
                     b.ToTable("Lekcja");
                 });
 
-            modelBuilder.Entity("Test2.Entities.LekcjaGrupa", b =>
+            modelBuilder.Entity("Test2.Models.LekcjaGrupa", b =>
                 {
                     b.Property<int>("IdLekcji")
                         .HasColumnType("integer");
 
                     b.Property<string>("NrGrupy")
                         .HasColumnType("text");
-
-                    b.Property<bool>("CzyOdpracowanie")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("DzienTygodnia")
                         .HasColumnType("integer");
@@ -118,11 +120,11 @@ namespace Test2.Migrations
                     b.ToTable("LekcjaGrupa");
                 });
 
-            modelBuilder.Entity("Test2.Entities.Przedmiot", b =>
+            modelBuilder.Entity("Test2.Models.Przedmiot", b =>
                 {
-                    b.Property<int>("IdPrzedmiotu")
+                    b.Property<short>("IdPrzedmiotu")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("smallint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Forma")
@@ -136,7 +138,7 @@ namespace Test2.Migrations
                     b.ToTable("Przedmiot");
                 });
 
-            modelBuilder.Entity("Test2.Entities.Sala", b =>
+            modelBuilder.Entity("Test2.Models.Sala", b =>
                 {
                     b.Property<int>("IdSali")
                         .ValueGeneratedOnAdd()
@@ -154,7 +156,7 @@ namespace Test2.Migrations
                     b.ToTable("Sala");
                 });
 
-            modelBuilder.Entity("Test2.Entities.Specjalnosc", b =>
+            modelBuilder.Entity("Test2.Models.Specjalnosc", b =>
                 {
                     b.Property<int>("IdSpecjalnosci")
                         .ValueGeneratedOnAdd()
@@ -169,7 +171,7 @@ namespace Test2.Migrations
                     b.ToTable("Specjalnosc");
                 });
 
-            modelBuilder.Entity("Test2.Entities.WyklSpec", b =>
+            modelBuilder.Entity("Test2.Models.WyklSpec", b =>
                 {
                     b.Property<int>("IdWykladowcy")
                         .HasColumnType("integer");
@@ -184,9 +186,9 @@ namespace Test2.Migrations
                     b.ToTable("WyklSpec");
                 });
 
-            modelBuilder.Entity("Test2.Entities.Wykladowca", b =>
+            modelBuilder.Entity("Test2.Models.Wykladowca", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdWykladowcy")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -203,12 +205,12 @@ namespace Test2.Migrations
                     b.Property<string>("Tytul")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdWykladowcy");
 
                     b.ToTable("Wykladowca");
                 });
 
-            modelBuilder.Entity("Test2.Entities.Zjazd", b =>
+            modelBuilder.Entity("Test2.Models.Zjazd", b =>
                 {
                     b.Property<int>("IdZjazdu")
                         .ValueGeneratedOnAdd()
@@ -221,7 +223,7 @@ namespace Test2.Migrations
                     b.Property<DateTime>("DataOd")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("RodzajSemestru")
+                    b.Property<int>("Semestr")
                         .HasColumnType("integer");
 
                     b.HasKey("IdZjazdu");
@@ -229,66 +231,66 @@ namespace Test2.Migrations
                     b.ToTable("Zjazd");
                 });
 
-            modelBuilder.Entity("Test2.Entities.GrupaZjazd", b =>
+            modelBuilder.Entity("Test2.Models.GrupaZjazd", b =>
                 {
-                    b.HasOne("Test2.Entities.Zjazd", "Zjazd")
+                    b.HasOne("Test2.Models.Zjazd", "Zjazd")
                         .WithMany("GrupaZjazdList")
                         .HasForeignKey("IdZjazdu")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Test2.Entities.Grupa", "Grupa")
+                    b.HasOne("Test2.Models.Grupa", "Grupa")
                         .WithMany("GrupaZjazdList")
                         .HasForeignKey("NrGrupy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Test2.Entities.Lekcja", b =>
+            modelBuilder.Entity("Test2.Models.Lekcja", b =>
                 {
-                    b.HasOne("Test2.Entities.Przedmiot", "Przedmiot")
+                    b.HasOne("Test2.Models.Przedmiot", "Przedmiot")
                         .WithMany("LekcjaList")
                         .HasForeignKey("IdPrzedmiotu")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Test2.Entities.Sala", "Sala")
+                    b.HasOne("Test2.Models.Sala", "Sala")
                         .WithMany("LekcjaList")
                         .HasForeignKey("IdSali")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Test2.Entities.Wykladowca", "Wykladowca")
+                    b.HasOne("Test2.Models.Wykladowca", "Wykladowca")
                         .WithMany("LekcjaList")
                         .HasForeignKey("IdWykladowcy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Test2.Entities.LekcjaGrupa", b =>
+            modelBuilder.Entity("Test2.Models.LekcjaGrupa", b =>
                 {
-                    b.HasOne("Test2.Entities.Lekcja", "Lekcja")
+                    b.HasOne("Test2.Models.Lekcja", "Lekcja")
                         .WithMany("LekcjaGrupaList")
                         .HasForeignKey("IdLekcji")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Test2.Entities.Grupa", "Grupa")
+                    b.HasOne("Test2.Models.Grupa", "Grupa")
                         .WithMany("LekcjaGrupaList")
                         .HasForeignKey("NrGrupy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Test2.Entities.WyklSpec", b =>
+            modelBuilder.Entity("Test2.Models.WyklSpec", b =>
                 {
-                    b.HasOne("Test2.Entities.Specjalnosc", "Specjalnosc")
+                    b.HasOne("Test2.Models.Specjalnosc", "Specjalnosc")
                         .WithMany("WyklSpecList")
                         .HasForeignKey("IdSpecjalnosci")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Test2.Entities.Wykladowca", "Wykladowca")
+                    b.HasOne("Test2.Models.Wykladowca", "Wykladowca")
                         .WithMany("WyklSpecList")
                         .HasForeignKey("IdWykladowcy")
                         .OnDelete(DeleteBehavior.Cascade)

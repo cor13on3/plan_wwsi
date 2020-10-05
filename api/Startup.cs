@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Test2.Data;
+using Test2.Entities;
 using Test2.Services;
 
 namespace Test2
@@ -31,6 +32,8 @@ namespace Test2
             services.AddDbContext<PlanContext>();
             services.AddSpaStaticFiles(c => c.RootPath = "admin");
             services.AddScoped<IPlanService, PlanService>();
+            services.AddScoped(typeof(IRepozytorium<>), typeof(Repozytorium<>));
+            services.AddScoped<IWykladowcaService, WykladowcaService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

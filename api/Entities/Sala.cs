@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace Test2.Models
+namespace Test2.Entities
 {
-    public class Przedmiot
+    public class Sala
     {
-        public Przedmiot()
+        public Sala()
         {
             LekcjaList = new List<Lekcja>();
         }
 
-        public short IdPrzedmiotu { get; set; }
+        public int IdSali { get; set; }
         public string Nazwa { get; set; }
-        public FormaPrzedmiotu Forma { get; set; }
+        public RodzajSali Rodzaj { get; set; }
 
         public List<Lekcja> LekcjaList { get; set; }
     }

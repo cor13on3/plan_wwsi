@@ -1,4 +1,4 @@
-﻿namespace Test2.Models
+﻿namespace Test2.Entities
 {
     public class WyklSpec
     {

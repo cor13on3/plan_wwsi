@@ -1,8 +1,9 @@
-﻿namespace Test2.Models
+﻿namespace Test2.Entities
 {
     public class GrupaZjazd
     {
-        public short NrZjazdu { get; set; }
+        public int NrZjazdu { get; set; }
+        public bool CzyZdalnie { get; set; }
 
         public int IdZjazdu { get; set; }
         public Zjazd Zjazd { get; set; }

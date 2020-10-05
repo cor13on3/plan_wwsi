@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Test2.Models;
+using Test2.Entities;
 
 namespace Test2.Services
 {

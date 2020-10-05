@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Test2.Data;
@@ -9,9 +10,10 @@ using Test2.Data;
 namespace Test2.Migrations
 {
     [DbContext(typeof(PlanContext))]
-    partial class PlanContextModelSnapshot : ModelSnapshot
+    [Migration("20201001191803_Refaktoring")]
+    partial class Refaktoring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,7 +188,7 @@ namespace Test2.Migrations
 
             modelBuilder.Entity("Test2.Entities.Wykladowca", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdWykladowcy")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -203,7 +205,7 @@ namespace Test2.Migrations
                     b.Property<string>("Tytul")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdWykladowcy");
 
                     b.ToTable("Wykladowca");
                 });

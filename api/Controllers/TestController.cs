@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Test2.Data;
-using Test2.Models;
+using Test2.Entities;
 using Test2.Services;
 
 namespace Test2.Controllers
@@ -15,8 +15,8 @@ namespace Test2.Controllers
     {
         public string Nazwa { get; set; }
         public string Wykladowca { get; set; }
-        public TimeSpan Od { get; set; }
-        public TimeSpan Do { get; set; }
+        public string Od { get; set; }
+        public string Do { get; set; }
         public string Sala { get; set; }
     }
 
@@ -47,6 +47,7 @@ namespace Test2.Controllers
                                select gz.NrZjazdu;
             var nr = nrZjazdQuery.First();
 
+            var dzienTyg = (int)new DateTime(2020, 10, 4).DayOfWeek;
             var query = from lekcjagrupa in _planContext.Set<LekcjaGrupa>()
                         join lekcja in _planContext.Set<Lekcja>()
                             on lekcjagrupa.IdLekcji equals lekcja.IdLekcji
@@ -57,11 +58,11 @@ namespace Test2.Controllers
                         join sala in _planContext.Set<Sala>()
                             on lekcja.IdSali equals sala.IdSali
 
-                        where lekcjagrupa.NrGrupy == "Z615" && lekcjagrupa.NrZjazdu == nr
+                        where lekcjagrupa.NrGrupy == "Z615" && lekcjagrupa.NrZjazdu == nr && lekcjagrupa.DzienTygodnia == dzienTyg
                         select new LekcjaView
                         {
-                            Od = lekcja.CzasOd,
-                            Do = lekcja.CzasDo,
+                            Od = lekcja.GodzinaOd,
+                            Do = lekcja.GodzinaDo,
                             Wykladowca = wykladowca.Nazwisko,
                             Nazwa = przedmiot.Nazwa,
                             Sala = sala.Nazwa
@@ -74,7 +75,7 @@ namespace Test2.Controllers
         {
             var z1 = new Zjazd
             {
-                Semestr = RodzajSemestru.Zimowy,
+                RodzajSemestru = RodzajSemestru.Zimowy,
                 DataOd = new DateTime(2020, 10, 3),
                 DataDo = new DateTime(2020, 10, 5)
             };

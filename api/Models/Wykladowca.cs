@@ -1,21 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Test2.Models
 {
-    public class Wykladowca
+    public class WykladowcaWidokDTO
     {
-        public Wykladowca()
-        {
-            LekcjaList = new List<Lekcja>();
-        }
+        public int Id { get; set; }
+        public string Nazwa { get; set; }
+        public string Email { get; set; }
+    }
 
-        public int IdWykladowcy { get; set; }
+    public class WykladowcaDTO
+    {
+        public int Id { get; set; }
         public string Tytul { get; set; }
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
         public string Email { get; set; }
-
-        public List<Lekcja> LekcjaList { get; set; }
-        public List<WyklSpec> WyklSpecList { get; set; }
+        public SpecjalnoscDTO[] Specjalnosci { get; set; }
     }
 }

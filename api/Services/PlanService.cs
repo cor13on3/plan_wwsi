@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Test2.Data;
-using Test2.Models;
+using Test2.Entities;
 
 namespace Test2.Services
 {
@@ -56,8 +56,8 @@ namespace Test2.Services
             {
                 NrGrupy = numer,
                 Semestr = semestr,
-                Tryb = tryb,
-                Stopien = stopien
+                TrybStudiow = tryb,
+                StopienStudiow = stopien
             };
             _planContext.Grupa.Add(grupa);
             _planContext.SaveChanges();
@@ -73,9 +73,8 @@ namespace Test2.Services
                 Przedmiot = przedmiot,
                 Wykladowca = wykladowca,
                 Sala = sala,
-                CzasOd = godzinaOd,
-                CzasDo = godzinaDo,
-                CzyOdpracowanie = czyOdpracowanie
+                GodzinaOd = godzinaOd.ToString(),
+                GodzinaDo = godzinaDo.ToString(),
             };
             _planContext.Lekcja.Add(lekcja);
             _planContext.SaveChanges();
@@ -138,7 +137,7 @@ namespace Test2.Services
             {
                 DataOd = dataOd,
                 DataDo = dataDo,
-                Semestr = semestr
+                RodzajSemestru = semestr
             };
             _planContext.Zjazd.Add(z);
             _planContext.SaveChanges();
@@ -210,8 +209,8 @@ namespace Test2.Services
         {
             var g = _planContext.Grupa.Find(numer);
             g.Semestr = semestr;
-            g.Tryb = tryb;
-            g.Stopien = stopien;
+            g.TrybStudiow = tryb;
+            g.StopienStudiow = stopien;
             _planContext.Grupa.Update(g);
             _planContext.SaveChanges();
         }

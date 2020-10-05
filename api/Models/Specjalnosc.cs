@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Test2.Models
 {
-    public class Specjalnosc
+    public class SpecjalnoscDTO
     {
-        public int IdSpecjalnosci { get; set; }
+        public int Id { get; set; }
         public string Nazwa { get; set; }
-
-        public List<WyklSpec> WyklSpecList { get; set; }
     }
 }

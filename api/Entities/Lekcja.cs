@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Test2.Models
+namespace Test2.Entities
 {
     public class Lekcja
     {
         public int IdLekcji { get; set; }
-        public TimeSpan CzasOd { get; set; }
-        public TimeSpan CzasDo { get; set; }
-        public bool CzyOdpracowanie { get; set; }
+        public string GodzinaOd { get; set; }
+        public string GodzinaDo { get; set; }
 
-        public short IdPrzedmiotu { get; set; }
+        public int IdPrzedmiotu { get; set; }
         public Przedmiot Przedmiot { get; set; }
 
         public int IdSali { get; set; }
