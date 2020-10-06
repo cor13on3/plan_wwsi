@@ -9,6 +9,12 @@ using Test2.Services;
 
 namespace Test2.Controllers
 {
+    public class UstalZjazdyRequest
+    {
+        public string NrGrupy { get; set; }
+        public KolejnyZjazdDTO[] Zjazdy { get; set; }
+    }
+
     [Route("api/kalendarium")]
     [ApiController]
     public class KalendariumController : ControllerBase
@@ -20,22 +26,28 @@ namespace Test2.Controllers
             _service = service;
         }
 
-        [HttpGet]
+        [HttpGet("zjazdy/przygotuj")]
         public IEnumerable<ProponowanyZjazdDTO> Get(DateTime dataOd, DateTime dataDo, TrybStudiow tryb)
         {
             return _service.PrzygotujZjazdy(dataOd, dataDo, tryb);
         }
 
-        [HttpPost]
+        [HttpPost("zjazdy/dodaj")]
         public void DodajZjazdy([FromBody] ZjazdDTO[] zjazdy)
         {
             _service.DodajZjazdy(zjazdy);
         }
 
-        [HttpPost]
-        public void UstalZjazdy([FromBody] string nrGrupy, [FromBody] KolejnyZjazdDTO[] zjazdy)
+        [HttpPost("zjazdy/ustal")]
+        public void UstalZjazdy([FromBody] UstalZjazdyRequest req)
         {
-            _service.PrzyporzadkujZjazdyGrupie(nrGrupy, zjazdy);
+            _service.PrzyporzadkujZjazdyGrupie(req.NrGrupy, req.Zjazdy);
+        }
+
+        [HttpGet("{nrGrupy}")]
+        public IEnumerable<ZjazdWidokDTO> Get(string nrGrupy)
+        {
+            return _service.PrzegladajZjazdy(nrGrupy);
         }
     }
 }

@@ -67,6 +67,9 @@ namespace Test2.Services
 
         public void PrzyporzadkujZjazdyGrupie(string nrGrupy, KolejnyZjazdDTO[] zjazdy)
         {
+            var grupa = _planContext.Grupa.Find(nrGrupy);
+            if (grupa == null)
+                throw new Exception("Grupa nie istnieje");
             foreach (var z in zjazdy)
             {
                 var istniejacyZjazd = _planContext.GrupaZjazd.Where(x => x.NrGrupy == nrGrupy && x.IdZjazdu == z.IdZjazdu);
