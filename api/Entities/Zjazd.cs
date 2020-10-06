@@ -9,6 +9,7 @@ namespace Test2.Entities
         public DateTime DataOd { get; set; }
         public DateTime DataDo { get; set; }
         public RodzajSemestru RodzajSemestru { get; set; }
+        public DateTime? DzienOdpracowywany { get; set; }
 
         public List<GrupaZjazd> GrupaZjazdList { get; set; }
     }

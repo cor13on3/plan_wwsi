@@ -12,6 +12,7 @@ namespace Test2.Services
         where E : Entity
     {
         void Dodaj(E entity);
+        E Daj(int id);
         IEnumerable<E> Przegladaj();
         void Zmien(int id, E entity);
         void Usun(int id);
@@ -27,6 +28,11 @@ namespace Test2.Services
         {
             _planContext = planContext;
             _table = _planContext.Set<E>();
+        }
+
+        public E Daj(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public void Dodaj(E entity)

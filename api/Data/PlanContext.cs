@@ -58,7 +58,7 @@ namespace Test2.Data
 
             modelBuilder.Entity<GrupaZjazd>(entity =>
             {
-                entity.HasKey(e => new { e.NrZjazdu, e.IdZjazdu, e.NrGrupy });
+                entity.HasKey(e => new { e.IdZjazdu, e.NrGrupy });
             });
 
             modelBuilder.Entity<GrupaZjazd>()

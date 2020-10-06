@@ -34,6 +34,8 @@ namespace Test2
             services.AddScoped<IPlanService, PlanService>();
             services.AddScoped(typeof(IRepozytorium<>), typeof(Repozytorium<>));
             services.AddScoped<IWykladowcaService, WykladowcaService>();
+            services.AddScoped<IGrupaService, GrupaService>();
+            services.AddScoped<IKalendariumService, KalendariumService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +44,10 @@ namespace Test2
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
             }
 
             app.UseRouting();

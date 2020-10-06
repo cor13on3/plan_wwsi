@@ -57,7 +57,7 @@ namespace Test2.Services
         public void DodajWykladowce(string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
         {
             if (string.IsNullOrEmpty(tytul) || string.IsNullOrEmpty(imie) || string.IsNullOrEmpty(nazwisko) || string.IsNullOrEmpty(email))
-                throw new Exception("Uzupełnij komplet informacji"); // wysyłać odpowiedni status http gdy dany wyjatek
+                throw new Exception("Uzupełnij komplet informacji");
             var wykladowca = new Wykladowca
             {
                 Imie = imie,

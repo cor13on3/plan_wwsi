@@ -4,6 +4,7 @@
     {
         public int NrZjazdu { get; set; }
         public bool CzyZdalnie { get; set; }
+        public bool CzyOdpracowanie { get; set; }
 
         public int IdZjazdu { get; set; }
         public Zjazd Zjazd { get; set; }
