@@ -8,9 +8,8 @@
 
     public enum RodzajSali
     {
-        Aula,
-        Laboratoryjna,
-        Silownia
+        Wykladowa,
+        Cwiczeniowa
     }
 
     public enum RodzajSemestru

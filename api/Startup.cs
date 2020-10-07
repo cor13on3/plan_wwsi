@@ -36,6 +36,7 @@ namespace Test2
             services.AddScoped<IWykladowcaService, WykladowcaService>();
             services.AddScoped<IGrupaService, GrupaService>();
             services.AddScoped<IKalendariumService, KalendariumService>();
+            services.AddScoped<ISalaService, SalaService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Test2.Data;
 using Test2.Entities;
 using Test2.Models;
@@ -21,6 +20,8 @@ namespace Test2.Services
         {
             if (string.IsNullOrEmpty(numer) || semestr < 0)
                 throw new Exception("Uzupełnij dane");
+            if(_planContext.Grupa.Find(numer) != null)
+                throw new Exception($"Istnieje już grupa o numerze {numer}");
             _planContext.Grupa.Add(new Grupa
             {
                 NrGrupy = numer,
@@ -46,6 +47,7 @@ namespace Test2.Services
             if (res == null)
                 throw new Exception($"Grupa o numerze {numer} nie istnieje.");
             _planContext.Grupa.Remove(res);
+            _planContext.SaveChanges();
         }
     }
 }

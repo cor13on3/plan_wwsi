@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Test2.Entities;
 using Test2.Models;
 using Test2.Services;
@@ -27,7 +25,7 @@ namespace Test2.Controllers
         }
 
         [HttpGet("zjazdy/przygotuj")]
-        public IEnumerable<ProponowanyZjazdDTO> Get(DateTime dataOd, DateTime dataDo, TrybStudiow tryb)
+        public IEnumerable<ProponowanyZjazdDTO> PrzygotujZjazdy(DateTime dataOd, DateTime dataDo, TrybStudiow tryb)
         {
             return _service.PrzygotujZjazdy(dataOd, dataDo, tryb);
         }
@@ -38,14 +36,14 @@ namespace Test2.Controllers
             _service.DodajZjazdy(zjazdy);
         }
 
-        [HttpPost("zjazdy/ustal")]
-        public void UstalZjazdy([FromBody] UstalZjazdyRequest req)
+        [HttpPost("zjazdy/przyporzadkuj")]
+        public void PrzyporzadkujZjazdy([FromBody] UstalZjazdyRequest req)
         {
             _service.PrzyporzadkujZjazdyGrupie(req.NrGrupy, req.Zjazdy);
         }
 
         [HttpGet("{nrGrupy}")]
-        public IEnumerable<ZjazdWidokDTO> Get(string nrGrupy)
+        public IEnumerable<ZjazdWidokDTO> PrzegladajZjazdy(string nrGrupy)
         {
             return _service.PrzegladajZjazdy(nrGrupy);
         }
