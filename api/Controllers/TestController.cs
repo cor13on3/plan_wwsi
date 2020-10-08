@@ -26,20 +26,17 @@ namespace Test2.Controllers
     {
         private readonly ILogger<TestController> _logger;
         private readonly PlanContext _planContext;
-        private readonly IPlanService _planService;
 
-        public TestController(ILogger<TestController> logger, PlanContext planContext, IPlanService planService)
+        public TestController(ILogger<TestController> logger, PlanContext planContext)
         {
             _logger = logger;
             _planContext = planContext;
-            _planService = planService;
         }
-
-
 
         [HttpGet]
         public IEnumerable<LekcjaView> Get()
         {
+            // wydzielić do klasy ZapytaniePlanDnia
             var nrZjazdQuery = from zjazd in _planContext.Set<Zjazd>()
                                join gz in _planContext.Set<GrupaZjazd>()
                                     on zjazd.IdZjazdu equals gz.IdZjazdu
@@ -58,7 +55,7 @@ namespace Test2.Controllers
                         join sala in _planContext.Set<Sala>()
                             on lekcja.IdSali equals sala.IdSali
 
-                        where lekcjagrupa.NrGrupy == "Z615" && lekcjagrupa.NrZjazdu == nr && lekcjagrupa.DzienTygodnia == dzienTyg
+                        where lekcjagrupa.NrGrupy == "Z715" && lekcjagrupa.NrZjazdu == nr && lekcjagrupa.DzienTygodnia == dzienTyg
                         select new LekcjaView
                         {
                             Od = lekcja.GodzinaOd,

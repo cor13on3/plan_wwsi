@@ -1,9 +1,9 @@
 ﻿namespace Test2.Entities
 {
-    public enum FormaPrzedmiotu
+    public enum FormaLekcji
     {
         Wyklad,
-        Laboratorium
+        Cwiczenia
     }
 
     public enum RodzajSali
