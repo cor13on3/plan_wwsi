@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Test2.Entities;
+using Test2.Models;
 using Test2.Services;
 
 namespace Test2.Controllers
@@ -47,7 +48,13 @@ namespace Test2.Controllers
         {
             foreach (string nr in req.NrGrup)
                 _lekcjaService.PrzypiszGrupe(req.IdLekcji, nr, req.NrZjazdu, req.DzienTygodnia, req.CzyOdpracowanie);
-            // może dopiero teraz save changes?
+        }
+
+        [HttpGet("plan/daj")]
+        public LekcjaView[] DajPlan(DateTime data, string grupa) 
+        {
+            var result = _lekcjaService.DajPlan(data, grupa);
+            return result.ToArray();
         }
     }
 }

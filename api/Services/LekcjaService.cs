@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Test2.Data;
 using Test2.Entities;
+using Test2.Models;
 
 namespace Test2.Services
 {
@@ -15,23 +17,42 @@ namespace Test2.Services
             _planContext = planContext;
         }
 
+        public IEnumerable<LekcjaView> DajPlan(DateTime data, string nrGrupy)
+        {
+            var nrZjazduQuery = from zjazd in _planContext.Set<Zjazd>()
+                                join gz in _planContext.Set<GrupaZjazd>()
+                                     on zjazd.IdZjazdu equals gz.IdZjazdu
+                                where zjazd.DataOd <= data && data <= zjazd.DataDo
+                                select gz.NrZjazdu;
+            var nr = nrZjazduQuery.First();
+
+            var dzienTyg = (int)data.DayOfWeek;
+            var query = from lekcjagrupa in _planContext.Set<LekcjaGrupa>()
+                        join lekcja in _planContext.Set<Lekcja>()
+                            on lekcjagrupa.IdLekcji equals lekcja.IdLekcji
+                        join wykladowca in _planContext.Set<Wykladowca>()
+                            on lekcja.IdWykladowcy equals wykladowca.IdWykladowcy
+                        join przedmiot in _planContext.Set<Przedmiot>()
+                            on lekcja.IdPrzedmiotu equals przedmiot.IdPrzedmiotu
+                        join sala in _planContext.Set<Sala>()
+                            on lekcja.IdSali equals sala.IdSali
+
+                        where lekcjagrupa.NrGrupy == nrGrupy && lekcjagrupa.NrZjazdu == nr && lekcjagrupa.DzienTygodnia == dzienTyg
+                        select new LekcjaView
+                        {
+                            Od = lekcja.GodzinaOd,
+                            Do = lekcja.GodzinaDo,
+                            Wykladowca = wykladowca.Nazwisko,
+                            Nazwa = przedmiot.Nazwa,
+                            Sala = sala.Nazwa,
+                            Forma = lekcja.Forma,
+                        };
+            return query.ToArray();
+        }
+
         public void Dodaj(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
         {
-            if (!_planContext.Przedmiot.Any(x => x.IdPrzedmiotu == przedmiotId))
-                throw new Exception($"Przedmiot o id {przedmiotId} nie istnieje.");
-            if (!_planContext.Wykladowca.Any(x => x.IdWykladowcy == wykladowcaId))
-                throw new Exception($"Wykładowca o id {wykladowcaId} nie istnieje.");
-            if (!_planContext.Sala.Any(x => x.IdSali == salaId))
-                throw new Exception($"Sala o id {salaId} nie istnieje.");
-            try
-            {
-                DateTime.ParseExact(godzinaOd, "HH:mm:ss", CultureInfo.InvariantCulture);
-                DateTime.ParseExact(godzinaDo, "HH:mm:ss", CultureInfo.InvariantCulture);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm:ss (np. 09:45:00)");
-            }
+            WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
             _planContext.Lekcja.Add(new Lekcja
             {
                 IdPrzedmiotu = przedmiotId,
@@ -73,7 +94,7 @@ namespace Test2.Services
 
         public void Usun(int lekcjaId)
         {
-            // sprawdzić czy usuwając lekcję nie usunie się z automaty grupa, sala itd..
+            // TODO: sprawdzić czy usuwając lekcję nie usunie się z automaty grupa, sala itd..
             var lekcja = _planContext.Lekcja.Find(lekcjaId);
             if (lekcja == null)
                 throw new Exception($"Nie istnieje lekcja o id {lekcjaId}");
@@ -86,6 +107,33 @@ namespace Test2.Services
             var lekcja = _planContext.Lekcja.Find(lekcjaId);
             if (lekcja == null)
                 throw new Exception($"Nie istnieje lekcja o id {lekcjaId}");
+            WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
+            lekcja.IdPrzedmiotu = przedmiotId;
+            lekcja.IdWykladowcy = wykladowcaId;
+            lekcja.IdSali = salaId;
+            lekcja.GodzinaOd = godzinaOd;
+            lekcja.GodzinaDo = godzinaDo;
+            lekcja.Forma = forma;
+            _planContext.SaveChanges();
+        }
+
+        private void WalidujDane(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo)
+        {
+            if (!_planContext.Przedmiot.Any(x => x.IdPrzedmiotu == przedmiotId))
+                throw new Exception($"Przedmiot o id {przedmiotId} nie istnieje.");
+            if (!_planContext.Wykladowca.Any(x => x.IdWykladowcy == wykladowcaId))
+                throw new Exception($"Wykładowca o id {wykladowcaId} nie istnieje.");
+            if (!_planContext.Sala.Any(x => x.IdSali == salaId))
+                throw new Exception($"Sala o id {salaId} nie istnieje.");
+            try
+            {
+                DateTime.ParseExact(godzinaOd, "HH:mm:ss", CultureInfo.InvariantCulture);
+                DateTime.ParseExact(godzinaDo, "HH:mm:ss", CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm:ss (np. 09:45:00)");
+            }
         }
     }
 }
