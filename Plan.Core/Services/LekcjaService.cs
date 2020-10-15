@@ -20,34 +20,19 @@ namespace Plan.Core.Services
 
         public IEnumerable<LekcjaWidokDTO> DajPlan(DateTime data, string nrGrupy)
         {
-            var nrZjazduQuery = from zjazd in _baza.Daj<Zjazd>().Przegladaj()
-                                join gz in _baza.Daj<GrupaZjazd>().Przegladaj()
-                                     on zjazd.IdZjazdu equals gz.IdZjazdu
-                                where zjazd.DataOd <= data && data <= zjazd.DataDo
-                                select gz.NrZjazdu;
-            var nr = nrZjazduQuery.First();
-
+            var nr = _baza.Daj<GrupaZjazd>().Przegladaj(x => x.NrGrupy == nrGrupy && x.Zjazd.DataOd <= data && data <= x.Zjazd.DataDo, "Zjazd").First().NrZjazdu;
             var dzienTyg = (int)data.DayOfWeek;
-            var query = from lekcjagrupa in _baza.Daj<LekcjaGrupa>().Przegladaj()
-                        join lekcja in _baza.Daj<Lekcja>().Przegladaj()
-                            on lekcjagrupa.IdLekcji equals lekcja.IdLekcji
-                        join wykladowca in _baza.Daj<Wykladowca>().Przegladaj()
-                            on lekcja.IdWykladowcy equals wykladowca.IdWykladowcy
-                        join przedmiot in _baza.Daj<Przedmiot>().Przegladaj()
-                            on lekcja.IdPrzedmiotu equals przedmiot.IdPrzedmiotu
-                        join sala in _baza.Daj<Sala>().Przegladaj()
-                            on lekcja.IdSali equals sala.IdSali
+            var query = _baza.Daj<LekcjaGrupa>().Przegladaj(x => x.NrGrupy == nrGrupy && x.NrZjazdu == nr && x.DzienTygodnia == dzienTyg, "Lekcja.Wykladowca,Lekcja.Przedmiot,Lekcja.Sala")
+                .Select(x => new LekcjaWidokDTO
+                {
+                    Od = x.Lekcja.GodzinaOd,
+                    Do = x.Lekcja.GodzinaDo,
+                    Wykladowca = x.Lekcja.Wykladowca.Nazwisko,
+                    Nazwa = x.Lekcja.Przedmiot.Nazwa,
+                    Sala = x.Lekcja.Sala.Nazwa,
+                    Forma = (int)x.Lekcja.Forma,
+                });
 
-                        where lekcjagrupa.NrGrupy == nrGrupy && lekcjagrupa.NrZjazdu == nr && lekcjagrupa.DzienTygodnia == dzienTyg
-                        select new LekcjaWidokDTO
-                        {
-                            Od = lekcja.GodzinaOd,
-                            Do = lekcja.GodzinaDo,
-                            Wykladowca = wykladowca.Nazwisko,
-                            Nazwa = przedmiot.Nazwa,
-                            Sala = sala.Nazwa,
-                            Forma = (int)lekcja.Forma,
-                        };
             return query.ToArray();
         }
 

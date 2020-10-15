@@ -3,7 +3,6 @@ using Plan.Core.Entities;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Plan.Core.Services
