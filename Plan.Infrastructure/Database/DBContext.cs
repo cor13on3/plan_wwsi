@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Plan.Core.Entities;
 
 namespace Plan.Serwis.BazaDanych
 {
-    public partial class PlanContext : DbContext
+    public partial class PlanContext : IdentityDbContext<Uzytkownik>
     {
         public virtual DbSet<Grupa> Grupa { get; set; }
         public virtual DbSet<GrupaZjazd> GrupaZjazd { get; set; }
@@ -19,11 +20,13 @@ namespace Plan.Serwis.BazaDanych
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseNpgsql("Host=localhost;Database=plancodefirst;Username=postgres;Password=postgres");
+                optionsBuilder.UseNpgsql("Host=localhost;Database=plancodefirst;Username=postgres;Password=postgres",b => b.MigrationsAssembly("Plan.Infrastructure"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Grupa>(entity =>
             {
                 entity.HasKey(e => e.NrGrupy);

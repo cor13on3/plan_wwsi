@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
@@ -25,6 +22,7 @@ namespace Plan.API.Controllers
             return _przedmiotService.Przegladaj();
         }
 
+        // TODO: Zabezpieczyć endpointy administracyjne atrybutem [Authorize].
         [HttpPost]
         public void Dodaj([FromBody] string nazwa)
         {
