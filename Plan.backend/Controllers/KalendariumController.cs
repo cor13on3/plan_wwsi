@@ -20,9 +20,9 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet("zjazdy/przygotuj")]
-        public IEnumerable<PropozycjaZjazduWidokDTO> PrzygotujZjazdy(DateTime dataOd, DateTime dataDo, int tryb)
+        public IEnumerable<PropozycjaZjazduWidokDTO> PrzygotujZjazdy(DateTime dataOd, DateTime dataDo, TrybStudiow tryb)
         {
-            return _service.PrzygotujZjazdy(dataOd, dataDo, (TrybStudiow)tryb);
+            return _service.PrzygotujZjazdy(dataOd, dataDo, tryb);
         }
 
         [HttpPost("zjazdy/dodaj")]

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
-using Plan.Core.Entities;
 using Plan.Core.IServices;
 
 namespace Plan.API.Controllers
@@ -30,7 +26,7 @@ namespace Plan.API.Controllers
         [HttpPost]
         public void Dodaj([FromBody] KomendaDodajSale req)
         {
-            _salaService.Dodaj(req.Nazwa, (RodzajSali)req.Rodzaj);
+            _salaService.Dodaj(req.Nazwa, req.Rodzaj);
         }
 
         [HttpDelete("{id}")]

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
-using Plan.Core.Entities;
 using Plan.Core.IServices;
 
 namespace Plan.API.Controllers
@@ -28,7 +27,7 @@ namespace Plan.API.Controllers
         [HttpPost]
         public void Post([FromBody] KomendaDodajGrupe req)
         {
-            _grupaService.Dodaj(req.NrGrupy, req.Semestr, (TrybStudiow)req.TrybStudiow, (StopienStudiow)req.StopienStudiow);
+            _grupaService.Dodaj(req.NrGrupy, req.Semestr, req.TrybStudiow, req.StopienStudiow);
         }
 
         [HttpDelete("{numer}")]

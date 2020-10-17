@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
-using Plan.Core.Entities;
 using Plan.Core.IServices;
 
 namespace Plan.API.Controllers
@@ -22,7 +21,7 @@ namespace Plan.API.Controllers
         [HttpPost("dodaj")]
         public void DodajLekcje([FromBody] KomendaDodajLekcje req)
         {
-            _lekcjaService.Dodaj(req.IdPrzedmiotu, req.IdWykladowcy, req.IdSali, req.GodzinaOd, req.GodzinaDo, (FormaLekcji)req.Forma);
+            _lekcjaService.Dodaj(req.IdPrzedmiotu, req.IdWykladowcy, req.IdSali, req.GodzinaOd, req.GodzinaDo, req.Forma);
         }
 
         [HttpPost("grupy/przypisz")]

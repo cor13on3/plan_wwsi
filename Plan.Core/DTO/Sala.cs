@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plan.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,6 @@ namespace Plan.Core.DTO
     {
         public int Id { get; set; }
         public string Nazwa { get; set; }
-        public int Rodzaj { get; set; }
+        public RodzajSali Rodzaj { get; set; }
     }
 }

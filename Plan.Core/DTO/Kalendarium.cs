@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Plan.Core.Entities;
+using System;
 
 namespace Plan.Core.DTO
 {
@@ -22,7 +21,7 @@ namespace Plan.Core.DTO
     {
         public DateTime DataOd { get; set; }
         public DateTime DataDo { get; set; }
-        public int RodzajSemestru { get; set; }
+        public RodzajSemestru RodzajSemestru { get; set; }
     }
 
 

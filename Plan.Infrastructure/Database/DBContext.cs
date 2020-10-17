@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Plan.Core.Entities;
 
 namespace Plan.Serwis.BazaDanych
@@ -20,7 +21,7 @@ namespace Plan.Serwis.BazaDanych
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseNpgsql("Host=localhost;Database=plancodefirst;Username=postgres;Password=postgres",b => b.MigrationsAssembly("Plan.Infrastructure"));
+                optionsBuilder.UseNpgsql("Host=localhost;Database=plancodefirst;Username=postgres;Password=postgres", b => b.MigrationsAssembly("Plan.Infrastructure"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,10 +31,16 @@ namespace Plan.Serwis.BazaDanych
             modelBuilder.Entity<Grupa>(entity =>
             {
                 entity.HasKey(e => e.NrGrupy);
+                entity.Property(e => e.TrybStudiow)
+                      .HasConversion(new EnumToStringConverter<TrybStudiow>());
+                entity.Property(e => e.StopienStudiow)
+                      .HasConversion(new EnumToStringConverter<StopienStudiow>());
             });
 
             modelBuilder.Entity<Zjazd>(entity =>
             {
+                entity.Property(e => e.RodzajSemestru)
+                      .HasConversion(new EnumToStringConverter<RodzajSemestru>());
                 entity.HasKey(e => e.IdZjazdu);
             });
 
@@ -44,6 +51,8 @@ namespace Plan.Serwis.BazaDanych
 
             modelBuilder.Entity<Sala>(entity =>
             {
+                entity.Property(e => e.Rodzaj)
+                      .HasConversion(new EnumToStringConverter<RodzajSali>());
                 entity.HasKey(e => e.IdSali);
             });
 
@@ -80,6 +89,8 @@ namespace Plan.Serwis.BazaDanych
             modelBuilder.Entity<Lekcja>(entity =>
             {
                 entity.HasKey(e => e.IdLekcji);
+                entity.Property(e => e.Forma)
+                      .HasConversion(new EnumToStringConverter<FormaLekcji>());
             });
 
             modelBuilder.Entity<Lekcja>()

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Plan.Core.Entities;
 
 namespace Plan.API.Komendy
 {
@@ -11,7 +9,7 @@ namespace Plan.API.Komendy
         public int IdSali { get; set; }
         public string GodzinaOd { get; set; }
         public string GodzinaDo { get; set; }
-        public int Forma { get; set; }
+        public FormaLekcji Forma { get; set; }
     }
 
     public class KomendaPrzypiszGrupyLekcji

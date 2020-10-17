@@ -10,6 +10,7 @@ using Plan.Core.IServices;
 using Plan.Core.Services;
 using Plan.Infrastructure.DB;
 using Plan.Serwis.BazaDanych;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Plan.API
@@ -26,7 +27,10 @@ namespace Plan.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(o =>
+            {
+                o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             services.AddDbContext<PlanContext>();
             services.AddSpaStaticFiles(c => c.RootPath = "admin");
             services.AddScoped<IWykladowcaService, WykladowcaService>();

@@ -30,7 +30,7 @@ namespace Plan.Core.Services
                     Wykladowca = x.Lekcja.Wykladowca.Nazwisko,
                     Nazwa = x.Lekcja.Przedmiot.Nazwa,
                     Sala = x.Lekcja.Sala.Nazwa,
-                    Forma = (int)x.Lekcja.Forma,
+                    Forma = x.Lekcja.Forma,
                 });
 
             return query.ToArray();

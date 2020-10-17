@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Plan.Serwis.BazaDanych;
@@ -9,9 +10,10 @@ using Plan.Serwis.BazaDanych;
 namespace Plan.Infrastructure.Migrations
 {
     [DbContext(typeof(PlanContext))]
-    partial class PlanContextModelSnapshot : ModelSnapshot
+    [Migration("20201017133530_Enum2String")]
+    partial class Enum2String
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,9 +159,8 @@ namespace Plan.Infrastructure.Migrations
                     b.Property<int>("Semestr")
                         .HasColumnType("integer");
 
-                    b.Property<string>("StopienStudiow")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("StopienStudiow")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TrybStudiow")
                         .IsRequired()
@@ -198,9 +199,8 @@ namespace Plan.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Forma")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Forma")
+                        .HasColumnType("integer");
 
                     b.Property<string>("GodzinaDo")
                         .HasColumnType("text");
@@ -277,9 +277,8 @@ namespace Plan.Infrastructure.Migrations
                     b.Property<string>("Nazwa")
                         .HasColumnType("text");
 
-                    b.Property<string>("Rodzaj")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Rodzaj")
+                        .HasColumnType("integer");
 
                     b.HasKey("IdSali");
 
@@ -423,9 +422,8 @@ namespace Plan.Infrastructure.Migrations
                     b.Property<DateTime>("DataOd")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("RodzajSemestru")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("RodzajSemestru")
+                        .HasColumnType("integer");
 
                     b.HasKey("IdZjazdu");
 

@@ -34,7 +34,7 @@ namespace Plan.Core.Services
                 {
                     Id = x.IdSali,
                     Nazwa = x.Nazwa,
-                    Rodzaj = (int)x.Rodzaj
+                    Rodzaj = x.Rodzaj
                 })
                 .ToArray();
         }
