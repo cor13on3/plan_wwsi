@@ -2,8 +2,8 @@
 using Plan.Core.Entities;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
+using Plan.Core.Zapytania;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Plan.Core.Services
@@ -29,19 +29,13 @@ namespace Plan.Core.Services
 
         public SalaWidokDTO[] Przegladaj()
         {
-            return _baza.Daj<Sala>().Przegladaj()
-                .Select(x => new SalaWidokDTO
-                {
-                    Id = x.IdSali,
-                    Nazwa = x.Nazwa,
-                    Rodzaj = x.Rodzaj
-                })
-                .ToArray();
+            var wynik = _baza.Daj<Sala>().Wybierz(new ZapytanieSale());
+            return wynik.ToArray();
         }
 
         public void Usun(int id)
         {
-            if (_baza.Daj<Sala>().Daj(id) == null)
+            if (_baza.Daj<Sala>().Znajdz(id) == null)
                 throw new Exception($"Sala o id {id} nie istnieje");
             _baza.Daj<Sala>().Usun(id);
             _baza.Zapisz();

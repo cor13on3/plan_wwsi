@@ -2,6 +2,7 @@
 using Plan.Core.Entities;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
+using Plan.Core.Zapytania;
 using System.Linq;
 
 namespace Plan.Core.Services
@@ -28,13 +29,8 @@ namespace Plan.Core.Services
         public PrzedmiotWidokDTO[] Przegladaj()
         {
             var przedmiot = _baza.Daj<Przedmiot>();
-            return przedmiot.Przegladaj()
-                .Select(x => new PrzedmiotWidokDTO
-                {
-                    Id = x.IdPrzedmiotu,
-                    Nazwa = x.Nazwa,
-                })
-                .ToArray();
+            var wynik = przedmiot.Wybierz(new ZapytaniePrzedmioty());
+            return wynik.ToArray();
         }
 
         public void Usun(int id)

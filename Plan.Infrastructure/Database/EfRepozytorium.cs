@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Plan.Core.IDatabase;
 using Plan.Serwis.BazaDanych;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Plan.Infrastructure.DB
 {
@@ -19,43 +17,23 @@ namespace Plan.Infrastructure.DB
             this.dbSet = context.Set<T>();
         }
 
-        public virtual IQueryable<T> Przegladaj(
-            Expression<Func<T, bool>> filtr = null,
-            string zawiera = "")
-        {
-            IQueryable<T> query = dbSet;
-
-            if (filtr != null)
-            {
-                query = query.Where(filtr);
-            }
-
-            foreach (var includeProperty in zawiera.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
-
-            return query;
-        }
-
-        public virtual T Daj(object id)
+        public T Znajdz(object id)
         {
             return dbSet.Find(id);
         }
 
-        public virtual void Dodaj(T entity)
+        public void Dodaj(T entity)
         {
             dbSet.Add(entity);
         }
 
-        public virtual void Usun(object id)
+        public void Usun(object id)
         {
             T entityToDelete = dbSet.Find(id);
             Usun(entityToDelete);
         }
 
-        public virtual void Usun(T entityToDelete)
+        public void Usun(T entityToDelete)
         {
             if (context.Entry(entityToDelete).State == EntityState.Detached)
             {
@@ -64,7 +42,7 @@ namespace Plan.Infrastructure.DB
             dbSet.Remove(entityToDelete);
         }
 
-        public virtual void Edytuj(T entityToUpdate)
+        public void Edytuj(T entityToUpdate)
         {
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
@@ -74,6 +52,24 @@ namespace Plan.Infrastructure.DB
         {
             foreach (var entity in entities)
                 Usun(entity);
+        }
+
+        public IEnumerable<TDTO> Wybierz<TDTO>(ISpecification<T, TDTO> spec)
+        {
+            var queryableResultWithIncludes = spec.Skladowe
+                                                    .Aggregate(dbSet.AsQueryable(),
+            (current, include) => current.Include(include));
+
+            // modify the IQueryable to include any string-based include statements
+            var secondaryResult = spec.SkladoweString
+                .Aggregate(queryableResultWithIncludes,
+                    (current, include) => current.Include(include));
+
+            // return the result of the query using the specification's criteria expression
+            return secondaryResult
+                            .Where(spec.Kryteria)
+                            .Select(spec.Mapowanie)
+                            .ToArray();
         }
     }
 }

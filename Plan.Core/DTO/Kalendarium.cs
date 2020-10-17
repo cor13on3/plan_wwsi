@@ -15,6 +15,7 @@ namespace Plan.Core.DTO
         public DateTime DataOd { get; set; }
         public DateTime DataDo { get; set; }
         public bool CzyOdpracowanie { get; set; }
+        public int IdZjazdu { get; set; }
     }
 
     public class ZjazdDTO

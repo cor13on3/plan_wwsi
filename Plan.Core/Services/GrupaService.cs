@@ -2,6 +2,7 @@
 using Plan.Core.Entities;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
+using Plan.Core.Zapytania;
 using System;
 using System.Linq;
 
@@ -18,12 +19,12 @@ namespace Plan.Core.Services
 
         public void Dodaj(string numer, int semestr, TrybStudiow trybStudiow, StopienStudiow stopienStudiow)
         {
-            var grupa = _db.Daj<Grupa>();
+            var repo = _db.Daj<Grupa>();
             if (string.IsNullOrEmpty(numer) || semestr < 0)
                 throw new Exception("Uzupełnij dane");
-            if (grupa.Przegladaj(x => x.NrGrupy == numer, "").FirstOrDefault() != null)
+            if (repo.Znajdz(numer) != null)
                 throw new Exception($"Istnieje już grupa o numerze {numer}");
-            grupa.Dodaj(new Grupa
+            repo.Dodaj(new Grupa
             {
                 NrGrupy = numer,
                 Semestr = semestr,
@@ -35,22 +36,17 @@ namespace Plan.Core.Services
 
         public GrupaWidokDTO[] Przegladaj()
         {
-            var grupa = _db.Daj<Grupa>();
-            var wynik = grupa.Przegladaj()
-                .Select(x => new GrupaWidokDTO
-                {
-                    Numer = x.NrGrupy
-                })
-                .ToArray();
+            var repo = _db.Daj<Grupa>();
+            var wynik = repo.Wybierz(new ZapytanieGrupy()).ToArray();
             return wynik;
         }
 
         public void Usun(string numer)
         {
-            var grupa = _db.Daj<Grupa>();
-            if (grupa.Przegladaj(x => x.NrGrupy == numer, "").FirstOrDefault() == null)
+            var repo = _db.Daj<Grupa>();
+            if (repo.Znajdz(numer) == null)
                 throw new Exception($"Grupa o numerze {numer} nie istnieje.");
-            grupa.Usun(numer);
+            repo.Usun(numer);
             _db.Zapisz();
         }
     }

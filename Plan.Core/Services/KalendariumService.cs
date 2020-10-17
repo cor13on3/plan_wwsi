@@ -2,6 +2,7 @@
 using Plan.Core.Entities;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
+using Plan.Core.Zapytania;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +20,19 @@ namespace Plan.Core.Services
 
         public void DodajZjazdy(ZjazdDTO[] zjazdy)
         {
+            var repo = _baza.Daj<Zjazd>();
             foreach (var z in zjazdy)
             {
-                var zajetaData = _baza.Daj<Zjazd>().Przegladaj(x => x.DataOd == z.DataOd && x.DataDo == z.DataDo, "");
-                if (zajetaData.Count() > 0)
-                    throw new Exception($"Istnieje już zjazd w terminie {z.DataOd:DD-MM-YYYY} - {z.DataDo:DD-MM-YYYY}");
-                _baza.Daj<Zjazd>().Dodaj(new Zjazd
+                var zjazdOTerminie = repo.Wybierz(new ZapytanieZjadOTerminie(z.DataOd, z.DataDo));
+                if (zjazdOTerminie.Count() > 0)
+                    throw new Exception($"Istnieje już zjazd w terminie {z.DataOd:dd-MM-yyyy} - {z.DataDo:dd-MM-yyyy}");
+                var zjazd = new Zjazd
                 {
                     DataOd = z.DataOd,
                     DataDo = z.DataDo,
-                    RodzajSemestru = (RodzajSemestru)z.RodzajSemestru
-                });
+                    RodzajSemestru = z.RodzajSemestru
+                };
+                repo.Dodaj(zjazd);
             }
 
             _baza.Zapisz();
@@ -37,14 +40,9 @@ namespace Plan.Core.Services
 
         public IEnumerable<ZjazdWidokDTO> PrzegladajZjazdy(string nrGrupy)
         {
-            var query = _baza.Daj<GrupaZjazd>().Przegladaj(x => x.NrGrupy == nrGrupy, "Zjazd");
-            return query.Select(x => new ZjazdWidokDTO
-            {
-                Nr = x.NrZjazdu,
-                DataOd = x.Zjazd.DataOd,
-                DataDo = x.Zjazd.DataDo,
-                CzyOdpracowanie = x.CzyOdpracowanie
-            }).ToArray();
+            var repo = _baza.Daj<GrupaZjazd>();
+            var wynik = repo.Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
+            return wynik.ToArray();
         }
 
         public IEnumerable<PropozycjaZjazduWidokDTO> PrzygotujZjazdy(DateTime poczatekSemestru, DateTime koniecSemestru, TrybStudiow trybStudiow)
@@ -65,15 +63,16 @@ namespace Plan.Core.Services
 
         public void PrzyporzadkujZjazdyGrupie(string nrGrupy, ZjazdKolejnyDTO[] zjazdy)
         {
-            var grupa = _baza.Daj<Grupa>().Przegladaj(x => x.NrGrupy == nrGrupy, "").FirstOrDefault();
-            if (grupa == null)
-                throw new Exception("Grupa nie istnieje");
+            var grupa = _baza.Daj<Grupa>().Wybierz(new ZapytanieGrupa(nrGrupy));
+            if (grupa.Count() == 0)
+                throw new Exception($"Grupa o numerze {nrGrupy} nie istnieje");
+            var repo = _baza.Daj<GrupaZjazd>();
+            var zjazdyGrupy = repo.Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
             foreach (var z in zjazdy)
             {
-                var istniejacyZjazd = _baza.Daj<GrupaZjazd>().Przegladaj(x => x.NrGrupy == nrGrupy && x.IdZjazdu == z.IdZjazdu, "");
-                if (istniejacyZjazd.Count() > 0)
+                if (zjazdyGrupy.Any(x => x.IdZjazdu == z.IdZjazdu))
                     throw new Exception($"Grupa {nrGrupy} ma już przypisany zjazd o id: {z.IdZjazdu}");
-                _baza.Daj<GrupaZjazd>().Dodaj(new GrupaZjazd
+                repo.Dodaj(new GrupaZjazd
                 {
                     NrZjazdu = z.NrZjazdu,
                     NrGrupy = nrGrupy,

@@ -2,6 +2,7 @@
 using Plan.Core.Entities;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
+using Plan.Core.Zapytania;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,20 +21,13 @@ namespace Plan.Core.Services
 
         public IEnumerable<LekcjaWidokDTO> DajPlan(DateTime data, string nrGrupy)
         {
-            var nr = _baza.Daj<GrupaZjazd>().Przegladaj(x => x.NrGrupy == nrGrupy && x.Zjazd.DataOd <= data && data <= x.Zjazd.DataDo, "Zjazd").First().NrZjazdu;
-            var dzienTyg = (int)data.DayOfWeek;
-            var query = _baza.Daj<LekcjaGrupa>().Przegladaj(x => x.NrGrupy == nrGrupy && x.NrZjazdu == nr && x.DzienTygodnia == dzienTyg, "Lekcja.Wykladowca,Lekcja.Przedmiot,Lekcja.Sala")
-                .Select(x => new LekcjaWidokDTO
-                {
-                    Od = x.Lekcja.GodzinaOd,
-                    Do = x.Lekcja.GodzinaDo,
-                    Wykladowca = x.Lekcja.Wykladowca.Nazwisko,
-                    Nazwa = x.Lekcja.Przedmiot.Nazwa,
-                    Sala = x.Lekcja.Sala.Nazwa,
-                    Forma = x.Lekcja.Forma,
-                });
+            var zjazd = _baza.Daj<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy(nrGrupy, data));
+            if (zjazd.Count() == 0)
+                return new LekcjaWidokDTO[0];
+            var zjazdNr = zjazd.First().Nr;
+            var wynik = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytaniePlanDnia(nrGrupy, zjazdNr, (int)data.DayOfWeek));
 
-            return query.ToArray();
+            return wynik.ToArray();
         }
 
         public void Dodaj(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
@@ -53,9 +47,9 @@ namespace Plan.Core.Services
 
         public void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu, int dzienTygodnia, bool czyOdpracowanie)
         {
-            if (_baza.Daj<Lekcja>().Przegladaj(x => x.IdLekcji == lekcjaId, "").Count() == 0)
+            if (_baza.Daj<Lekcja>().Znajdz(lekcjaId) == null)
                 throw new Exception($"Lekcja o id {lekcjaId} nie istnieje.");
-            if (_baza.Daj<Grupa>().Przegladaj(x => x.NrGrupy == nrGrupy, "").Count() == 0)
+            if (_baza.Daj<Grupa>().Znajdz(nrGrupy) == null)
                 throw new Exception($"Grupa o numerze {nrGrupy} nie istnieje.");
             if (nrZjazdu < 0)
                 throw new Exception("Podano niepoprawny numer zjazdu.");
@@ -63,7 +57,8 @@ namespace Plan.Core.Services
                 throw new Exception("Podano niepoprawny dzień tygodnia.");
             if (czyOdpracowanie)
             {
-                if (_baza.Daj<GrupaZjazd>().Przegladaj(x => x.NrGrupy == nrGrupy && x.NrZjazdu == nrZjazdu && x.CzyOdpracowanie, "").Count() == 0)
+                var zjazdy = _baza.Daj<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
+                if (!zjazdy.Any(x => x.Nr == nrZjazdu && x.CzyOdpracowanie))
                     throw new Exception($"Brak ustalonej daty odpracowania zjazdu nr {nrZjazdu} dla grupy {nrGrupy}. Dodaj zjazd z datą odpracowania.");
             }
             _baza.Daj<LekcjaGrupa>().Dodaj(new LekcjaGrupa
@@ -81,7 +76,7 @@ namespace Plan.Core.Services
         public void Usun(int lekcjaId)
         {
             // TODO: sprawdzić czy usuwając lekcję nie usunie się z automaty grupa, sala itd..
-            if (_baza.Daj<Lekcja>().Daj(lekcjaId) == null)
+            if (_baza.Daj<Lekcja>().Znajdz(lekcjaId) == null)
                 throw new Exception($"Nie istnieje lekcja o id {lekcjaId}");
             _baza.Daj<Lekcja>().Usun(lekcjaId);
             _baza.Zapisz();
@@ -89,7 +84,8 @@ namespace Plan.Core.Services
 
         public void Zmien(int lekcjaId, int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
         {
-            var lekcja = _baza.Daj<Lekcja>().Daj(lekcjaId);
+            IRepozytorium<Lekcja> repo = _baza.Daj<Lekcja>();
+            var lekcja = repo.Znajdz(lekcjaId);
             if (lekcja == null)
                 throw new Exception($"Nie istnieje lekcja o id {lekcjaId}");
             WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
@@ -99,17 +95,17 @@ namespace Plan.Core.Services
             lekcja.GodzinaOd = godzinaOd;
             lekcja.GodzinaDo = godzinaDo;
             lekcja.Forma = forma;
-            _baza.Daj<Lekcja>().Edytuj(lekcja);
+            repo.Edytuj(lekcja);
             _baza.Zapisz();
         }
 
         private void WalidujDane(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo)
         {
-            if (_baza.Daj<Przedmiot>().Daj(przedmiotId) == null)
+            if (_baza.Daj<Przedmiot>().Znajdz(przedmiotId) == null)
                 throw new Exception($"Przedmiot o id {przedmiotId} nie istnieje.");
-            if (_baza.Daj<Wykladowca>().Daj(wykladowcaId) == null)
+            if (_baza.Daj<Wykladowca>().Znajdz(wykladowcaId) == null)
                 throw new Exception($"Wykładowca o id {wykladowcaId} nie istnieje.");
-            if (_baza.Daj<Sala>().Daj(salaId) == null)
+            if (_baza.Daj<Sala>().Znajdz(salaId) == null)
                 throw new Exception($"Sala o id {salaId} nie istnieje.");
             try
             {
