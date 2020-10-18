@@ -1,5 +1,6 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
+using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
@@ -36,7 +37,7 @@ namespace Plan.Core.Services
         public void Usun(int id)
         {
             if (_baza.Daj<Sala>().Znajdz(id) == null)
-                throw new Exception($"Sala o id {id} nie istnieje");
+                throw new BladBiznesowy($"Sala o id {id} nie istnieje");
             _baza.Daj<Sala>().Usun(id);
             _baza.Zapisz();
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Plan.Core.Entities;
+using Plan.Core.Exceptions;
 using Plan.Core.IServices;
 using System;
 
@@ -20,7 +21,7 @@ namespace Plan.Core.Services
         {
             var res = _userManager.FindByNameAsync(email).Result;
             if (res != null)
-                throw new Exception("Użytkownik o podanym adresie e-mail jest już zarejestrowany.");
+                throw new BladBiznesowy("Użytkownik o podanym adresie e-mail jest już zarejestrowany.");
             var user = new Uzytkownik(email)
             {
                 Imie = imie,
@@ -33,7 +34,7 @@ namespace Plan.Core.Services
         {
             var res = _signInManager.PasswordSignInAsync(email, haslo, false, false).Result;
             if (!res.Succeeded)
-                throw new Exception("Podano nieprawidłowy e-mail lub hasło.");
+                throw new BladBiznesowy("Podano nieprawidłowy e-mail lub hasło.");
         }
     }
 }

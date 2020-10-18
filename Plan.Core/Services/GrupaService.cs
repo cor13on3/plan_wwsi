@@ -1,5 +1,6 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
+using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
@@ -21,9 +22,9 @@ namespace Plan.Core.Services
         {
             var repo = _db.Daj<Grupa>();
             if (string.IsNullOrEmpty(numer) || semestr < 0)
-                throw new Exception("Uzupełnij dane");
+                throw new BladBiznesowy("Uzupełnij dane");
             if (repo.Znajdz(numer) != null)
-                throw new Exception($"Istnieje już grupa o numerze {numer}");
+                throw new BladBiznesowy($"Istnieje już grupa o numerze {numer}");
             repo.Dodaj(new Grupa
             {
                 NrGrupy = numer,
@@ -45,7 +46,7 @@ namespace Plan.Core.Services
         {
             var repo = _db.Daj<Grupa>();
             if (repo.Znajdz(numer) == null)
-                throw new Exception($"Grupa o numerze {numer} nie istnieje.");
+                throw new BladBiznesowy($"Grupa o numerze {numer} nie istnieje.");
             repo.Usun(numer);
             _db.Zapisz();
         }

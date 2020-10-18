@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
@@ -24,18 +23,18 @@ namespace Plan.API.Controllers
             _lekcjaService.Dodaj(req.IdPrzedmiotu, req.IdWykladowcy, req.IdSali, req.GodzinaOd, req.GodzinaDo, req.Forma);
         }
 
-        [HttpPost("grupy/przypisz")]
+        [HttpPost("przypisz-grupy")]
         public void PrzypiszGrupy([FromBody] KomendaPrzypiszGrupyLekcji req)
         {
             foreach (string nr in req.NrGrup)
                 _lekcjaService.PrzypiszGrupe(req.IdLekcji, nr, req.NrZjazdu, req.DzienTygodnia, req.CzyOdpracowanie);
         }
 
-        [HttpGet("plan/daj")]
+        [HttpGet("daj-plan")]
         public LekcjaWidokDTO[] DajPlan(DateTime data, string grupa)
         {
-            var result = _lekcjaService.DajPlan(data, grupa);
-            return result.ToArray();
+            var wynik = _lekcjaService.DajPlan(data, grupa);
+            return wynik;
         }
     }
 }

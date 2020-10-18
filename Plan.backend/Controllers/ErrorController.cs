@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Plan.Core.Exceptions;
 
 namespace Plan.API.Controllers
 {
@@ -10,7 +11,10 @@ namespace Plan.API.Controllers
         public IActionResult Error()
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            return Problem(detail: context.Error.Message, statusCode: 412, title: "Błąd!");
+            var exception = context.Error;
+            var kod = 500;
+            if (exception is BladBiznesowy) kod = 412;
+            return Problem(detail: context.Error.Message, statusCode: kod, title: "Błąd!");
         }
     }
 }

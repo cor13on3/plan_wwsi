@@ -9,10 +9,10 @@ namespace Plan.Core.IServices
 {
     public interface IKalendariumService
     {
-        IEnumerable<PropozycjaZjazduWidokDTO> PrzygotujZjazdy(DateTime poczatekSemestru, DateTime koniecSemestru, TrybStudiow trybStudiow);
+        PropozycjaZjazduWidokDTO[] PrzygotujZjazdy(DateTime poczatekSemestru, DateTime koniecSemestru, TrybStudiow trybStudiow);
         void DodajZjazdy(ZjazdDTO[] zjazdy);
         void PrzyporzadkujZjazdyGrupie(string nrGrupy, ZjazdKolejnyDTO[] zjazdy);
 
-        IEnumerable<ZjazdWidokDTO> PrzegladajZjazdy(string nrGrupy);
+        ZjazdWidokDTO[] PrzegladajZjazdy(string nrGrupy);
     }
 }

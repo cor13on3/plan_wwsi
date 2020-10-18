@@ -13,6 +13,6 @@ namespace Plan.Core.IServices
         void Zmien(int lekcjaId, int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma);
         void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu, int dzienTygodnia, bool czyOdpracowanie);
         void Usun(int lekcjaId);
-        IEnumerable<LekcjaWidokDTO> DajPlan(DateTime data, string nrGrupy);
+        LekcjaWidokDTO[] DajPlan(DateTime data, string nrGrupy);
     }
 }

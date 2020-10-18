@@ -2,7 +2,7 @@
 using Plan.Core.DTO;
 using Plan.Core.IServices;
 
-namespace Plan.Controllers
+namespace Plan.API.Controllers
 {
     [Route("api/uzytkownik")]
     [ApiController]
@@ -22,7 +22,7 @@ namespace Plan.Controllers
         }
 
         [HttpPost("zaloguj")]
-        public void Zaloguj([FromBody] UzytkownikDTO dto)
+        public void Zaloguj([FromBody] LogowanieDTO dto)
         {
             _uzytkownikService.Zaloguj(dto.Email, dto.Haslo);
         }

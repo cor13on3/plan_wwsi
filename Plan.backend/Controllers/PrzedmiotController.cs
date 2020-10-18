@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
 
@@ -17,7 +16,7 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<PrzedmiotWidokDTO> Przegladaj()
+        public PrzedmiotWidokDTO[] Przegladaj()
         {
             return _przedmiotService.Przegladaj();
         }

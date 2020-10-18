@@ -1,5 +1,6 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
+using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
@@ -21,7 +22,7 @@ namespace Plan.Core.Services
         {
             var wynik = _baza.Daj<Wykladowca>().Wybierz(new ZapytanieWykladowca(id));
             if (wynik.Count() == 0)
-                throw new Exception($"Wykładowca o id {id} nie istnieje.");
+                throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
             return wynik.First();
         }
 
@@ -34,7 +35,7 @@ namespace Plan.Core.Services
         public void DodajWykladowce(string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
         {
             if (string.IsNullOrEmpty(tytul) || string.IsNullOrEmpty(imie) || string.IsNullOrEmpty(nazwisko) || string.IsNullOrEmpty(email))
-                throw new Exception("Uzupełnij komplet informacji");
+                throw new BladBiznesowy("Uzupełnij komplet informacji");
             var wykladowca = new Wykladowca
             {
                 Imie = imie,
@@ -47,7 +48,7 @@ namespace Plan.Core.Services
             {
                 var specjalnosc = _baza.Daj<Specjalnosc>().Znajdz(id);
                 if (specjalnosc == null)
-                    throw new Exception($"Specjalnosc o id {idSpecjalnosci} nie istnieje.");
+                    throw new BladBiznesowy($"Specjalnosc o id {idSpecjalnosci} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
                 {
                     Wykladowca = wykladowca,
@@ -62,7 +63,7 @@ namespace Plan.Core.Services
         {
             var wykladowca = _baza.Daj<Wykladowca>().Znajdz(id);
             if (wykladowca == null)
-                throw new Exception($"Wykładowca o id {id} nie istnieje.");
+                throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
             _baza.Daj<Wykladowca>().Usun(wykladowca);
             _baza.Zapisz();
         }
@@ -71,7 +72,7 @@ namespace Plan.Core.Services
         {
             var res = _baza.Daj<Wykladowca>().Znajdz(id);
             if (res == null)
-                throw new Exception($"Wykładowca o id {id} nie istnieje.");
+                throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
             res.Tytul = tytul;
             res.Imie = imie;
             res.Nazwisko = nazwisko;
@@ -83,7 +84,7 @@ namespace Plan.Core.Services
             {
                 var specjalnosc = _baza.Daj<Specjalnosc>().Znajdz(specId);
                 if (specjalnosc == null)
-                    throw new Exception($"Specjalnosc o id {specId} nie istnieje.");
+                    throw new BladBiznesowy($"Specjalnosc o id {specId} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
                 {
                     Wykladowca = res,

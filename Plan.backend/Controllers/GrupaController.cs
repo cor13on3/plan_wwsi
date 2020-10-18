@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
@@ -18,10 +17,10 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<GrupaWidokDTO> Get()
+        public GrupaWidokDTO[] Get()
         {
-            var result = _grupaService.Przegladaj();
-            return result;
+            var wynik = _grupaService.Przegladaj();
+            return wynik;
         }
 
         [HttpPost]

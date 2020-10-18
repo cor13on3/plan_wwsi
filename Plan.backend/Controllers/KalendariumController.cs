@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
@@ -19,26 +19,26 @@ namespace Plan.API.Controllers
             _service = service;
         }
 
-        [HttpGet("zjazdy/przygotuj")]
-        public IEnumerable<PropozycjaZjazduWidokDTO> PrzygotujZjazdy(DateTime dataOd, DateTime dataDo, TrybStudiow tryb)
+        [HttpGet("daj-proponowane-zjazdy")]
+        public PropozycjaZjazduWidokDTO[] DajProponowaneZjazdy(DateTime dataOd, DateTime dataDo, TrybStudiow tryb)
         {
             return _service.PrzygotujZjazdy(dataOd, dataDo, tryb);
         }
 
-        [HttpPost("zjazdy/dodaj")]
+        [HttpPost("dodaj-zjazd")]
         public void DodajZjazdy([FromBody] ZjazdDTO[] zjazdy)
         {
             _service.DodajZjazdy(zjazdy);
         }
 
-        [HttpPost("zjazdy/przyporzadkuj")]
-        public void PrzyporzadkujZjazdy([FromBody] KomendaPrzypiszZjazdyGrupie req)
+        [HttpPost("przyporzadkuj-zjazdy-grupie")]
+        public void PrzyporzadkujZjazdyGrupie([FromBody] KomendaPrzypiszZjazdyGrupie req)
         {
             _service.PrzyporzadkujZjazdyGrupie(req.NrGrupy, req.Zjazdy);
         }
 
         [HttpGet("{nrGrupy}")]
-        public IEnumerable<ZjazdWidokDTO> PrzegladajZjazdy(string nrGrupy)
+        public ZjazdWidokDTO[] DajZjazdy(string nrGrupy)
         {
             return _service.PrzegladajZjazdy(nrGrupy);
         }

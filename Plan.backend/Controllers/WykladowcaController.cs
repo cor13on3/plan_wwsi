@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
@@ -18,10 +17,9 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WykladowcaWidokDTO> Get()
+        public WykladowcaWidokDTO[] Get()
         {
-            var res = _wykladowcaService.DajWykladowcow();
-            return res;
+            return _wykladowcaService.DajWykladowcow();
         }
 
         [HttpGet("{id}")]

@@ -1,5 +1,6 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
+using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
@@ -25,7 +26,7 @@ namespace Plan.Core.Services
             {
                 var zjazdOTerminie = repo.Wybierz(new ZapytanieZjadOTerminie(z.DataOd, z.DataDo));
                 if (zjazdOTerminie.Count() > 0)
-                    throw new Exception($"Istnieje już zjazd w terminie {z.DataOd:dd-MM-yyyy} - {z.DataDo:dd-MM-yyyy}");
+                    throw new BladBiznesowy($"Istnieje już zjazd w terminie {z.DataOd:dd-MM-yyyy} - {z.DataDo:dd-MM-yyyy}");
                 var zjazd = new Zjazd
                 {
                     DataOd = z.DataOd,
@@ -38,14 +39,14 @@ namespace Plan.Core.Services
             _baza.Zapisz();
         }
 
-        public IEnumerable<ZjazdWidokDTO> PrzegladajZjazdy(string nrGrupy)
+        public ZjazdWidokDTO[] PrzegladajZjazdy(string nrGrupy)
         {
             var repo = _baza.Daj<GrupaZjazd>();
             var wynik = repo.Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
             return wynik.ToArray();
         }
 
-        public IEnumerable<PropozycjaZjazduWidokDTO> PrzygotujZjazdy(DateTime poczatekSemestru, DateTime koniecSemestru, TrybStudiow trybStudiow)
+        public PropozycjaZjazduWidokDTO[] PrzygotujZjazdy(DateTime poczatekSemestru, DateTime koniecSemestru, TrybStudiow trybStudiow)
         {
             var result = new List<PropozycjaZjazduWidokDTO>();
             var offset = trybStudiow == TrybStudiow.Stacjonarne ? 7 : 14;
@@ -58,20 +59,20 @@ namespace Plan.Core.Services
                     DataDo = d.AddDays(dlugosc - 1)
                 });
             }
-            return result;
+            return result.ToArray();
         }
 
         public void PrzyporzadkujZjazdyGrupie(string nrGrupy, ZjazdKolejnyDTO[] zjazdy)
         {
             var grupa = _baza.Daj<Grupa>().Wybierz(new ZapytanieGrupa(nrGrupy));
             if (grupa.Count() == 0)
-                throw new Exception($"Grupa o numerze {nrGrupy} nie istnieje");
+                throw new BladBiznesowy($"Grupa o numerze {nrGrupy} nie istnieje");
             var repo = _baza.Daj<GrupaZjazd>();
             var zjazdyGrupy = repo.Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
             foreach (var z in zjazdy)
             {
                 if (zjazdyGrupy.Any(x => x.IdZjazdu == z.IdZjazdu))
-                    throw new Exception($"Grupa {nrGrupy} ma już przypisany zjazd o id: {z.IdZjazdu}");
+                    throw new BladBiznesowy($"Grupa {nrGrupy} ma już przypisany zjazd o id: {z.IdZjazdu}");
                 repo.Dodaj(new GrupaZjazd
                 {
                     NrZjazdu = z.NrZjazdu,
