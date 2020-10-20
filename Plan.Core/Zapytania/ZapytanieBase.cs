@@ -11,10 +11,19 @@ namespace Plan.Core.Zapytania
         {
             Kryteria = kryteria;
         }
-        public Expression<Func<T, bool>> Kryteria { get; }
+        public ZapytanieBase()
+        {
+        }
+
+        public Expression<Func<T, bool>> Kryteria { get; private set; }
         public List<Expression<Func<T, object>>> Skladowe { get; } = new List<Expression<Func<T, object>>>();
         public List<string> SkladoweString { get; } = new List<string>();
         public Expression<Func<T, TMAP>> Mapowanie { get; private set; }
+
+        protected virtual void UstawKryteria(Expression<Func<T, bool>> kryteria)
+        {
+            Kryteria = kryteria;
+        }
 
         protected virtual void DodajSkladowa(Expression<Func<T, object>> expr)
         {

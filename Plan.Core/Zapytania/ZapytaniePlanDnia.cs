@@ -1,14 +1,17 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
-using System;
 
 namespace Plan.Core.Zapytania
 {
     public class ZapytaniePlanDnia : ZapytanieBase<LekcjaGrupa, LekcjaWidokDTO>
     {
-        public ZapytaniePlanDnia(string nrGrupy, int nrZjazdu, int dzienTyg) :
-            base(x => x.NrGrupy == nrGrupy && x.NrZjazdu == nrZjazdu && x.DzienTygodnia == (int)dzienTyg)
+        public string NrGrupy { get; set; }
+        public int NrZjazdu { get; set; }
+        public int DzienTygodnia { get; set; }
+
+        public ZapytaniePlanDnia()
         {
+            UstawKryteria(x => x.NrGrupy == NrGrupy && x.NrZjazdu == NrZjazdu && x.DzienTygodnia == (int)DzienTygodnia);
             DodajSkladowa("Lekcja.Wykladowca");
             DodajSkladowa("Lekcja.Przedmiot");
             DodajSkladowa("Lekcja.Sala");
@@ -20,6 +23,7 @@ namespace Plan.Core.Zapytania
                 Nazwa = x.Lekcja.Przedmiot.Nazwa,
                 Sala = x.Lekcja.Sala.Nazwa,
                 Forma = x.Lekcja.Forma,
+                CzyOdpracowanie = x.CzyOdpracowanie
             });
         }
     }

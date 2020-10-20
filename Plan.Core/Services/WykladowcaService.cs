@@ -4,7 +4,6 @@ using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
-using System;
 using System.Linq;
 
 namespace Plan.Core.Services
@@ -34,7 +33,7 @@ namespace Plan.Core.Services
 
         public void DodajWykladowce(string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
         {
-            if (string.IsNullOrEmpty(tytul) || string.IsNullOrEmpty(imie) || string.IsNullOrEmpty(nazwisko) || string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(imie) || string.IsNullOrEmpty(nazwisko) || string.IsNullOrEmpty(email))
                 throw new BladBiznesowy("Uzupełnij komplet informacji");
             var wykladowca = new Wykladowca
             {
@@ -48,7 +47,7 @@ namespace Plan.Core.Services
             {
                 var specjalnosc = _baza.Daj<Specjalnosc>().Znajdz(id);
                 if (specjalnosc == null)
-                    throw new BladBiznesowy($"Specjalnosc o id {idSpecjalnosci} nie istnieje.");
+                    throw new BladBiznesowy($"Specjalność o id {id} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
                 {
                     Wykladowca = wykladowca,
@@ -61,36 +60,39 @@ namespace Plan.Core.Services
 
         public void UsunWykladowce(int id)
         {
-            var wykladowca = _baza.Daj<Wykladowca>().Znajdz(id);
+            var repo = _baza.Daj<Wykladowca>();
+            var wykladowca = repo.Znajdz(id);
             if (wykladowca == null)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
-            _baza.Daj<Wykladowca>().Usun(wykladowca);
+            repo.Usun(wykladowca);
             _baza.Zapisz();
         }
 
         public void ZmienWykladowce(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
         {
-            var res = _baza.Daj<Wykladowca>().Znajdz(id);
-            if (res == null)
+            var repoWykladowca = _baza.Daj<Wykladowca>();
+            var wykladowca = repoWykladowca.Znajdz(id);
+            if (wykladowca == null)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
-            res.Tytul = tytul;
-            res.Imie = imie;
-            res.Nazwisko = nazwisko;
-            res.Email = email;
-            var repo = _baza.Daj<WykladowcaSpecjalizacja>();
-            var wyklSpec = repo.Wybierz(new ZapytanieWykladowcaSpecjalizacja());
-            repo.UsunWiele(wyklSpec);
+            wykladowca.Tytul = tytul;
+            wykladowca.Imie = imie;
+            wykladowca.Nazwisko = nazwisko;
+            wykladowca.Email = email;
+            repoWykladowca.Edytuj(wykladowca);
+            var repoWyklSpec = _baza.Daj<WykladowcaSpecjalizacja>();
+            var wyklSpec = repoWyklSpec.Wybierz(new ZapytanieWykladowcaSpecjalizacja());
+            repoWyklSpec.UsunWiele(wyklSpec);
             foreach (var specId in idSpecjalnosci)
             {
                 var specjalnosc = _baza.Daj<Specjalnosc>().Znajdz(specId);
                 if (specjalnosc == null)
-                    throw new BladBiznesowy($"Specjalnosc o id {specId} nie istnieje.");
+                    throw new BladBiznesowy($"Specjalność o id {specId} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
                 {
-                    Wykladowca = res,
+                    Wykladowca = wykladowca,
                     Specjalnosc = specjalnosc
                 };
-                repo.Dodaj(ws);
+                repoWyklSpec.Dodaj(ws);
             }
             _baza.Zapisz();
         }

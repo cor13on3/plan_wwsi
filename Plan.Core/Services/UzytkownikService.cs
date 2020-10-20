@@ -2,7 +2,6 @@
 using Plan.Core.Entities;
 using Plan.Core.Exceptions;
 using Plan.Core.IServices;
-using System;
 
 namespace Plan.Core.Services
 {

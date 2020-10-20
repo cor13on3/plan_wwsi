@@ -1,5 +1,6 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
+using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
@@ -18,8 +19,10 @@ namespace Plan.Core.Services
 
         public void Dodaj(string nazwa)
         {
-            var przedmiot = _baza.Daj<Przedmiot>();
-            przedmiot.Dodaj(new Przedmiot
+            if (string.IsNullOrEmpty(nazwa))
+                throw new BladBiznesowy("Podaj nazwę");
+            var repo = _baza.Daj<Przedmiot>();
+            repo.Dodaj(new Przedmiot
             {
                 Nazwa = nazwa,
             });
@@ -28,15 +31,18 @@ namespace Plan.Core.Services
 
         public PrzedmiotWidokDTO[] Przegladaj()
         {
-            var przedmiot = _baza.Daj<Przedmiot>();
-            var wynik = przedmiot.Wybierz(new ZapytaniePrzedmioty());
+            var repo = _baza.Daj<Przedmiot>();
+            var wynik = repo.Wybierz(new ZapytaniePrzedmioty());
             return wynik.ToArray();
         }
 
         public void Usun(int id)
         {
-            var przedmiot = _baza.Daj<Przedmiot>();
-            przedmiot.Usun(id);
+            var repo = _baza.Daj<Przedmiot>();
+            var przedmiot = repo.Znajdz(id);
+            if (przedmiot == null)
+                throw new BladBiznesowy($"Przedmiot o id {id} nie istnieje");
+            repo.Usun(przedmiot);
             _baza.Zapisz();
         }
     }

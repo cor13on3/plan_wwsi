@@ -54,6 +54,19 @@ namespace Plan.Infrastructure.DB
                 Usun(entity);
         }
 
+        public bool Istnieje<TDTO>(ISpecification<T, TDTO> spec)
+        {
+            var queryableResultWithIncludes = spec.Skladowe
+                                                    .Aggregate(dbSet.AsQueryable(),
+            (current, include) => current.Include(include));
+
+            var secondaryResult = spec.SkladoweString
+                .Aggregate(queryableResultWithIncludes,
+                    (current, include) => current.Include(include));
+
+            return secondaryResult.Any(spec.Kryteria);
+        }
+
         public IEnumerable<TDTO> Wybierz<TDTO>(ISpecification<T, TDTO> spec)
         {
             var queryableResultWithIncludes = spec.Skladowe

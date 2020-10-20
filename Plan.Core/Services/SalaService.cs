@@ -4,7 +4,6 @@ using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
-using System;
 using System.Linq;
 
 namespace Plan.Core.Services
@@ -20,6 +19,8 @@ namespace Plan.Core.Services
 
         public void Dodaj(string nazwa, RodzajSali rodzajSali)
         {
+            if (string.IsNullOrEmpty(nazwa))
+                throw new BladBiznesowy("Podaj nazwę");
             _baza.Daj<Sala>().Dodaj(new Sala
             {
                 Nazwa = nazwa,
@@ -36,9 +37,10 @@ namespace Plan.Core.Services
 
         public void Usun(int id)
         {
-            if (_baza.Daj<Sala>().Znajdz(id) == null)
+            IRepozytorium<Sala> repo = _baza.Daj<Sala>();
+            if (repo.Znajdz(id) == null)
                 throw new BladBiznesowy($"Sala o id {id} nie istnieje");
-            _baza.Daj<Sala>().Usun(id);
+            repo.Usun(id);
             _baza.Zapisz();
         }
     }

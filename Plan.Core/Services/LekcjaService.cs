@@ -25,7 +25,12 @@ namespace Plan.Core.Services
             if (zjazd.Count() == 0)
                 return new LekcjaWidokDTO[0];
             var zjazdNr = zjazd.First().Nr;
-            var wynik = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytaniePlanDnia(nrGrupy, zjazdNr, (int)data.DayOfWeek));
+            var wynik = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytaniePlanDnia()
+            {
+                NrGrupy = nrGrupy,
+                NrZjazdu = zjazdNr,
+                DzienTygodnia = (int)data.DayOfWeek
+            });
 
             return wynik.ToArray();
         }
@@ -84,11 +89,11 @@ namespace Plan.Core.Services
 
         public void Zmien(int lekcjaId, int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
         {
+            WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
             IRepozytorium<Lekcja> repo = _baza.Daj<Lekcja>();
             var lekcja = repo.Znajdz(lekcjaId);
             if (lekcja == null)
                 throw new BladBiznesowy($"Nie istnieje lekcja o id {lekcjaId}");
-            WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
             lekcja.IdPrzedmiotu = przedmiotId;
             lekcja.IdWykladowcy = wykladowcaId;
             lekcja.IdSali = salaId;

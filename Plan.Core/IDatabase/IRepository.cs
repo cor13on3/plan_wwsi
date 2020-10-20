@@ -11,5 +11,6 @@ namespace Plan.Core.IDatabase
         void Usun(T entity);
         void UsunWiele(IEnumerable<T> entities);
         IEnumerable<TDTO> Wybierz<TDTO>(ISpecification<T, TDTO> spec);
+        bool Istnieje<TDTO>(ISpecification<T, TDTO> spec);
     }
 }

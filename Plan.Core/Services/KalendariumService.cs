@@ -6,6 +6,7 @@ using Plan.Core.IServices;
 using Plan.Core.Zapytania;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Plan.Core.Services
@@ -46,6 +47,7 @@ namespace Plan.Core.Services
             return wynik.ToArray();
         }
 
+        [ExcludeFromCodeCoverage]
         public PropozycjaZjazduWidokDTO[] PrzygotujZjazdy(DateTime poczatekSemestru, DateTime koniecSemestru, TrybStudiow trybStudiow)
         {
             var result = new List<PropozycjaZjazduWidokDTO>();
@@ -64,8 +66,8 @@ namespace Plan.Core.Services
 
         public void PrzyporzadkujZjazdyGrupie(string nrGrupy, ZjazdKolejnyDTO[] zjazdy)
         {
-            var grupa = _baza.Daj<Grupa>().Wybierz(new ZapytanieGrupa(nrGrupy));
-            if (grupa.Count() == 0)
+            var grupa = _baza.Daj<Grupa>().Znajdz(nrGrupy);
+            if (grupa == null)
                 throw new BladBiznesowy($"Grupa o numerze {nrGrupy} nie istnieje");
             var repo = _baza.Daj<GrupaZjazd>();
             var zjazdyGrupy = repo.Wybierz(new ZapytanieZjadyGrupy(nrGrupy));

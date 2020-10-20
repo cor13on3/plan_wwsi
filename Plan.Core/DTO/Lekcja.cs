@@ -13,5 +13,6 @@ namespace Plan.Core.DTO
         public string Od { get; set; }
         public string Do { get; set; }
         public string Sala { get; set; }
+        public bool CzyOdpracowanie { get; set; }
     }
 }

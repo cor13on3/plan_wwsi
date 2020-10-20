@@ -4,7 +4,6 @@ using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
-using System;
 using System.Linq;
 
 namespace Plan.Core.Services
@@ -20,9 +19,9 @@ namespace Plan.Core.Services
 
         public void Dodaj(string numer, int semestr, TrybStudiow trybStudiow, StopienStudiow stopienStudiow)
         {
-            var repo = _db.Daj<Grupa>();
             if (string.IsNullOrEmpty(numer) || semestr < 0)
                 throw new BladBiznesowy("Uzupełnij dane");
+            var repo = _db.Daj<Grupa>();
             if (repo.Znajdz(numer) != null)
                 throw new BladBiznesowy($"Istnieje już grupa o numerze {numer}");
             repo.Dodaj(new Grupa
