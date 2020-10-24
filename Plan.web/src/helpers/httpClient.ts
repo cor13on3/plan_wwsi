@@ -28,6 +28,30 @@ async function POST(path: string, body: any) {
   return handleResponse(response);
 }
 
+async function GET(path: string) {
+  const response = await fetch(url + path, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  return handleResponse(response);
+}
+
+async function DELETE(path: string) {
+  const response = await fetch(url + path, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  return handleResponse(response);
+}
+
 export const httpClient = {
   POST,
+  GET,
+  DELETE,
 };

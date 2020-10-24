@@ -1,0 +1,14 @@
+.lista {
+  padding: 16px;
+  width: 1024px;
+}
+
+.grupa {
+  background-color: aqua;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.blad {
+  color: red;
+}

@@ -1,6 +1,6 @@
 .window {
   height: 100vh;
-  background-color: #f0f0f0;
+  background-color: #8b8484;
   display: grid;
   grid-template-rows: 64px 1fr;
   color: #0f0f0f;
