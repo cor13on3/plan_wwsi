@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Plan.Core.DTO;
 using Plan.Core.Entities;
 using Plan.Core.Exceptions;
 using Plan.Core.IServices;
@@ -29,11 +30,23 @@ namespace Plan.Core.Services
             _userManager.CreateAsync(user, haslo).Wait();
         }
 
-        public void Zaloguj(string email, string haslo)
+        public DaneUzytkownikaDTO Zaloguj(string email, string haslo)
         {
-            var res = _signInManager.PasswordSignInAsync(email, haslo, false, false).Result;
-            if (!res.Succeeded)
+            var wynik = _signInManager.PasswordSignInAsync(email, haslo, false, false).Result;
+            if (!wynik.Succeeded)
                 throw new BladBiznesowy("Podano nieprawidłowy e-mail lub hasło.");
+            var uzytkownik = _userManager.FindByNameAsync(email).Result;
+            return new DaneUzytkownikaDTO
+            {
+                Email = uzytkownik.Email,
+                Imie = uzytkownik.Imie,
+                Nazwisko = uzytkownik.Nazwisko
+            };
+        }
+
+        public void Wyloguj()
+        {
+            _signInManager.SignOutAsync();
         }
     }
 }

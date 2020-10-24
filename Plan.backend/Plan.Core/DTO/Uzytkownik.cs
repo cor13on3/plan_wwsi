@@ -11,4 +11,11 @@ namespace Plan.Core.DTO
         public string Email { get; set; }
         public string Haslo { get; set; }
     }
+
+    public class DaneUzytkownikaDTO
+    {
+        public string Email { get; set; }
+        public string Imie { get; set; }
+        public string Nazwisko { get; set; }
+    }
 }

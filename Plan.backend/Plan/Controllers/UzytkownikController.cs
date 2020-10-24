@@ -22,9 +22,15 @@ namespace Plan.API.Controllers
         }
 
         [HttpPost("zaloguj")]
-        public void Zaloguj([FromBody] LogowanieDTO dto)
+        public DaneUzytkownikaDTO Zaloguj([FromBody] LogowanieDTO dto)
         {
-            _uzytkownikService.Zaloguj(dto.Email, dto.Haslo);
+            return _uzytkownikService.Zaloguj(dto.Email, dto.Haslo);
+        }
+
+        [HttpPost("wyloguj")]
+        public void Wyloguj()
+        {
+            _uzytkownikService.Wyloguj();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
 
@@ -16,6 +17,7 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public PrzedmiotWidokDTO[] Przegladaj()
         {
             return _przedmiotService.Przegladaj();

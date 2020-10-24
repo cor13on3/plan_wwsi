@@ -16,6 +16,7 @@ namespace Plan.Core.Entities
 
         public Uzytkownik(string email) : base(email)
         {
+            Email = email;
         }
     }
 }
