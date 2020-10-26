@@ -17,19 +17,19 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public PrzedmiotWidokDTO[] Przegladaj()
         {
             return _przedmiotService.Przegladaj();
         }
 
-        // TODO: Zabezpieczyć endpointy administracyjne atrybutem [Authorize].
+        [Authorize]
         [HttpPost]
         public void Dodaj([FromBody] string nazwa)
         {
             _przedmiotService.Dodaj(nazwa);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public void Usun(int id)
         {

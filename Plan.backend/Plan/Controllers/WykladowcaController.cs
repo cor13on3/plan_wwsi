@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
@@ -28,18 +29,21 @@ namespace Plan.API.Controllers
             return _wykladowcaService.Daj(id);
         }
 
+        [Authorize]
         [HttpPost]
         public void Post([FromBody] KomendaDodajWykladowce dto)
         {
             _wykladowcaService.DodajWykladowce(dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalnosci);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] KomendaEdytujWykladowce dto)
         {
             _wykladowcaService.ZmienWykladowce(id, dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalnosci);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

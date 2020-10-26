@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
@@ -17,12 +18,14 @@ namespace Plan.API.Controllers
             _lekcjaService = lekcjaService;
         }
 
+        [Authorize]
         [HttpPost("dodaj")]
         public void DodajLekcje([FromBody] KomendaDodajLekcje req)
         {
             _lekcjaService.Dodaj(req.IdPrzedmiotu, req.IdWykladowcy, req.IdSali, req.GodzinaOd, req.GodzinaDo, req.Forma);
         }
 
+        [Authorize]
         [HttpPost("przypisz-grupy")]
         public void PrzypiszGrupy([FromBody] KomendaPrzypiszGrupyLekcji req)
         {

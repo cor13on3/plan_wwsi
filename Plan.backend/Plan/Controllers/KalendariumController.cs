@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
@@ -25,12 +26,14 @@ namespace Plan.API.Controllers
             return _service.PrzygotujZjazdy(dataOd, dataDo, tryb);
         }
 
+        [Authorize]
         [HttpPost("dodaj-zjazd")]
         public void DodajZjazdy([FromBody] ZjazdDTO[] zjazdy)
         {
             _service.DodajZjazdy(zjazdy);
         }
 
+        [Authorize]
         [HttpPost("przyporzadkuj-zjazdy-grupie")]
         public void PrzyporzadkujZjazdyGrupie([FromBody] KomendaPrzypiszZjazdyGrupie req)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
@@ -23,12 +24,14 @@ namespace Plan.API.Controllers
             return _salaService.Przegladaj();
         }
 
+        [Authorize]
         [HttpPost]
         public void Dodaj([FromBody] KomendaDodajSale req)
         {
             _salaService.Dodaj(req.Nazwa, req.Rodzaj);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public void Usun(int id)
         {
