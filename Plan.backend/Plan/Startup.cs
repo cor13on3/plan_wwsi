@@ -29,9 +29,11 @@ namespace Plan.API
         {
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.AllowAnyOrigin()
+                // TODO: Obeznaæ te CORS jebane
+                builder.WithOrigins("http://localhost:3000")
                        .AllowAnyMethod()
-                       .AllowAnyHeader();
+                       .AllowAnyHeader()
+                       .AllowCredentials();
             }));
             services.AddControllers().AddJsonOptions(o =>
             {

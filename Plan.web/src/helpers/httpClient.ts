@@ -24,6 +24,7 @@ async function POST(path: string, body: any) {
       "Content-Type": "application/json",
     },
     body: bodyValue,
+    credentials: "include",
   });
   return handleResponse(response);
 }
@@ -35,6 +36,7 @@ async function GET(path: string) {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
+    credentials: "include",
   });
   return handleResponse(response);
 }
@@ -46,6 +48,7 @@ async function DELETE(path: string) {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
+    credentials: "include",
   });
   return handleResponse(response);
 }
