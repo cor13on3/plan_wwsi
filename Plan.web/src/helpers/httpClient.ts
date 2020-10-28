@@ -29,6 +29,20 @@ async function POST(path: string, body: any) {
   return handleResponse(response);
 }
 
+async function PUT(path: string, body: any) {
+  const bodyValue = body != null ? JSON.stringify(body) : null;
+  const response = await fetch(url + path, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: bodyValue,
+    credentials: "include",
+  });
+  return handleResponse(response);
+}
+
 async function GET(path: string) {
   const response = await fetch(url + path, {
     method: "GET",
@@ -55,6 +69,7 @@ async function DELETE(path: string) {
 
 export const httpClient = {
   POST,
+  PUT,
   GET,
   DELETE,
 };

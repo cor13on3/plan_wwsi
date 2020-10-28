@@ -1,0 +1,17 @@
+.lista {
+  padding: 16px;
+  width: 1024px;
+}
+
+.wykladowca {
+  background-color: aqua;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.blad {
+  color: red;
+}

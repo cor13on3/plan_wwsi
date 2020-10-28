@@ -8,7 +8,7 @@ namespace Plan.Core.IServices
 {
     public interface ISpecjalnoscService
     {
-        SpecjalnoscWidokDTO[] Przegladaj();
+        SpecjalnoscDTO[] Przegladaj();
         void Dodaj(string nazwa);
         void Usun(int id);
     }

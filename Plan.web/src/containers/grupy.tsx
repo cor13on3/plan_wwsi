@@ -36,7 +36,7 @@ function Grupy() {
   function odswiezListe() {
     httpClient
       .GET("/api/grupa")
-      .then((res: any) => setLista(res))
+      .then((res: GrupaWidok[]) => setLista(res))
       .catch((err: Blad) => setBlad(err.Tresc));
   }
 

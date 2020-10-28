@@ -17,7 +17,7 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
-        public SpecjalnoscWidokDTO[] Przegladaj()
+        public SpecjalnoscDTO[] Przegladaj()
         {
             return _specjalnoscService.Przegladaj();
         }

@@ -49,6 +49,7 @@ namespace Plan.Core.Zapytania
         public ZapytanieWykladowcaSpecjalizacja() :
             base(x => true)
         {
+            DodajMapowanie(w => w);
         }
     }
 }

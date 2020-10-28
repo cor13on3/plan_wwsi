@@ -48,6 +48,7 @@ namespace Plan.API
             services.AddScoped<IPrzedmiotService, PrzedmiotService>();
             services.AddScoped<ILekcjaService, LekcjaService>();
             services.AddScoped<IUzytkownikService, UzytkownikService>();
+            services.AddScoped<ISpecjalnoscService, SpecjalnoscService>();
             // TODO: Rozwazyæ sprytne DI ¿eby nie by³o tu referencji do infry
             services.AddScoped<IBazaDanych, EfBazaDanych>();
             services.AddScoped(typeof(IRepozytorium<>), typeof(EfRepozytorium<>));

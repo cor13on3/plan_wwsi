@@ -29,7 +29,7 @@ namespace Plan.Core.Services
             _baza.Zapisz();
         }
 
-        public SpecjalnoscWidokDTO[] Przegladaj()
+        public SpecjalnoscDTO[] Przegladaj()
         {
             var repo = _baza.Daj<Specjalnosc>();
             var wynik = repo.Wybierz(new ZapytanieSpecjalnosci());

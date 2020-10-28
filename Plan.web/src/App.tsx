@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Grupy from "./containers/Grupy";
-import Kadra from "./containers/kadra";
+import Kadra from "./containers/Kadra/Kadra";
 import Kalendarium from "./containers/kalendarium";
 import Logowanie from "./containers/Logowanie";
 import Plan from "./containers/plan";
