@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Plan.Core.IDatabase;
 using Plan.Serwis.BazaDanych;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Plan.Infrastructure.DB
 {
@@ -35,6 +37,18 @@ namespace Plan.Infrastructure.DB
 
         public void Usun(T entityToDelete)
         {
+            if (context.Entry(entityToDelete).State == EntityState.Detached)
+            {
+                dbSet.Attach(entityToDelete);
+            }
+            dbSet.Remove(entityToDelete);
+        }
+
+        public void Usun(Expression<Func<T, bool>> match)
+        {
+            var entityToDelete = dbSet.FirstOrDefault(match);
+            if (entityToDelete == null)
+                return;
             if (context.Entry(entityToDelete).State == EntityState.Detached)
             {
                 dbSet.Attach(entityToDelete);

@@ -1,21 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Blad, httpClient } from "../helpers/httpClient";
+import { StopienStudiow } from "../helpers/enums";
+import { TrybStudiow } from "../helpers/enums";
+import { GrupaWidok } from "../helpers/types";
 import "./Grupy.css";
-
-interface GrupaWidok {
-  numer: string;
-}
-
-enum TrybStudiow {
-  Stacjonarne,
-  Niestacjonarne,
-}
-
-enum StopienStudiow {
-  Inzynierskie,
-  Magisterskie,
-  Podyplomowe,
-}
 
 interface Grupa {
   nrGrupy: string;
@@ -109,6 +97,7 @@ function Grupy() {
           <select placeholder="Stopień studiów">
             <option value={StopienStudiow.Inzynierskie}>Inżynierskie</option>
             <option value={StopienStudiow.Magisterskie}>Magisterskie</option>
+            <option value={StopienStudiow.Podyplomowe}>Podyplomowe</option>
           </select>
           <button onClick={zapisz}>ZAPISZ</button>
         </div>

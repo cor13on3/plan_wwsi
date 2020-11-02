@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
+using Plan.Core.Entities;
 using Plan.Core.IServices;
 
 namespace Plan.API.Controllers
@@ -18,9 +19,16 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
-        public GrupaWidokDTO[] Get()
+        public GrupaWidokDTO[] Przegladaj()
         {
             var wynik = _grupaService.Przegladaj();
+            return wynik;
+        }
+
+        [HttpGet("{tryb}/{stopien}/{semestr}")]
+        public GrupaWidokDTO[] Filtruj(TrybStudiow tryb, StopienStudiow stopien, int semestr)
+        {
+            var wynik = _grupaService.Filtruj(tryb, stopien, semestr);
             return wynik;
         }
 

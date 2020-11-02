@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Plan.Core.IDatabase
 {
@@ -10,6 +12,7 @@ namespace Plan.Core.IDatabase
         void Usun(object id);
         void Usun(T entity);
         void UsunWiele(IEnumerable<T> entities);
+        void Usun(Expression<Func<T, bool>> match);
         IEnumerable<TDTO> Wybierz<TDTO>(ISpecification<T, TDTO> spec);
         bool Istnieje<TDTO>(ISpecification<T, TDTO> spec);
     }

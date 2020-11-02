@@ -44,12 +44,12 @@ namespace Plan.Testy
         }
 
         [TestMethod]
-        public void DodajZjazdy_WywolujeDodanieZjazdow()
+        public void DodajZjazd_WywolujeDodanieZjazdu()
         {
-            var zjazdy = new ZjazdDTO[] { new ZjazdDTO() };
-            _controller.DodajZjazdy(zjazdy);
+            var zjazd = new ZjazdDTO();
+            _controller.DodajZjazd(zjazd);
 
-            _kalendariumService.Verify(x => x.DodajZjazdy(zjazdy), Times.Once);
+            _kalendariumService.Verify(x => x.DodajZjazd(zjazd), Times.Once);
         }
 
         [TestMethod]
@@ -66,15 +66,15 @@ namespace Plan.Testy
         }
 
         [TestMethod]
-        public void DajZjazdy_ZwracaZjazdy()
+        public void DajZjazdyGrupy_ZwracaZjazdy()
         {
             var zjazdy = new ZjazdWidokDTO[]
             {
                 new ZjazdWidokDTO{Nr = 1}
             };
-            _kalendariumService.Setup(x => x.PrzegladajZjazdy(It.IsAny<string>())).Returns(zjazdy);
+            _kalendariumService.Setup(x => x.PrzegladajZjazdyGrupy(It.IsAny<string>())).Returns(zjazdy);
 
-            var wynik = _controller.DajZjazdy("Z101");
+            var wynik = _controller.DajZjazdyGrupy("Z101");
             Assert.IsNotNull(wynik);
             Assert.AreEqual(zjazdy, wynik);
         }

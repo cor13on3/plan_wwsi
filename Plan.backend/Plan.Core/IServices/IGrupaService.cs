@@ -11,6 +11,7 @@ namespace Plan.Core.IServices
     {
         void Dodaj(string numer, int semestr, TrybStudiow trybStudiow, StopienStudiow stopienStudiow);
         GrupaWidokDTO[] Przegladaj();
+        GrupaWidokDTO[] Filtruj(TrybStudiow tryb, StopienStudiow stopien, int semestr);
         void Usun(string numer);
     }
 }

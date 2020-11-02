@@ -32,51 +32,33 @@ namespace Plan.Testy.Services
         }
 
         [TestMethod]
-        public void DodajZjazdy_WyjatekIstniejeTakiZjazd()
+        public void DodajZjazd_WyjatekIstniejeTakiZjazd()
         {
             _repoZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadOTerminie>())).Returns(new Zjazd[] { new Zjazd() });
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.DodajZjazdy(new ZjazdDTO[]
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.DodajZjazd(new ZjazdDTO
             {
-                new ZjazdDTO
-                {
-                    DataOd = new System.DateTime(2020,10,19),
-                    DataDo = new System.DateTime(2020,10,21),
-                }
+                DataOd = new System.DateTime(2020, 10, 19),
+                DataDo = new System.DateTime(2020, 10, 21),
             }), "Istnieje już zjazd w terminie 19-10-2020 - 21-10-2020");
         }
 
         [TestMethod]
-        public void DodajZjazdy_DodajeZjazdy()
+        public void DodajZjazdy_DodajeZjazd()
         {
             _repoZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadOTerminie>())).Returns(new Zjazd[] { });
 
-            _service.DodajZjazdy(new ZjazdDTO[]
+            _service.DodajZjazd(new ZjazdDTO
             {
-                new ZjazdDTO
-                {
-                    DataOd = new System.DateTime(2020,10,19),
-                    DataDo = new System.DateTime(2020,10,21),
-                    RodzajSemestru  = RodzajSemestru.Zimowy
-                },
-                new ZjazdDTO
-                {
-                    DataOd = new System.DateTime(2020,10,26),
-                    DataDo = new System.DateTime(2020,10,28),
-                    RodzajSemestru  = RodzajSemestru.Letni
-                }
+                DataOd = new System.DateTime(2020, 10, 19),
+                DataDo = new System.DateTime(2020, 10, 21),
+                RodzajSemestru = RodzajSemestru.Zimowy
             });
 
             _repoZjazd.Verify(x => x.Dodaj(It.Is<Zjazd>(x =>
                 x.DataOd == new System.DateTime(2020, 10, 19) &&
                 x.DataDo == new System.DateTime(2020, 10, 21) &&
                 x.RodzajSemestru == RodzajSemestru.Zimowy
-            )), Times.Once);
-
-            _repoZjazd.Verify(x => x.Dodaj(It.Is<Zjazd>(x =>
-                x.DataOd == new System.DateTime(2020, 10, 26) &&
-                x.DataDo == new System.DateTime(2020, 10, 28) &&
-                x.RodzajSemestru == RodzajSemestru.Letni
             )), Times.Once);
 
             _db.Verify(x => x.Zapisz(), Times.Once);
@@ -97,7 +79,7 @@ namespace Plan.Testy.Services
                 }
             });
 
-            var wynik = _service.PrzegladajZjazdy("Z101");
+            var wynik = _service.PrzegladajZjazdyGrupy("Z101");
 
             Assert.IsNotNull(wynik);
             Assert.AreEqual(1, wynik.Length);

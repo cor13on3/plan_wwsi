@@ -22,7 +22,7 @@ namespace Plan.Testy
         }
 
         [TestMethod]
-        public void Get_ZwracaListeGrup()
+        public void Przegladaj_ZwracaListeGrup()
         {
             _grupaService.Setup(x => x.Przegladaj()).Returns(new GrupaWidokDTO[]
             {
@@ -36,7 +36,7 @@ namespace Plan.Testy
                 }
             });
 
-            var wynik = _controller.Get();
+            var wynik = _controller.Przegladaj();
 
             Assert.IsNotNull(wynik);
             Assert.AreEqual(2, wynik.Length);

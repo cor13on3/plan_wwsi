@@ -28,9 +28,9 @@ namespace Plan.API.Controllers
 
         [Authorize]
         [HttpPost("dodaj-zjazd")]
-        public void DodajZjazdy([FromBody] ZjazdDTO[] zjazdy)
+        public void DodajZjazd([FromBody] ZjazdDTO zjazd)
         {
-            _service.DodajZjazdy(zjazdy);
+            _service.DodajZjazd(zjazd);
         }
 
         [Authorize]
@@ -40,10 +40,30 @@ namespace Plan.API.Controllers
             _service.PrzyporzadkujZjazdyGrupie(req.NrGrupy, req.Zjazdy);
         }
 
-        [HttpGet("{nrGrupy}")]
-        public ZjazdWidokDTO[] DajZjazdy(string nrGrupy)
+        [Authorize]
+        [HttpPost("przyporzadkuj-grupy-do-zjazdu")]
+        public void PrzyporzadkujGrupyDoZjazdu([FromBody] KomendaPrzypiszGrupyDoZjazdu req)
         {
-            return _service.PrzegladajZjazdy(nrGrupy);
+            _service.PrzyporzadkujGrupyDoZjazdu(req.Zjazd, req.Grupy);
+        }
+
+        [Authorize]
+        [HttpPost("usun-grupy-z-zjazdu")]
+        public void UsunGrupyZZjazdu([FromBody] KomendaUsunGrupyZZjazdu req)
+        {
+            _service.UsunGrupyZZjazdu(req.Grupy, req.NrKolejny);
+        }
+
+        [HttpGet("{nrGrupy}")]
+        public ZjazdWidokDTO[] DajZjazdyGrupy(string nrGrupy)
+        {
+            return _service.PrzegladajZjazdyGrupy(nrGrupy);
+        }
+
+        [HttpGet("zjazdy")]
+        public ZjazdWidokDTO[] DajZjazdy()
+        {
+            return _service.PrzegladajZjazdy();
         }
     }
 }
