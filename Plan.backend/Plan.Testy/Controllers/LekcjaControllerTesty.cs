@@ -39,19 +39,18 @@ namespace Plan.Testy
         }
 
         [TestMethod]
-        public void PrzypiszGrupy_WywolujePrzypisanieGrup()
+        public void PrzypiszGrupe_WywolujePrzypisanieGrupy()
         {
-            _controller.PrzypiszGrupy(new KomendaPrzypiszGrupyLekcji
+            _controller.PrzypiszGrupe(new KomendaPrzypiszGrupeLekcji
             {
                 IdLekcji = 1,
                 NrZjazdu = 2,
                 DzienTygodnia = 0,
                 CzyOdpracowanie = false,
-                NrGrup = new string[] { "Z101", "Z102" }
+                NrGrupy = "Z101"
             });
 
             _lekcjaService.Verify(x => x.PrzypiszGrupe(1, "Z101", 2, 0, false), Times.Once);
-            _lekcjaService.Verify(x => x.PrzypiszGrupe(1, "Z102", 2, 0, false), Times.Once);
         }
 
         [TestMethod]
@@ -61,9 +60,9 @@ namespace Plan.Testy
             {
                 new LekcjaWidokDTO{ Nazwa = "N1"}
             };
-            _lekcjaService.Setup(x => x.DajPlan(It.IsAny<DateTime>(), It.IsAny<string>())).Returns(plan);
+            _lekcjaService.Setup(x => x.DajPlanNaDzien(It.IsAny<DateTime>(), It.IsAny<string>())).Returns(plan);
 
-            var wynik = _controller.DajPlan(new DateTime(), "Z101");
+            var wynik = _controller.DajPlanNaDzien(new DateTime(), "Z101");
             Assert.IsNotNull(wynik);
             Assert.AreEqual(1, wynik.Length);
             Assert.AreEqual("N1", wynik[0].Nazwa);

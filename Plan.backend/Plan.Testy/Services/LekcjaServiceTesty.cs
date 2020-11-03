@@ -52,7 +52,7 @@ namespace Plan.Testy.Services
         {
             _repoGrupaZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadyGrupy>())).Returns(new ZjazdWidokDTO[0]);
 
-            var wynik = _service.DajPlan(new System.DateTime(), "Z101");
+            var wynik = _service.DajPlanNaDzien(new System.DateTime(), "Z101");
 
             Assert.AreEqual(0, wynik.Length);
         }
@@ -64,7 +64,7 @@ namespace Plan.Testy.Services
             {
                 new ZjazdWidokDTO{ Nr = 2 }
             });
-            _repoLekcjaGrupa.Setup(x => x.Wybierz(It.IsAny<ZapytaniePlanDnia>())).Returns(new LekcjaWidokDTO[]
+            _repoLekcjaGrupa.Setup(x => x.Wybierz(It.IsAny<ZapytanieLekcje>())).Returns(new LekcjaWidokDTO[]
             {
                 new LekcjaWidokDTO
                 {
@@ -78,9 +78,9 @@ namespace Plan.Testy.Services
                 }
             });
 
-            var wynik = _service.DajPlan(new System.DateTime(), "Z101");
+            var wynik = _service.DajPlanNaDzien(new System.DateTime(), "Z101");
 
-            _repoLekcjaGrupa.Verify(x => x.Wybierz(It.Is<ZapytaniePlanDnia>(x =>
+            _repoLekcjaGrupa.Verify(x => x.Wybierz(It.Is<ZapytanieLekcje>(x =>
                 x.DzienTygodnia == (int)new DateTime().DayOfWeek &&
                 x.NrGrupy == "Z101" &&
                 x.NrZjazdu == 2

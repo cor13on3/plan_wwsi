@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { StopienStudiow, TrybStudiow } from "../../helpers/enums";
+import {
+  StopienStudiow,
+  TrybStudiow,
+  ZjazdGrupyWidok,
+} from "../../helpers/enums";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { GrupaWidok } from "../../helpers/types";
 import KalendariumEdycja from "./KalendariumEdycja";
 import "./Kalendarium.css";
 import formatujDate from "../../helpers/formatujDate";
-
-interface ZjazdGrupyWidok {
-  nr: number;
-  dataOd: Date;
-  dataDo: Date;
-  czyOdpracowanie: boolean;
-  idZjazdu: number;
-}
 
 function Kalendarium() {
   const [stopien, setStopien] = useState(

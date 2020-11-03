@@ -12,10 +12,10 @@ namespace Plan.API.Komendy
         public FormaLekcji Forma { get; set; }
     }
 
-    public class KomendaPrzypiszGrupyLekcji
+    public class KomendaPrzypiszGrupeLekcji
     {
         public int IdLekcji { get; set; }
-        public string[] NrGrup { get; set; }
+        public string NrGrupy { get; set; }
         public int NrZjazdu { get; set; }
         public int DzienTygodnia { get; set; }
         public bool CzyOdpracowanie { get; set; }

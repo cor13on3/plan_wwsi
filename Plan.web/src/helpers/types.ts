@@ -7,3 +7,9 @@ export interface ZjazdWidok {
   dataOd: Date;
   dataDo: Date;
 }
+
+export interface WykladowcaWidok {
+  id: number;
+  nazwa: string;
+  email: string;
+}

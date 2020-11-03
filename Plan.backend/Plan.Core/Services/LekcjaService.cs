@@ -19,13 +19,13 @@ namespace Plan.Core.Services
             _baza = baza;
         }
 
-        public LekcjaWidokDTO[] DajPlan(DateTime data, string nrGrupy)
+        public LekcjaWidokDTO[] DajPlanNaDzien(DateTime data, string nrGrupy)
         {
             var zjazd = _baza.Daj<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy(nrGrupy, data));
             if (zjazd.Count() == 0)
                 return new LekcjaWidokDTO[0];
             var zjazdNr = zjazd.First().Nr;
-            var wynik = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytaniePlanDnia()
+            var wynik = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
             {
                 NrGrupy = nrGrupy,
                 NrZjazdu = zjazdNr,
@@ -35,10 +35,40 @@ namespace Plan.Core.Services
             return wynik.ToArray();
         }
 
-        public void Dodaj(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
+        public PlanDnia[] DajPlanNaTydzien(string nrGrupy)
+        {
+            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
+            {
+                NrGrupy = nrGrupy,
+            });
+
+            var dni = lekcje.GroupBy(x => x.DzienTygodnia).Select(x => new PlanDnia
+            {
+                DzienTygodnia = x.Key,
+                Lekcje = x.GroupBy(z => z.IdLekcji).Select(z => new LekcjaWZjazdach
+                {
+                    Lekcja = new LekcjaWidokDTO
+                    {
+                        IdLekcji = z.First().IdLekcji,
+                        Nazwa = z.First().Nazwa,
+                        Wykladowca = z.First().Wykladowca,
+                        Sala = z.First().Sala,
+                        Od = z.First().Od,
+                        Do = z.First().Do,
+                        Forma = z.First().Forma,
+                        CzyOdpracowanie = z.First().CzyOdpracowanie,
+                    },
+                    Zjazdy = z.Select(y => y.NrZjazdu).ToArray()
+                }).ToArray()
+            });
+
+            return dni.ToArray();
+        }
+
+        public int Dodaj(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
         {
             WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
-            _baza.Daj<Lekcja>().Dodaj(new Lekcja
+            var lekcja = new Lekcja
             {
                 IdPrzedmiotu = przedmiotId,
                 IdWykladowcy = wykladowcaId,
@@ -46,8 +76,11 @@ namespace Plan.Core.Services
                 GodzinaOd = godzinaOd,
                 GodzinaDo = godzinaDo,
                 Forma = forma
-            });
+            };
+            _baza.Daj<Lekcja>().Dodaj(lekcja);
             _baza.Zapisz();
+            var id = lekcja.IdLekcji;
+            return id;
         }
 
         public void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu, int dzienTygodnia, bool czyOdpracowanie)
@@ -60,9 +93,11 @@ namespace Plan.Core.Services
                 throw new BladBiznesowy("Podano niepoprawny numer zjazdu.");
             if (dzienTygodnia < 0 || dzienTygodnia > 6)
                 throw new BladBiznesowy("Podano niepoprawny dzień tygodnia.");
+            var zjazdy = _baza.Daj<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
+            if (!zjazdy.Any(x => x.Nr == nrZjazdu))
+                throw new BladBiznesowy($"Brak ustalonego zjazdu o numerze {nrZjazdu} dla grupy {nrGrupy}.");
             if (czyOdpracowanie)
             {
-                var zjazdy = _baza.Daj<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
                 if (!zjazdy.Any(x => x.Nr == nrZjazdu && x.CzyOdpracowanie))
                     throw new BladBiznesowy($"Brak ustalonej daty odpracowania zjazdu nr {nrZjazdu} dla grupy {nrGrupy}. Dodaj zjazd z datą odpracowania.");
             }
@@ -114,12 +149,12 @@ namespace Plan.Core.Services
                 throw new BladBiznesowy($"Sala o id {salaId} nie istnieje.");
             try
             {
-                DateTime.ParseExact(godzinaOd, "HH:mm:ss", CultureInfo.InvariantCulture);
-                DateTime.ParseExact(godzinaDo, "HH:mm:ss", CultureInfo.InvariantCulture);
+                DateTime.ParseExact(godzinaOd, "HH:mm", CultureInfo.InvariantCulture);
+                DateTime.ParseExact(godzinaDo, "HH:mm", CultureInfo.InvariantCulture);
             }
             catch (Exception)
             {
-                throw new BladBiznesowy("Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm:ss (np. 09:45:00)");
+                throw new BladBiznesowy("Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm (np. 09:45)");
             }
         }
     }

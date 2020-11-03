@@ -6,7 +6,7 @@ import Grupy from "./containers/Grupy";
 import Kadra from "./containers/Kadra/Kadra";
 import Kalendarium from "./containers/Kalendarium/Kalendarium";
 import Logowanie from "./containers/Logowanie";
-import Plan from "./containers/plan";
+import Plan from "./containers/Plan/Plan";
 import Pulpit from "./containers/pulpit";
 import { httpClient } from "./helpers/httpClient";
 import { PlanStore } from "./redux/store";

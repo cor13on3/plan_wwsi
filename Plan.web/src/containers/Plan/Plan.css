@@ -1,0 +1,13 @@
+.tydzien {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  width: 800px;
+  column-gap: 16px;
+  margin: 24px;
+}
+
+.dzien {
+  background-color: rgba(0, 0, 0, 0.09);
+  height: 512px;
+  padding: 12px;
+}

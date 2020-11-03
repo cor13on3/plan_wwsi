@@ -9,10 +9,11 @@ namespace Plan.Core.IServices
 {
     public interface ILekcjaService
     {
-        void Dodaj(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma);
+        int Dodaj(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma);
         void Zmien(int lekcjaId, int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma);
         void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu, int dzienTygodnia, bool czyOdpracowanie);
         void Usun(int lekcjaId);
-        LekcjaWidokDTO[] DajPlan(DateTime data, string nrGrupy);
+        LekcjaWidokDTO[] DajPlanNaDzien(DateTime data, string nrGrupy);
+        PlanDnia[] DajPlanNaTydzien(string nrGrupy);
     }
 }

@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Blad, httpClient } from "../../helpers/httpClient";
+import { WykladowcaWidok } from "../../helpers/types";
 import "./Kadra.css";
 import KadraEdycja from "./KadraEdycja";
-
-interface WykladowcaWidok {
-  id: number;
-  nazwa: string;
-  email: string;
-}
 
 function Kadra() {
   const [lista, setLista] = useState([] as WykladowcaWidok[]);

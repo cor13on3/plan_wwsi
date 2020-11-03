@@ -20,23 +20,29 @@ namespace Plan.API.Controllers
 
         [Authorize]
         [HttpPost("dodaj")]
-        public void DodajLekcje([FromBody] KomendaDodajLekcje req)
+        public int DodajLekcje([FromBody] KomendaDodajLekcje req)
         {
-            _lekcjaService.Dodaj(req.IdPrzedmiotu, req.IdWykladowcy, req.IdSali, req.GodzinaOd, req.GodzinaDo, req.Forma);
+            return _lekcjaService.Dodaj(req.IdPrzedmiotu, req.IdWykladowcy, req.IdSali, req.GodzinaOd, req.GodzinaDo, req.Forma);
         }
 
         [Authorize]
-        [HttpPost("przypisz-grupy")]
-        public void PrzypiszGrupy([FromBody] KomendaPrzypiszGrupyLekcji req)
+        [HttpPost("przypisz-grupe")]
+        public void PrzypiszGrupe([FromBody] KomendaPrzypiszGrupeLekcji req)
         {
-            foreach (string nr in req.NrGrup)
-                _lekcjaService.PrzypiszGrupe(req.IdLekcji, nr, req.NrZjazdu, req.DzienTygodnia, req.CzyOdpracowanie);
+            _lekcjaService.PrzypiszGrupe(req.IdLekcji, req.NrGrupy, req.NrZjazdu, req.DzienTygodnia, req.CzyOdpracowanie);
         }
 
         [HttpGet("daj-plan")]
-        public LekcjaWidokDTO[] DajPlan(DateTime data, string grupa)
+        public LekcjaWidokDTO[] DajPlanNaDzien(DateTime data, string grupa)
         {
-            var wynik = _lekcjaService.DajPlan(data, grupa);
+            var wynik = _lekcjaService.DajPlanNaDzien(data, grupa);
+            return wynik;
+        }
+
+        [HttpGet("daj-plan-na-tydzien/{grupa}")]
+        public PlanDnia[] DajPlanNaTydzien(string grupa)
+        {
+            var wynik = _lekcjaService.DajPlanNaTydzien(grupa);
             return wynik;
         }
     }

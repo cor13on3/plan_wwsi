@@ -34,7 +34,7 @@ namespace Plan.Core.Services
             _db.Zapisz();
         }
 
-        public GrupaWidokDTO[] Filtruj(TrybStudiow tryb, StopienStudiow stopien, int semestr)
+        public GrupaWidokDTO[] Filtruj(TrybStudiow? tryb, StopienStudiow? stopien, int? semestr)
         {
             var repo = _db.Daj<Grupa>();
             var wynik = repo.Wybierz(new ZapytanieGrupy(tryb, stopien, semestr)).ToArray();

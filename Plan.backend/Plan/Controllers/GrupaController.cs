@@ -25,8 +25,8 @@ namespace Plan.API.Controllers
             return wynik;
         }
 
-        [HttpGet("{tryb}/{stopien}/{semestr}")]
-        public GrupaWidokDTO[] Filtruj(TrybStudiow tryb, StopienStudiow stopien, int semestr)
+        [HttpGet("{tryb?}/{stopien?}/{semestr?}")]
+        public GrupaWidokDTO[] Filtruj(TrybStudiow? tryb = null, StopienStudiow? stopien = null, int? semestr = null)
         {
             var wynik = _grupaService.Filtruj(tryb, stopien, semestr);
             return wynik;
