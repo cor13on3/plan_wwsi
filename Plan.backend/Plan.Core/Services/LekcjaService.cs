@@ -45,7 +45,7 @@ namespace Plan.Core.Services
             var dni = lekcje.GroupBy(x => x.DzienTygodnia).Select(x => new PlanDnia
             {
                 DzienTygodnia = x.Key,
-                Lekcje = x.GroupBy(z => z.IdLekcji).Select(z => new LekcjaWZjazdach
+                Lekcje = x.Where(x => !x.CzyOdpracowanie).GroupBy(z => z.IdLekcji).Select(z => new LekcjaWZjazdach
                 {
                     Lekcja = new LekcjaWidokDTO
                     {
@@ -57,8 +57,43 @@ namespace Plan.Core.Services
                         Do = z.First().Do,
                         Forma = z.First().Forma,
                         CzyOdpracowanie = z.First().CzyOdpracowanie,
+                        DzienTygodnia = z.First().DzienTygodnia,
+                        NrZjazdu = z.First().NrZjazdu
                     },
                     Zjazdy = z.Select(y => y.NrZjazdu).ToArray()
+                }).ToArray()
+            });
+
+            return dni.ToArray();
+        }
+
+        public PlanDnia[] DajPlanOdpracowania(string nrGrupy, int nrZjazdu)
+        {
+            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
+            {
+                NrGrupy = nrGrupy,
+                NrZjazdu = nrZjazdu
+            });
+
+            var dni = lekcje.GroupBy(x => x.DzienTygodnia).Select(x => new PlanDnia
+            {
+                DzienTygodnia = x.Key,
+                Lekcje = x.Where(x => x.CzyOdpracowanie).Select(z => new LekcjaWZjazdach
+                {
+                    Lekcja = new LekcjaWidokDTO
+                    {
+                        IdLekcji = z.IdLekcji,
+                        Nazwa = z.Nazwa,
+                        Wykladowca = z.Wykladowca,
+                        Sala = z.Sala,
+                        Od = z.Od,
+                        Do = z.Do,
+                        Forma = z.Forma,
+                        CzyOdpracowanie = z.CzyOdpracowanie,
+                        DzienTygodnia = z.DzienTygodnia,
+                        NrZjazdu = z.NrZjazdu
+                    },
+                    Zjazdy = new int[] { z.NrZjazdu }
                 }).ToArray()
             });
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FormaLekcji, TrybStudiow } from "../../helpers/enums";
+import { FormaLekcji, TrybStudiow, ZjazdGrupyWidok } from "../../helpers/enums";
+import formatujDate from "../../helpers/formatujDate";
 import formatujGodzine from "../../helpers/formatujGodzine";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { GrupaWidok } from "../../helpers/types";
@@ -39,6 +40,28 @@ function Plan() {
   const [plan, setPlan] = useState([] as PlanDnia[]);
   const [blad, setBlad] = useState("");
   const [edytowanyDzien, setEdytowanyDzien] = useState(-1);
+  const [zjazdyOdpracowujace, setZjazdyOdpracowujace] = useState(
+    [] as ZjazdGrupyWidok[]
+  );
+  const [wybranyZjazdOdpr, setWybranyZjazdOdpr] = useState(
+    undefined as ZjazdGrupyWidok | undefined
+  );
+
+  useEffect(() => {
+    if (tryb === "Odpracowania") {
+      httpClient
+        .GET(`/api/kalendarium/${grupa}`)
+        .then((res: ZjazdGrupyWidok[]) => {
+          const zjazdy = res.filter((x) => x.czyOdpracowanie);
+          setZjazdyOdpracowujace(zjazdy);
+          if (zjazdy.length > 0) setWybranyZjazdOdpr(zjazdy[0]);
+        })
+        .catch((err: Blad) => setBlad(err.Tresc));
+    } else {
+      setZjazdyOdpracowujace([]);
+      setWybranyZjazdOdpr(undefined);
+    }
+  }, [grupa, tryb]);
 
   useEffect(() => {
     if (trybStudiow !== "Wybierz") {
@@ -53,23 +76,33 @@ function Plan() {
 
   useEffect(() => {
     if (grupa !== "Wybierz") {
-      httpClient
-        .GET(`/api/lekcja/daj-plan-na-tydzien/${grupa}`)
-        .then((res: PlanDnia[]) => {
-          setPlan(res);
-        });
+      odswiezListe();
     }
-  }, [grupa]);
+  }, [grupa, tryb, wybranyZjazdOdpr]);
+
+  function odswiezListe() {
+    const url =
+      tryb === "Odpracowania" && wybranyZjazdOdpr
+        ? `/api/lekcja/daj-plan-odpracowania/${grupa}/${wybranyZjazdOdpr.nr}`
+        : `/api/lekcja/daj-plan-na-tydzien/${grupa}`;
+    httpClient.GET(url).then((res: PlanDnia[]) => {
+      setPlan(res);
+    });
+  }
 
   function dajLekcje(dzienTygodnia: number) {
     return plan
       .find((x) => x.dzienTygodnia === dzienTygodnia)
       ?.lekcje.map((l) => (
-        <div>
-          <p>
-            Zjazdy:
-            {l.zjazdy.join(", ")}
-          </p>
+        <div className="lekcja">
+          {tryb === "Standardowy" && (
+            <>
+              <p>
+                Zjazdy:
+                {l.zjazdy.join(", ")}
+              </p>
+            </>
+          )}
           <p>
             {formatujGodzine(l.lekcja.od)} - {formatujGodzine(l.lekcja.do)}
           </p>
@@ -80,6 +113,11 @@ function Plan() {
           <p>{l.lekcja.sala}</p>
         </div>
       ));
+  }
+
+  function onZapisz() {
+    setEdytowanyDzien(-1);
+    odswiezListe();
   }
 
   return (
@@ -112,6 +150,31 @@ function Plan() {
         <option value="Standardowy">Standardowy</option>
         <option value="Odpracowania">Odpracowania</option>
       </select>
+      {tryb === "Odpracowania" && zjazdyOdpracowujace.length > 0 && (
+        <>
+          <span>Odpracowanie zjadu </span>
+          <select
+            value={wybranyZjazdOdpr?.nr}
+            onChange={(e) =>
+              setWybranyZjazdOdpr(
+                zjazdyOdpracowujace.find(
+                  (x) => x.nr === Number.parseInt(e.target.value)
+                )
+              )
+            }
+          >
+            {zjazdyOdpracowujace.map((x) => (
+              <option value={x.nr}>{x.nr}</option>
+            ))}
+          </select>
+          {wybranyZjazdOdpr && (
+            <span>
+              ({formatujDate(wybranyZjazdOdpr.dataOd)} -{" "}
+              {formatujDate(wybranyZjazdOdpr.dataDo)})
+            </span>
+          )}
+        </>
+      )}
       {trybStudiow !== "Wybierz" && grupa !== "Wybierz" && (
         <div>
           {trybStudiow === TrybStudiow.Niestacjonarne ? (
@@ -144,7 +207,12 @@ function Plan() {
         </div>
       )}
       {edytowanyDzien >= 0 && (
-        <LekcjaEdycja grupa={grupa} dzienTygodnia={edytowanyDzien} />
+        <LekcjaEdycja
+          grupa={grupa}
+          dzienTygodnia={edytowanyDzien}
+          zjazdOdpracowywany={wybranyZjazdOdpr?.nr}
+          onZapisz={onZapisz}
+        />
       )}
     </div>
   );

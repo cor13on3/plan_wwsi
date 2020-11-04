@@ -15,5 +15,6 @@ namespace Plan.Core.IServices
         void Usun(int lekcjaId);
         LekcjaWidokDTO[] DajPlanNaDzien(DateTime data, string nrGrupy);
         PlanDnia[] DajPlanNaTydzien(string nrGrupy);
+        PlanDnia[] DajPlanOdpracowania(string nrGrupy, int nrZjazdu);
     }
 }

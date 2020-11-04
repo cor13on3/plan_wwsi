@@ -11,3 +11,11 @@
   height: 512px;
   padding: 12px;
 }
+
+.lekcja {
+  border-bottom: 2px solid black;
+}
+
+p {
+  line-height: 8px;
+}

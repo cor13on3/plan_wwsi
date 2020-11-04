@@ -45,5 +45,12 @@ namespace Plan.API.Controllers
             var wynik = _lekcjaService.DajPlanNaTydzien(grupa);
             return wynik;
         }
+
+        [HttpGet("daj-plan-odpracowania/{grupa}/{nrZjazdu}")]
+        public PlanDnia[] DajPlanOdpracowania(string grupa, int nrZjazdu)
+        {
+            var wynik = _lekcjaService.DajPlanOdpracowania(grupa, nrZjazdu);
+            return wynik;
+        }
     }
 }

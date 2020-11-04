@@ -15,9 +15,16 @@ import WyborSali from "./WyborSali";
 interface LekcjaEdycjaProps {
   grupa: string;
   dzienTygodnia: number;
+  onZapisz: Function;
+  zjazdOdpracowywany?: number;
 }
 
-function LekcjaEdycja({ grupa, dzienTygodnia }: LekcjaEdycjaProps) {
+function LekcjaEdycja({
+  grupa,
+  dzienTygodnia,
+  zjazdOdpracowywany,
+  onZapisz,
+}: LekcjaEdycjaProps) {
   const [przedmiot, setPrzedmiot] = useState({} as PrzedmiotWidok);
   const [wykladowca, setWykladowca] = useState({} as WykladowcaWidok);
   const [wykladowcy, setWykladowcy] = useState([] as WykladowcaWidok[]);
@@ -44,11 +51,13 @@ function LekcjaEdycja({ grupa, dzienTygodnia }: LekcjaEdycjaProps) {
     httpClient.GET("/api/wykladowca").then((res: WykladowcaWidok[]) => {
       setWykladowcy(res);
     });
-    httpClient
-      .GET(`/api/kalendarium/${grupa}`)
-      .then((res: ZjazdGrupyWidok[]) => {
-        setZjazdy(res.filter((x) => !x.czyOdpracowanie).map((x) => x.nr));
-      });
+    if (!zjazdOdpracowywany) {
+      httpClient
+        .GET(`/api/kalendarium/${grupa}`)
+        .then((res: ZjazdGrupyWidok[]) => {
+          setZjazdy(res.filter((x) => !x.czyOdpracowanie).map((x) => x.nr));
+        });
+    }
     // eslint-disable-next-line
   }, []);
 
@@ -63,15 +72,29 @@ function LekcjaEdycja({ grupa, dzienTygodnia }: LekcjaEdycjaProps) {
         FormaLekcji: forma,
       })
       .then((id: number) => {
-        wybraneZjazdy.forEach((x) => {
-          httpClient.POST("/api/lekcja/przypisz-grupe", {
-            IdLekcji: id,
-            NrGrupy: grupa,
-            NrZjazdu: x,
-            DzienTygodnia: dzienTygodnia,
-            CzyOdpracowanie: false,
+        if (zjazdOdpracowywany) {
+          httpClient
+            .POST("/api/lekcja/przypisz-grupe", {
+              IdLekcji: id,
+              NrGrupy: grupa,
+              NrZjazdu: zjazdOdpracowywany,
+              DzienTygodnia: dzienTygodnia,
+              CzyOdpracowanie: true,
+            })
+            .then(() => onZapisz());
+        } else {
+          wybraneZjazdy.forEach((x) => {
+            httpClient
+              .POST("/api/lekcja/przypisz-grupe", {
+                IdLekcji: id,
+                NrGrupy: grupa,
+                NrZjazdu: x,
+                DzienTygodnia: dzienTygodnia,
+                CzyOdpracowanie: false,
+              })
+              .then(() => onZapisz());
           });
-        });
+        }
       });
   }
 
@@ -104,17 +127,21 @@ function LekcjaEdycja({ grupa, dzienTygodnia }: LekcjaEdycjaProps) {
         value={sala.nazwa}
       />
       {edycjaSali && <WyborSali onWybierz={onWyborSali} />}
-      <p>Zjazdy: </p>
-      <Autocomplete
-        multiple
-        options={zjazdy}
-        getOptionLabel={(w) => w.toString()}
-        style={{ width: 300 }}
-        renderInput={(params) => (
-          <TextField {...params} label="Zjazdy" variant="outlined" />
-        )}
-        onChange={(e, v) => v && setWybraneZjazdy(v)}
-      />
+      {!zjazdOdpracowywany && (
+        <>
+          <p>Zjazdy: </p>
+          <Autocomplete
+            multiple
+            options={zjazdy}
+            getOptionLabel={(w) => w.toString()}
+            style={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField {...params} label="Zjazdy" variant="outlined" />
+            )}
+            onChange={(e, v) => v && setWybraneZjazdy(v)}
+          />
+        </>
+      )}
       <span>Godzina: </span>
       <input
         type="time"
