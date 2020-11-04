@@ -68,8 +68,8 @@ function Grupy() {
       {blad && <p className="blad">{blad}</p>}
       <button onClick={() => pokazEdycje()}>DODAJ</button>
       <div className="lista">
-        {lista.map((grupa) => (
-          <div className="grupa">
+        {lista.map((grupa, i) => (
+          <div className="grupa" key={i}>
             <span>{grupa.numer}</span>
             <button onClick={() => usun(grupa.numer)}>Usuń</button>
           </div>

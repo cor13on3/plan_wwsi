@@ -1,5 +1,6 @@
 import moment from "moment";
 
 export default function formatujDate(date: Date) {
-  return moment(date).format("DD/MM/YYYY");
+  if (date) return moment(new Date(date).toISOString()).format("DD/MM/YYYY");
+  return "";
 }

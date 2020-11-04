@@ -113,8 +113,8 @@ function Kalendarium() {
       </select>
       <span>{dajOpis()}</span>
       <div className="lista">
-        {lista.map((x) => (
-          <div>
+        {lista.map((x, i) => (
+          <div key={i}>
             <span>{x.nr}. </span>
             <span>{formatujDate(x.dataOd)} - </span>
             <span>{formatujDate(x.dataDo)}</span>

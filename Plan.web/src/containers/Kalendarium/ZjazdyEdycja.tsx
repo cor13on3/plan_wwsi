@@ -9,8 +9,8 @@ interface ZjazdyEdycjaProps {
 }
 
 function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
-  const [dataOd, setDataOd] = useState(moment(new Date()).format("yyyy-MM-dd"));
-  const [dataDo, setDataDo] = useState(moment(new Date()).format("yyyy-MM-dd"));
+  const [dataOd, setDataOd] = useState(moment(new Date()).format("yyyy-MM-DD"));
+  const [dataDo, setDataDo] = useState(moment(new Date()).format("yyyy-MM-DD"));
   const [lista, setLista] = useState([] as ZjazdWidok[]);
 
   function odswiezListe() {
@@ -37,8 +37,8 @@ function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
   return (
     <div>
       <h3>Zjazdy</h3>
-      {lista.map((x) => (
-        <div>
+      {lista.map((x, i) => (
+        <div key={i}>
           <span>{formatujDate(x.dataOd)} - </span>
           <span>{formatujDate(x.dataDo)}</span>
           <button onClick={() => onWybierz(x)}>Wybierz</button>

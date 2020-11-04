@@ -32,5 +32,11 @@ namespace Plan.API.Controllers
         {
             _uzytkownikService.Wyloguj();
         }
+
+        [HttpGet("czy-zalogowany")]
+        public bool CzyZalogowany()
+        {
+            return User.Identity.IsAuthenticated;
+        }
     }
 }

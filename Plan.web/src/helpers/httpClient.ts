@@ -8,7 +8,6 @@ const url = "http://localhost:60211";
 async function handleResponse(response: Response) {
   const text = await response.text();
   const data = text ? JSON.parse(text) : null;
-  console.log(response);
   if (!response.ok) {
     let error = data.detail;
     return Promise.reject({ Status: response.status, Tresc: error });

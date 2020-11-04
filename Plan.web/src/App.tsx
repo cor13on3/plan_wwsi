@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
 import "./App.css";
@@ -13,11 +13,24 @@ import { PlanStore } from "./redux/store";
 
 interface AppProps {
   zalogowano: boolean;
+  imie: string;
+  nazwisko: string;
+  onWyloguj: Function;
 }
 
-function App({ zalogowano, imie, nazwisko, onWylogowano }: any) {
+function App({ zalogowano, imie, nazwisko, onWyloguj }: AppProps) {
+  useEffect(() => {
+    httpClient
+      .GET("/api/uzytkownik/czy-zalogowany")
+      .then((res: boolean) => {
+        if (!res) onWyloguj();
+      })
+      .catch(() => onWyloguj());
+    // eslint-disable-next-line
+  }, []);
+
   function wyloguj() {
-    httpClient.POST("/api/uzytkownik/wyloguj", null).then(() => onWylogowano());
+    httpClient.POST("/api/uzytkownik/wyloguj", null).then(() => onWyloguj());
   }
 
   return (
@@ -85,7 +98,7 @@ function mapStateToProps(store: PlanStore) {
 
 function mapDispatchToProps(dispatch: Function) {
   return {
-    onWylogowano: () => dispatch({ type: "WYLOGOWANO" }),
+    onWyloguj: () => dispatch({ type: "WYLOGOWANO" }),
   };
 }
 

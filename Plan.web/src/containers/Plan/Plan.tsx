@@ -98,8 +98,8 @@ function Plan() {
   function dajLekcje(dzienTygodnia: number) {
     return plan
       .find((x) => x.dzienTygodnia === dzienTygodnia)
-      ?.lekcje.map((l) => (
-        <div className="lekcja">
+      ?.lekcje.map((l, i) => (
+        <div className="lekcja" key={i}>
           {tryb === "Standardowy" && (
             <>
               <p>
@@ -141,8 +141,10 @@ function Plan() {
       <span>Grupa </span>
       <select value={grupa} onChange={(e) => setGrupa(e.target.value)}>
         <option value="Wybierz">Wybierz</option>
-        {grupy.map((x) => (
-          <option value={x.numer}>{x.numer}</option>
+        {grupy.map((x, i) => (
+          <option key={i} value={x.numer}>
+            {x.numer}
+          </option>
         ))}
       </select>
       <span>Tryb planu </span>
@@ -168,8 +170,10 @@ function Plan() {
               )
             }
           >
-            {zjazdyOdpracowujace.map((x) => (
-              <option value={x.nr}>{x.nr}</option>
+            {zjazdyOdpracowujace.map((x, i) => (
+              <option value={x.nr} key={i}>
+                {x.nr}
+              </option>
             ))}
           </select>
           {wybranyZjazdOdpr && (
