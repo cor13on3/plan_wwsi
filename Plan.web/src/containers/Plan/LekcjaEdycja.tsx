@@ -7,10 +7,11 @@ import {
   SalaWidok,
   ZjazdGrupyWidok,
 } from "../../helpers/enums";
-import { httpClient } from "../../helpers/httpClient";
+import { Blad, httpClient } from "../../helpers/httpClient";
 import { WykladowcaWidok } from "../../helpers/types";
 import WyborPrzedmiotu from "./WyborPrzedmiotu";
 import WyborSali from "./WyborSali";
+import dajDzienTygodnia from "../../helpers/dajDzienTygodnia";
 
 interface LekcjaEdycjaProps {
   grupa: string;
@@ -36,30 +37,42 @@ function LekcjaEdycja({
   const [forma, setForma] = useState(FormaLekcji.Wyklad);
   const [edycjaPrzedmiotu, setEdycjaPrzedmiotu] = useState(false);
   const [edycjaSali, setEdycjaSali] = useState(false);
-
-  function onWyborPrzedmiotu(wybrany: PrzedmiotWidok) {
-    setPrzedmiot(wybrany);
-    setEdycjaPrzedmiotu(false);
-  }
-
-  function onWyborSali(wybrana: SalaWidok) {
-    setSala(wybrana);
-    setEdycjaSali(false);
-  }
+  const [blad, setBlad] = useState("");
 
   useEffect(() => {
-    httpClient.GET("/api/wykladowca").then((res: WykladowcaWidok[]) => {
-      setWykladowcy(res);
-    });
+    httpClient
+      .GET("/api/wykladowca")
+      .then((res: WykladowcaWidok[]) => {
+        setWykladowcy(res);
+      })
+      .catch((err: Blad) => setBlad(err.Tresc));
     if (!zjazdOdpracowywany) {
       httpClient
         .GET(`/api/kalendarium/${grupa}`)
         .then((res: ZjazdGrupyWidok[]) => {
           setZjazdy(res.filter((x) => !x.czyOdpracowanie).map((x) => x.nr));
-        });
+        })
+        .catch((err: Blad) => setBlad(err.Tresc));
     }
     // eslint-disable-next-line
   }, []);
+
+  function przypiszGrupe(
+    id: number,
+    nrZjazdu: number,
+    czyOdpracowanie: boolean
+  ) {
+    httpClient
+      .POST("/api/lekcja/przypisz-grupe", {
+        IdLekcji: id,
+        NrGrupy: grupa,
+        NrZjazdu: nrZjazdu,
+        DzienTygodnia: dzienTygodnia,
+        CzyOdpracowanie: czyOdpracowanie,
+      })
+      .then(() => onZapisz())
+      .catch((err: Blad) => setBlad(err.Tresc));
+  }
 
   function zapisz() {
     httpClient
@@ -73,36 +86,33 @@ function LekcjaEdycja({
       })
       .then((id: number) => {
         if (zjazdOdpracowywany) {
-          httpClient
-            .POST("/api/lekcja/przypisz-grupe", {
-              IdLekcji: id,
-              NrGrupy: grupa,
-              NrZjazdu: zjazdOdpracowywany,
-              DzienTygodnia: dzienTygodnia,
-              CzyOdpracowanie: true,
-            })
-            .then(() => onZapisz());
+          przypiszGrupe(id, zjazdOdpracowywany, true);
         } else {
           wybraneZjazdy.forEach((x) => {
-            httpClient
-              .POST("/api/lekcja/przypisz-grupe", {
-                IdLekcji: id,
-                NrGrupy: grupa,
-                NrZjazdu: x,
-                DzienTygodnia: dzienTygodnia,
-                CzyOdpracowanie: false,
-              })
-              .then(() => onZapisz());
+            przypiszGrupe(id, x, false);
           });
         }
-      });
+      })
+      .catch((err: Blad) => setBlad(err.Tresc));
+  }
+
+  function onWyborPrzedmiotu(wybrany: PrzedmiotWidok) {
+    setPrzedmiot(wybrany);
+    setEdycjaPrzedmiotu(false);
+  }
+
+  function onWyborSali(wybrana: SalaWidok) {
+    setSala(wybrana);
+    setEdycjaSali(false);
   }
 
   return (
     <div>
       <h3>
-        Edycja zajęć dla grupy {grupa} na dzień {dzienTygodnia}.
+        Edycja zajęć dla grupy {grupa} na{" "}
+        {dajDzienTygodnia(dzienTygodnia).toLowerCase()}.
       </h3>
+      {blad && <p className="blad">{blad}</p>}
       <span>Przedmiot: </span>
       <input
         onClick={() => setEdycjaPrzedmiotu(true)}

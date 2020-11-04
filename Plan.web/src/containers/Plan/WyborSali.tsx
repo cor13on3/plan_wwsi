@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SalaWidok } from "../../helpers/enums";
-import { httpClient } from "../../helpers/httpClient";
+import { Blad, httpClient } from "../../helpers/httpClient";
 
 interface WyborSaliProps {
   onWybierz: (wybrany: SalaWidok) => void;
@@ -9,29 +9,37 @@ interface WyborSaliProps {
 function WyborSali(props: WyborSaliProps) {
   const [lista, setLista] = useState([] as SalaWidok[]);
   const [nazwa, setNazwa] = useState("");
-
-  function odswiezListe() {
-    httpClient.GET("/api/sala").then((res: SalaWidok[]) => {
-      setLista(res);
-    });
-  }
+  const [blad, setBlad] = useState("");
 
   useEffect(() => {
     odswiezListe();
   }, []);
 
+  function odswiezListe() {
+    httpClient
+      .GET("/api/sala")
+      .then((res: SalaWidok[]) => {
+        setLista(res);
+      })
+      .catch((err: Blad) => setBlad(err.Tresc));
+  }
+
+  function dodaj() {
+    httpClient
+      .POST("/api/sala", { Nazwa: nazwa })
+      .then(() => {
+        odswiezListe();
+      })
+      .catch((err: Blad) => setBlad(err.Tresc));
+  }
+
   function onWybierz(wybrany: SalaWidok) {
     props.onWybierz(wybrany);
   }
 
-  function dodaj() {
-    httpClient.POST("/api/sala", { Nazwa: nazwa }).then(() => {
-      odswiezListe();
-    });
-  }
-
   return (
     <div>
+      {blad && <p className="blad">{blad}</p>}
       {lista.map((x) => (
         <div>
           <span>{x.nazwa}</span>

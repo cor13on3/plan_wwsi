@@ -70,7 +70,8 @@ function Kalendarium() {
       })
       .then(() => {
         odswiezListe();
-      });
+      })
+      .catch((err: Blad) => setBlad(err.Tresc));
   }
 
   return (

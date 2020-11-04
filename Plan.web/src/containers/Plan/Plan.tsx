@@ -6,6 +6,7 @@ import { Blad, httpClient } from "../../helpers/httpClient";
 import { GrupaWidok } from "../../helpers/types";
 import LekcjaEdycja from "./LekcjaEdycja";
 import "./Plan.css";
+import dajDzienTygodnia from "../../helpers/dajDzienTygodnia";
 
 interface LekcjaWidok {
   idLekcji: number;
@@ -35,7 +36,7 @@ function Plan() {
   const [grupy, setGrupy] = useState([] as GrupaWidok[]);
   const [grupa, setGrupa] = useState("Z715");
   const [tryb, setTryb] = useState(
-    "Standardowy" as "Standardowy" | "Odpracowania"
+    "Wybierz" as "Wybierz" | "Standardowy" | "Odpracowania"
   );
   const [plan, setPlan] = useState([] as PlanDnia[]);
   const [blad, setBlad] = useState("");
@@ -75,9 +76,10 @@ function Plan() {
   }, [trybStudiow]);
 
   useEffect(() => {
-    if (grupa !== "Wybierz") {
+    if (grupa !== "Wybierz" && tryb !== "Wybierz") {
       odswiezListe();
     }
+    // eslint-disable-next-line
   }, [grupa, tryb, wybranyZjazdOdpr]);
 
   function odswiezListe() {
@@ -85,9 +87,12 @@ function Plan() {
       tryb === "Odpracowania" && wybranyZjazdOdpr
         ? `/api/lekcja/daj-plan-odpracowania/${grupa}/${wybranyZjazdOdpr.nr}`
         : `/api/lekcja/daj-plan-na-tydzien/${grupa}`;
-    httpClient.GET(url).then((res: PlanDnia[]) => {
-      setPlan(res);
-    });
+    httpClient
+      .GET(url)
+      .then((res: PlanDnia[]) => {
+        setPlan(res);
+      })
+      .catch((err: Blad) => setBlad(err.Tresc));
   }
 
   function dajLekcje(dzienTygodnia: number) {
@@ -178,30 +183,50 @@ function Plan() {
       {trybStudiow !== "Wybierz" && grupa !== "Wybierz" && (
         <div>
           {trybStudiow === TrybStudiow.Niestacjonarne ? (
-            <div className="tydzien">
+            <div className="tydzien3">
               <div className="dzien">
-                <span>Piątek</span>
+                <span>{dajDzienTygodnia(5)}</span>
                 {dajLekcje(5)}
                 <button onClick={() => setEdytowanyDzien(5)}>DODAJ</button>
               </div>
               <div className="dzien">
-                <span>Sobota</span>
+                <span>{dajDzienTygodnia(6)}</span>
                 {dajLekcje(6)}
                 <button onClick={() => setEdytowanyDzien(6)}>DODAJ</button>
               </div>
               <div className="dzien">
-                <span>Niedziela</span>
+                <span>{dajDzienTygodnia(0)}</span>
                 {dajLekcje(0)}
                 <button onClick={() => setEdytowanyDzien(0)}>DODAJ</button>
               </div>
             </div>
           ) : (
-            <div>
-              <span>Poniedziałek</span>
-              <span>Wtorek</span>
-              <span>Środa</span>
-              <span>Czwartek</span>
-              <span>Piątek</span>
+            <div className="tydzien5">
+              <div className="dzien">
+                <span>{dajDzienTygodnia(1)}</span>
+                {dajLekcje(1)}
+                <button onClick={() => setEdytowanyDzien(1)}>DODAJ</button>
+              </div>
+              <div className="dzien">
+                <span>{dajDzienTygodnia(2)}</span>
+                {dajLekcje(2)}
+                <button onClick={() => setEdytowanyDzien(2)}>DODAJ</button>
+              </div>
+              <div className="dzien">
+                <span>{dajDzienTygodnia(3)}</span>
+                {dajLekcje(3)}
+                <button onClick={() => setEdytowanyDzien(3)}>DODAJ</button>
+              </div>
+              <div className="dzien">
+                <span>{dajDzienTygodnia(4)}</span>
+                {dajLekcje(4)}
+                <button onClick={() => setEdytowanyDzien(4)}>DODAJ</button>
+              </div>
+              <div className="dzien">
+                <span>{dajDzienTygodnia(5)}</span>
+                {dajLekcje(5)}
+                <button onClick={() => setEdytowanyDzien(5)}>DODAJ</button>
+              </div>
             </div>
           )}
         </div>
