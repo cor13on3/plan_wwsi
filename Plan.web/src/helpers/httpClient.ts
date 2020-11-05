@@ -3,7 +3,10 @@ export interface Blad {
   Tresc: string;
 }
 
-const url = "http://localhost:60211";
+const url =
+  !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+    ? "http://localhost:60211"
+    : "";
 
 async function handleResponse(response: Response) {
   const text = await response.text();
