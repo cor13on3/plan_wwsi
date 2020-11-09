@@ -44,7 +44,7 @@ const ContextMenu = (props: ContextMenuProps) => {
               setAnchorEl(null as any);
             }}
           >
-            Usuń
+            {x.title}
           </MenuItem>
         ))}
       </Menu>

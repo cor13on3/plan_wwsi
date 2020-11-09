@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import WyborSpecjalnosci, { Specjalnosc } from "./WyborSpecjalnosci";
+import { KadraEdycjaStyle } from "../../styles/KadraEdycjaStyle";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@material-ui/core";
 
 interface Wykladowca {
   id: number;
@@ -66,51 +75,70 @@ function KadraEdycja(props: Props) {
   }
 
   return (
-    <div>
-      {blad && <p className="blad">{blad}</p>}
-      <div className="edycja">
-        <input
-          placeholder="Nazwisko"
+    <KadraEdycjaStyle>
+      <p className="xl">NOWY WYKŁADOWCA</p>
+      <form>
+        <TextField
+          label="Nazwisko"
+          variant="outlined"
           value={edytowany.nazwisko}
           onChange={(e) =>
             setEdytowany({ ...edytowany, nazwisko: e.target.value })
           }
         />
-        <input
-          placeholder="Imie"
+        <TextField
+          variant="outlined"
+          label="Imie"
           value={edytowany.imie}
           onChange={(e) => setEdytowany({ ...edytowany, imie: e.target.value })}
         />
-        <input
-          placeholder="Tytuły"
+        <TextField
+          variant="outlined"
+          label="Tytuły"
           value={edytowany.tytul}
           onChange={(e) =>
             setEdytowany({ ...edytowany, tytul: e.target.value })
           }
         />
-        <input
+        <TextField
+          variant="outlined"
           onChange={() => {}}
           value={dajSpecjalnosci()}
-          placeholder="Specjalizacje"
+          label="Specjalizacje"
           onClick={() => setEdycjaSpecjalnosci(true)}
         />
-        <input
-          placeholder="Email"
+        <TextField
+          variant="outlined"
+          label="Email"
           value={edytowany.email}
           onChange={(e) =>
             setEdytowany({ ...edytowany, email: e.target.value })
           }
         />
-        <button onClick={zapisz}>ZAPISZ</button>
-        <button onClick={props.onAnuluj}>ANULUJ</button>
-      </div>
-      {edycjaSpecjalnosci && (
-        <WyborSpecjalnosci
-          specjalnosci={edytowany.specjalnosci}
-          onWybrano={(lista) => onWybranoSpecjalnosci(lista)}
-        />
-      )}
-    </div>
+        <div className="buttons">
+          <Button color="secondary" variant="outlined" onClick={props.onAnuluj}>
+            ANULUJ
+          </Button>
+          <Button color="secondary" variant="contained" onClick={zapisz}>
+            ZAPISZ
+          </Button>
+        </div>
+      </form>
+      <Dialog
+        open={edycjaSpecjalnosci}
+        onClose={() => setEdycjaSpecjalnosci(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Specjalizacje</DialogTitle>
+        <DialogContent>
+          <WyborSpecjalnosci
+            specjalnosci={edytowany.specjalnosci}
+            onWybrano={(lista) => onWybranoSpecjalnosci(lista)}
+          />
+        </DialogContent>
+      </Dialog>
+    </KadraEdycjaStyle>
   );
 }
 

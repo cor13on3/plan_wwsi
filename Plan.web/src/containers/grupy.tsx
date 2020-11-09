@@ -12,6 +12,7 @@ import ContextMenu from "../components/ContextMenu";
 import { StopienStudiow, TrybStudiow } from "../helpers/enums";
 import { Blad, httpClient } from "../helpers/httpClient";
 import { GrupaWidok } from "../helpers/types";
+import { GrupaEdycjaStyle } from "../styles/GrupaEdycjaStyle";
 import "./Grupy.css";
 
 interface Grupa {
@@ -41,7 +42,7 @@ function Grupy() {
     odswiezListe();
   }, []);
 
-  function pokazEdycje(numer?: string) {
+  function pokazEdycje() {
     setCzyEdycja(true);
   }
 
@@ -116,10 +117,8 @@ function Grupy() {
         onClose={() => setCzyEdycja(false)}
         anchor="right"
       >
-        <div className="edycja">
-          <div className="title">
-            <p className="xl">NOWA GRUPA</p>
-          </div>
+        <GrupaEdycjaStyle>
+          <p className="xl">NOWA GRUPA</p>
           <form>
             <TextField
               variant="outlined"
@@ -181,7 +180,7 @@ function Grupy() {
               ZAPISZ
             </Button>
           </form>
-        </div>
+        </GrupaEdycjaStyle>
       </Drawer>
     </div>
   );

@@ -38,7 +38,7 @@ namespace Plan.Core.Zapytania
             DodajMapowanie(w => new WykladowcaWidokDTO
             {
                 Id = w.IdWykladowcy,
-                Nazwa = $"{w.Tytul}. {w.Imie[0]} {w.Nazwisko}",
+                Nazwa = $"{w.Tytul} {w.Imie[0]}. {w.Nazwisko}",
                 Email = w.Email
             });
         }

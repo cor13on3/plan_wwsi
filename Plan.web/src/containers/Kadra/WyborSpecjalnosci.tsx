@@ -1,5 +1,22 @@
+import { Button, Checkbox, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { httpClient } from "../../helpers/httpClient";
+
+const WyborSpecjalnosciStyle = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr 1fr;
+  row-gap: 12px;
+
+  .dodaj {
+    padding-left: 14px;
+  }
+
+  .zapisz-btn {
+    justify-self: end;
+    margin-top: 12px;
+  }
+`;
 
 export interface Specjalnosc {
   id: number;
@@ -45,23 +62,33 @@ function WyborSpecjalnosci(props: WyborSpecjalnosciProps) {
   }
 
   return (
-    <div className="edycja-spec">
-      {lista.map((x, i) => (
-        <div key={i}>
-          <input
-            type="checkbox"
-            onChange={(e) => zmienWybrane(x, e.target.checked)}
-            checked={wybrane.some((y) => y.id === x.id)}
-          />
-          <span>{x.nazwa}</span>
-        </div>
-      ))}
-      <div>
-        <input value={nowa} onChange={(e) => setNowa(e.target.value)} />
-        <button onClick={dodaj}>DODAJ</button>
+    <WyborSpecjalnosciStyle>
+      <div className="opcje">
+        {lista.map((x, i) => (
+          <div key={i}>
+            <Checkbox
+              onChange={(e) => zmienWybrane(x, e.target.checked)}
+              checked={wybrane.some((y) => y.id === x.id)}
+            />
+            <span>{x.nazwa}</span>
+          </div>
+        ))}
       </div>
-      <button onClick={() => props.onWybrano(wybrane)}>WYBIERZ</button>
-    </div>
+      <div className="dodaj">
+        <TextField value={nowa} onChange={(e) => setNowa(e.target.value)} />
+        <Button variant="text" color="secondary" onClick={dodaj}>
+          DODAJ
+        </Button>
+      </div>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => props.onWybrano(wybrane)}
+        className="zapisz-btn"
+      >
+        WYBIERZ
+      </Button>
+    </WyborSpecjalnosciStyle>
   );
 }
 
