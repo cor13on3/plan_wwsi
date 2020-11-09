@@ -10,7 +10,10 @@ namespace Plan.Core.Zapytania
             UstawKryteria(x => (tryb == null || x.TrybStudiow == tryb) && (stopien == null || x.StopienStudiow == stopien) && (semestr == null || x.Semestr == semestr));
             DodajMapowanie(x => new GrupaWidokDTO
             {
-                Numer = x.NrGrupy
+                Numer = x.NrGrupy,
+                Semestr = x.Semestr,
+                TrybStudiow = x.TrybStudiow,
+                StopienStudiow = x.StopienStudiow
             });
         }
     }

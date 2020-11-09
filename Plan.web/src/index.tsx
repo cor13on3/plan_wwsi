@@ -4,10 +4,13 @@ import { Provider } from "react-redux";
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import App from "./App";
-import "./index.css";
 import { PlanStore } from "./redux/store";
 import uzytkownikReducer from "./redux/uzytkownik.reducer";
 import * as serviceWorker from "./serviceWorker";
+import "./index.css";
+import "./styles.css";
+import { MuiThemeProvider, ThemeProvider } from "@material-ui/core";
+import { theme } from "./theme";
 
 const init = {} as PlanStore;
 const daneLocalStg = localStorage.getItem("uzytkownik");
@@ -27,7 +30,11 @@ store.subscribe(() => {
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <MuiThemeProvider theme={theme}>
+          <App />
+        </MuiThemeProvider>
+      </ThemeProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

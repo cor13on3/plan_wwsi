@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import { Button, Drawer } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
-import "./App.css";
 import Grupy from "./containers/Grupy";
 import Kadra from "./containers/Kadra/Kadra";
 import Kalendarium from "./containers/Kalendarium/Kalendarium";
@@ -10,6 +10,8 @@ import Plan from "./containers/Plan/Plan";
 import Pulpit from "./containers/pulpit";
 import { httpClient } from "./helpers/httpClient";
 import { PlanStore } from "./redux/store";
+import { HeaderStyle } from "./styles/HeaderStyle";
+import { AppStyle } from "./styles/AppStyle";
 
 interface AppProps {
   zalogowano: boolean;
@@ -35,55 +37,60 @@ function App({ zalogowano, imie, nazwisko, onWyloguj }: AppProps) {
 
   return (
     <BrowserRouter>
-      <div className="window">
-        {zalogowano ? (
-          <header>
-            <div>
-              Zalogowano jako {imie} {nazwisko}
+      <AppStyle logged={zalogowano}>
+        <HeaderStyle>
+          {zalogowano && (
+            <div className="zalogowany">
+              <p>
+                Zalogowano jako {imie} {nazwisko}
+              </p>
+              <Button color="inherit" onClick={wyloguj}>
+                WYLOGUJ
+              </Button>
             </div>
-            <button onClick={wyloguj}>WYLOGUJ</button>
-            <Link to="/plan">Zarządzanie planem zajęć</Link>
-            <Link to="/kadra">Zarządzanie kadrą</Link>
-            <Link to="/kalendarium">Zarządzanie kalendarium</Link>
-            <Link to="/grupy">Zarządzanie grupami</Link>
-          </header>
-        ) : (
-          <header>
-            <div>Zaloguj się</div>
-          </header>
-        )}
-        <main>
-          <Switch>
-            {zalogowano ? (
-              <>
-                <Route exact path="/pulpit">
-                  <Pulpit />
-                </Route>
-                <Route exact path="/plan">
-                  <Plan />
-                </Route>
-                <Route exact path="/kadra">
-                  <Kadra />
-                </Route>
-                <Route exact path="/kalendarium">
-                  <Kalendarium />
-                </Route>
-                <Route exact path="/grupy">
-                  <Grupy />
-                </Route>
-                <Redirect to="/pulpit" />
-              </>
-            ) : (
-              <>
-                <Route exact path="/">
-                  <Logowanie />
-                </Route>
-                <Redirect to="/" />
-              </>
-            )}
-          </Switch>
-        </main>
-      </div>
+          )}
+        </HeaderStyle>
+        <div className="window">
+          {zalogowano && (
+            <nav>
+              <Link to="/plan">Plan zajęć</Link>
+              <Link to="/kadra">Kadra</Link>
+              <Link to="/kalendarium">Kalendarium</Link>
+              <Link to="/grupy">Grupy</Link>
+            </nav>
+          )}
+          <main>
+            <Switch>
+              {zalogowano ? (
+                <>
+                  <Route exact path="/pulpit">
+                    <Pulpit />
+                  </Route>
+                  <Route exact path="/plan">
+                    <Plan />
+                  </Route>
+                  <Route exact path="/kadra">
+                    <Kadra />
+                  </Route>
+                  <Route exact path="/kalendarium">
+                    <Kalendarium />
+                  </Route>
+                  <Route exact path="/grupy">
+                    <Grupy />
+                  </Route>
+                </>
+              ) : (
+                <>
+                  <Route exact path="/">
+                    <Logowanie />
+                  </Route>
+                  <Redirect to="/" />
+                </>
+              )}
+            </Switch>
+          </main>
+        </div>
+      </AppStyle>
     </BrowserRouter>
   );
 }

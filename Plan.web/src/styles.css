@@ -1,0 +1,39 @@
+body {
+  color: rgba(0, 0, 0, 0.87);
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  line-height: 1.43;
+}
+
+.s {
+  font-size: 12px;
+}
+
+.m {
+  font-size: 14px;
+}
+
+.l {
+  font-size: 16px;
+}
+
+.xl {
+  font-size: 20px;
+}
+
+.xxl {
+  font-weight: 300;
+  font-size: 34px;
+}
+
+.high {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.medium {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.disabled {
+  color: rgba(0, 0, 0, 0.34);
+}
