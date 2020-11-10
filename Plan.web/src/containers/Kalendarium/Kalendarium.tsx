@@ -9,6 +9,15 @@ import { GrupaWidok } from "../../helpers/types";
 import KalendariumEdycja from "./KalendariumEdycja";
 import "./Kalendarium.css";
 import formatujDate from "../../helpers/formatujDate";
+import {
+  Button,
+  Drawer,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
+import ContextMenu from "../../components/ContextMenu";
 
 function Kalendarium() {
   const [stopien, setStopien] = useState(
@@ -17,7 +26,7 @@ function Kalendarium() {
   const [tryb, setTryb] = useState(
     TrybStudiow.Niestacjonarne as TrybStudiow | "Wybierz"
   );
-  const [semestr, setSemestr] = useState("7");
+  const [semestr, setSemestr] = useState("1");
   const [grupy, setGrupy] = useState([] as string[]);
   const [blad, setBlad] = useState("");
   const [lista, setLista] = useState([] as ZjazdGrupyWidok[]);
@@ -75,56 +84,101 @@ function Kalendarium() {
   }
 
   return (
-    <div>
-      {blad && <p className="blad">{blad}</p>}
-      <select
-        placeholder="Stopień studiów"
-        value={stopien}
-        onChange={(e) => setStopien(e.target.value as StopienStudiow)}
-      >
-        <option value="Wybierz">Wybierz</option>
-        <option value={StopienStudiow.Inzynierskie}>Inżynierskie</option>
-        <option value={StopienStudiow.Magisterskie}>Magisterskie</option>
-        <option value={StopienStudiow.Podyplomowe}>Podyplomowe</option>
-      </select>
-      <select
-        placeholder="Tryb studiów"
-        value={tryb}
-        onChange={(e) => setTryb(e.target.value as TrybStudiow)}
-      >
-        <option value="Wybierz">Wybierz</option>
-        <option value={TrybStudiow.Niestacjonarne}>Niestacjonarne</option>
-        <option value={TrybStudiow.Stacjonarne}>Stacjonarne</option>
-      </select>
-      <select
-        placeholder="Semestr"
-        value={semestr}
-        onChange={(e) => setSemestr(e.target.value)}
-      >
-        <option value="Wybierz">Wybierz</option>
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-      </select>
-      <span>{dajOpis()}</span>
-      <div className="lista">
-        {lista.map((x, i) => (
-          <div key={i}>
-            <span>{x.nr}. </span>
-            <span>{formatujDate(x.dataOd)} - </span>
-            <span>{formatujDate(x.dataDo)}</span>
-            {x.czyOdpracowanie && <span> (odpracowanie)</span>}
-            <button onClick={() => onUsun(x.nr)}>USUŃ</button>
-          </div>
-        ))}
+    <div className="kalendarium">
+      <div className="kalendarium_header">
+        <span className="xxl">Zarządzanie zjazdami</span>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setCzyEdycja(true)}
+        >
+          PRZYPISZ ZJAZD
+        </Button>
       </div>
-      <button onClick={() => setCzyEdycja(true)}>DODAJ</button>
-      {czyEdycja && <KalendariumEdycja grupy={grupy} onZapisz={onZapisz} />}
+      {blad && <p className="blad">{blad}</p>}
+      <div className="kalendarium_main">
+        <div className="filters">
+          <FormControl variant="outlined">
+            <InputLabel>Stopień studiów</InputLabel>
+            <Select
+              value={stopien}
+              onChange={(e) => setStopien(e.target.value as StopienStudiow)}
+              label="Stopień studiów"
+            >
+              <MenuItem value={StopienStudiow.Inzynierskie}>
+                Inżynierskie
+              </MenuItem>
+              <MenuItem value={StopienStudiow.Magisterskie}>
+                Magisterskie
+              </MenuItem>
+              <MenuItem value={StopienStudiow.Podyplomowe}>
+                Podyplomowe
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl variant="outlined">
+            <InputLabel>Tryb studiów</InputLabel>
+            <Select
+              value={tryb}
+              onChange={(e) => setTryb(e.target.value as TrybStudiow)}
+              label="Tryb studiów"
+            >
+              <MenuItem value={TrybStudiow.Niestacjonarne}>
+                Niestacjonarne
+              </MenuItem>
+              <MenuItem value={TrybStudiow.Stacjonarne}>Stacjonarne</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl variant="outlined">
+            <InputLabel>Semestr</InputLabel>
+            <Select
+              value={semestr}
+              onChange={(e) => setSemestr(e.target.value as string)}
+              label="Semestr"
+            >
+              <MenuItem value="1">1</MenuItem>
+              <MenuItem value="2">2</MenuItem>
+              <MenuItem value="3">3</MenuItem>
+              <MenuItem value="4">4</MenuItem>
+              <MenuItem value="5">5</MenuItem>
+              <MenuItem value="6">6</MenuItem>
+              <MenuItem value="7">7</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+        <div className="zjazd_lista">
+          <span className="xl">{dajOpis()}</span>
+          <div className="zjazd_lista_header disabled">
+            <span>NR</span>
+            <span>DATA</span>
+          </div>
+          {lista.map((x, i) => (
+            <div key={i} className="zjazd">
+              <span>
+                {x.nr}. {x.czyOdpracowanie && "(odpracowanie)"}
+              </span>
+              <span>{formatujDate(x.dataOd)}</span>
+              <span> - </span>
+              <span>{formatujDate(x.dataDo)}</span>
+              <ContextMenu
+                items={[
+                  {
+                    title: "Usuń",
+                    action: () => onUsun(x.nr),
+                  },
+                ]}
+              />
+            </div>
+          ))}
+        </div>
+        <Drawer
+          open={czyEdycja}
+          onClose={() => setCzyEdycja(false)}
+          anchor="right"
+        >
+          <KalendariumEdycja grupy={grupy} onZapisz={onZapisz} />
+        </Drawer>
+      </div>
     </div>
   );
 }

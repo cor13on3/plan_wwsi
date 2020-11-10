@@ -2,8 +2,8 @@ import { Button, TextField } from "@material-ui/core";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Blad, httpClient } from "../helpers/httpClient";
-import "./Logowanie.css";
 import { ErrorStyle } from "../styles/ErrorStyle";
+import LogowanieStyle from "../styles/LogowanieStyle";
 
 interface LogowanieProps {
   onZalogowano: Function;
@@ -25,7 +25,7 @@ function Logowanie({ onZalogowano }: LogowanieProps) {
   }
 
   return (
-    <div className="logowanie">
+    <LogowanieStyle>
       {blad ? <ErrorStyle>{blad}</ErrorStyle> : <div />}
       <div className="panel">
         <p className="xl">Zaloguj się</p>
@@ -48,7 +48,7 @@ function Logowanie({ onZalogowano }: LogowanieProps) {
         </Button>
       </div>
       <div />
-    </div>
+    </LogowanieStyle>
   );
 }
 

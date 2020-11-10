@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Blad, httpClient } from "../../helpers/httpClient";
-import WyborSpecjalnosci, { Specjalnosc } from "./WyborSpecjalnosci";
-import { KadraEdycjaStyle } from "../../styles/KadraEdycjaStyle";
 import {
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
 } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Blad, httpClient } from "../../helpers/httpClient";
+import { KadraEdycjaStyle } from "../../styles/KadraEdycjaStyle";
+import WyborSpecjalnosci, { Specjalnosc } from "./WyborSpecjalnosci";
 
 interface Wykladowca {
   id: number;
@@ -76,6 +75,7 @@ function KadraEdycja(props: Props) {
 
   return (
     <KadraEdycjaStyle>
+      {blad && <p>{blad}</p>}
       <p className="xl">NOWY WYKŁADOWCA</p>
       <form>
         <TextField

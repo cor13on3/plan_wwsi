@@ -1,7 +1,9 @@
+import { Button, Checkbox, Drawer, TextField } from "@material-ui/core";
 import React, { useState } from "react";
 import formatujDate from "../../helpers/formatujDate";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { ZjazdWidok } from "../../helpers/types";
+import KalendariumEdycjaStyle from "../../styles/KalendariumEdycjaStyle";
 import ZjazdyEdycja from "./ZjazdyEdycja";
 
 interface KalendariumEdycjaProps {
@@ -38,34 +40,54 @@ function KalendariumEdycja(props: KalendariumEdycjaProps) {
   }
 
   return (
-    <div>
+    <KalendariumEdycjaStyle>
       {blad && <p className="blad">{blad}</p>}
-      <p>Wprowadzanie zjazdu</p>
-      <span>Nr kolejny: </span>
-      <input
-        placeholder="Numer kolejny"
-        type="number"
-        value={nr}
-        onChange={(e) => setNr(e.target.valueAsNumber)}
-      />
-      <span>Data: </span>
-      {wybranyZjazd.idZjazdu ? (
-        <>
-          <span>{formatujDate(wybranyZjazd.dataOd)} - </span>
-          <span>{formatujDate(wybranyZjazd.dataDo)}</span>
-        </>
-      ) : (
-        <button onClick={() => setEdycjaZjazdow(true)}>Wybierz zjazd</button>
-      )}
-      <span>Czy odpracowanie</span>
-      <input
-        type="checkbox"
-        checked={odpracowanie}
-        onChange={(e) => setOdpracowanie(e.target.checked)}
-      />
-      <button onClick={zapisz}>ZAPISZ</button>
-      {edycjaZjazdow && <ZjazdyEdycja onWybierz={onWybierz} />}
-    </div>
+      <p className="xl">PRZYPISANIE ZJAZDU</p>
+      <form>
+        <TextField
+          label="Numer kolejny"
+          variant="outlined"
+          value={nr}
+          onChange={(e) => setNr(Number.parseInt(e.target.value))}
+        />
+        <div className="data">
+          <TextField
+            disabled
+            label="Data zjazdu"
+            variant="outlined"
+            value={`${formatujDate(wybranyZjazd.dataOd)} - ${formatujDate(
+              wybranyZjazd.dataDo
+            )}`}
+          />
+          <Button color="secondary" onClick={() => setEdycjaZjazdow(true)}>
+            WYBIERZ
+          </Button>
+        </div>
+        <div>
+          <Checkbox
+            className="checkbox"
+            checked={odpracowanie}
+            onChange={(e) => setOdpracowanie(e.target.checked)}
+          />
+          <span>Czy odpracowanie</span>
+        </div>
+        <Button
+          className="zapiszBtn"
+          variant="contained"
+          color="secondary"
+          onClick={zapisz}
+        >
+          ZAPISZ
+        </Button>
+      </form>
+      <Drawer
+        open={edycjaZjazdow}
+        onClose={() => setEdycjaZjazdow(false)}
+        anchor="right"
+      >
+        <ZjazdyEdycja onWybierz={onWybierz} />
+      </Drawer>
+    </KalendariumEdycjaStyle>
   );
 }
 
