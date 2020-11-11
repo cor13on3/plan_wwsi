@@ -1,6 +1,8 @@
+import { Button, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { SalaWidok } from "../../helpers/enums";
 import { Blad, httpClient } from "../../helpers/httpClient";
+import WyborSaliStyle from "../../styles/WyborSaliStyle";
 
 interface WyborSaliProps {
   onWybierz: (wybrany: SalaWidok) => void;
@@ -38,21 +40,30 @@ function WyborSali(props: WyborSaliProps) {
   }
 
   return (
-    <div>
+    <WyborSaliStyle>
+      <span className="xl">SALE</span>
       {blad && <p className="blad">{blad}</p>}
-      {lista.map((x) => (
-        <div>
-          <span>{x.nazwa}</span>
-          <button onClick={() => onWybierz(x)}>WYBIERZ</button>
-        </div>
-      ))}
-      <input
-        value={nazwa}
-        onChange={(e) => setNazwa(e.target.value)}
-        placeholder="Nazwa"
-      />
-      <button onClick={dodaj}>DODAJ</button>
-    </div>
+      <div>
+        {lista.map((x) => (
+          <div className="element">
+            <span>{x.nazwa}</span>
+            <Button color="secondary" onClick={() => onWybierz(x)}>
+              WYBIERZ
+            </Button>
+          </div>
+        ))}
+      </div>
+      <div className="element-dodaj">
+        <TextField
+          label="Nazwa"
+          value={nazwa}
+          onChange={(e) => setNazwa(e.target.value)}
+        />
+        <Button color="secondary" onClick={dodaj}>
+          DODAJ
+        </Button>
+      </div>
+    </WyborSaliStyle>
   );
 }
 

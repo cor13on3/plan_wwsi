@@ -7,6 +7,14 @@ import { GrupaWidok } from "../../helpers/types";
 import LekcjaEdycja from "./LekcjaEdycja";
 import "./Plan.css";
 import dajDzienTygodnia from "../../helpers/dajDzienTygodnia";
+import {
+  Button,
+  Drawer,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 
 interface LekcjaWidok {
   idLekcji: number;
@@ -36,7 +44,7 @@ function Plan() {
   const [grupy, setGrupy] = useState([] as GrupaWidok[]);
   const [grupa, setGrupa] = useState("Z715");
   const [tryb, setTryb] = useState(
-    "Wybierz" as "Wybierz" | "Standardowy" | "Odpracowania"
+    "Standardowy" as "Wybierz" | "Standardowy" | "Odpracowania"
   );
   const [plan, setPlan] = useState([] as PlanDnia[]);
   const [blad, setBlad] = useState("");
@@ -126,82 +134,123 @@ function Plan() {
   }
 
   return (
-    <div>
-      <h1>PLAN</h1>
-      {blad && <p className="blad">{blad}</p>}
-      <span>Tryb studiów </span>
-      <select
-        value={trybStudiow}
-        onChange={(e) => setTrybStudiow(e.target.value as TrybStudiow)}
-      >
-        <option value="Wybierz">Wybierz</option>
-        <option value={TrybStudiow.Niestacjonarne}>Niestacjonarne</option>
-        <option value={TrybStudiow.Stacjonarne}>Stacjonarne</option>
-      </select>
-      <span>Grupa </span>
-      <select value={grupa} onChange={(e) => setGrupa(e.target.value)}>
-        <option value="Wybierz">Wybierz</option>
-        {grupy.map((x, i) => (
-          <option key={i} value={x.numer}>
-            {x.numer}
-          </option>
-        ))}
-      </select>
-      <span>Tryb planu </span>
-      <select
-        value={tryb}
-        onChange={(e) =>
-          setTryb(e.target.value as "Standardowy" | "Odpracowania")
-        }
-      >
-        <option value="Standardowy">Standardowy</option>
-        <option value="Odpracowania">Odpracowania</option>
-      </select>
-      {tryb === "Odpracowania" && zjazdyOdpracowujace.length > 0 && (
-        <>
-          <span>Odpracowanie zjadu </span>
-          <select
-            value={wybranyZjazdOdpr?.nr}
-            onChange={(e) =>
-              setWybranyZjazdOdpr(
-                zjazdyOdpracowujace.find(
-                  (x) => x.nr === Number.parseInt(e.target.value)
-                )
-              )
-            }
+    <div className="plan">
+      <div className="plan-header">
+        <span className="xxl">Zarządzanie planem zajęć</span>
+      </div>
+      <div className="plan_filters">
+        <FormControl variant="outlined">
+          <InputLabel>Tryb studiów</InputLabel>
+          <Select
+            value={trybStudiow}
+            onChange={(e) => setTrybStudiow(e.target.value as TrybStudiow)}
+            label="Tryb studiów"
           >
-            {zjazdyOdpracowujace.map((x, i) => (
-              <option value={x.nr} key={i}>
-                {x.nr}
-              </option>
+            <MenuItem value="Wybierz">Wybierz</MenuItem>
+            <MenuItem value={TrybStudiow.Niestacjonarne}>
+              Niestacjonarne
+            </MenuItem>
+            <MenuItem value={TrybStudiow.Stacjonarne}>Stacjonarne</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl variant="outlined">
+          <InputLabel>Grupa</InputLabel>
+          <Select
+            label="Grupa"
+            value={grupa}
+            onChange={(e) => setGrupa(e.target.value as string)}
+          >
+            <MenuItem value="Wybierz">Wybierz</MenuItem>
+            {grupy.map((x, i) => (
+              <MenuItem key={i} value={x.numer}>
+                {x.numer}
+              </MenuItem>
             ))}
-          </select>
-          {wybranyZjazdOdpr && (
-            <span>
-              ({formatujDate(wybranyZjazdOdpr.dataOd)} -{" "}
-              {formatujDate(wybranyZjazdOdpr.dataDo)})
-            </span>
-          )}
-        </>
-      )}
+          </Select>
+        </FormControl>
+        <FormControl variant="outlined">
+          <InputLabel>Tryb planu</InputLabel>
+          <Select
+            value={tryb}
+            onChange={(e) =>
+              setTryb(e.target.value as "Standardowy" | "Odpracowania")
+            }
+            label="Tryb planu"
+          >
+            <MenuItem value="Wybierz">Wybierz</MenuItem>
+            <MenuItem value="Standardowy">Standardowy</MenuItem>
+            <MenuItem value="Odpracowania">Odpracowania</MenuItem>
+          </Select>
+        </FormControl>
+        {tryb === "Odpracowania" && zjazdyOdpracowujace.length > 0 && (
+          <div className="plan_filters_odpr">
+            <FormControl variant="outlined">
+              <InputLabel>Zjazd</InputLabel>
+              <Select
+                value={wybranyZjazdOdpr?.nr}
+                onChange={(e) =>
+                  setWybranyZjazdOdpr(
+                    zjazdyOdpracowujace.find((x) => x.nr === e.target.value)
+                  )
+                }
+                label="Zjazd"
+              >
+                {zjazdyOdpracowujace.map((x, i) => (
+                  <MenuItem value={x.nr} key={i}>
+                    {x.nr}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {wybranyZjazdOdpr && (
+              <span className="xl">
+                ({formatujDate(wybranyZjazdOdpr.dataOd)} -{" "}
+                {formatujDate(wybranyZjazdOdpr.dataDo)})
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+      {blad && <p className="blad">{blad}</p>}
       {trybStudiow !== "Wybierz" && grupa !== "Wybierz" && (
         <div>
           {trybStudiow === TrybStudiow.Niestacjonarne ? (
             <div className="tydzien3">
               <div className="dzien">
                 <span>{dajDzienTygodnia(5)}</span>
-                {dajLekcje(5)}
-                <button onClick={() => setEdytowanyDzien(5)}>DODAJ</button>
+                <div>{dajLekcje(5)}</div>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="dodajBtn"
+                  onClick={() => setEdytowanyDzien(5)}
+                >
+                  +
+                </Button>
               </div>
               <div className="dzien">
                 <span>{dajDzienTygodnia(6)}</span>
-                {dajLekcje(6)}
-                <button onClick={() => setEdytowanyDzien(6)}>DODAJ</button>
+                <div>{dajLekcje(6)}</div>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="dodajBtn"
+                  onClick={() => setEdytowanyDzien(6)}
+                >
+                  +
+                </Button>
               </div>
               <div className="dzien">
                 <span>{dajDzienTygodnia(0)}</span>
-                {dajLekcje(0)}
-                <button onClick={() => setEdytowanyDzien(0)}>DODAJ</button>
+                <div>{dajLekcje(0)}</div>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="dodajBtn"
+                  onClick={() => setEdytowanyDzien(0)}
+                >
+                  +
+                </Button>
               </div>
             </div>
           ) : (
@@ -235,14 +284,18 @@ function Plan() {
           )}
         </div>
       )}
-      {edytowanyDzien >= 0 && (
+      <Drawer
+        anchor="right"
+        open={edytowanyDzien >= 0}
+        onClose={() => setEdytowanyDzien(-1)}
+      >
         <LekcjaEdycja
           grupa={grupa}
           dzienTygodnia={edytowanyDzien}
           zjazdOdpracowywany={wybranyZjazdOdpr?.nr}
           onZapisz={onZapisz}
         />
-      )}
+      </Drawer>
     </div>
   );
 }

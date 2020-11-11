@@ -2,12 +2,12 @@ import { withTheme } from "@material-ui/core/styles";
 import styled from "styled-components";
 
 export const AppStyle = withTheme(styled.div<any>`
-  height: 100vh;
   background-color: rgb(228, 228, 232);
   display: grid;
   grid-template-rows: 64px 1fr;
 
   .window {
+    height: 100vh;
     display: grid;
     grid-template-columns: ${(props) => (props.logged ? "220px 1fr" : "1fr")};
     column-gap: 72px;

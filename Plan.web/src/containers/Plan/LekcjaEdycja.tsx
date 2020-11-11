@@ -1,6 +1,15 @@
-import { TextField } from "@material-ui/core";
+import {
+  Button,
+  Drawer,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
+import dajDzienTygodnia from "../../helpers/dajDzienTygodnia";
 import {
   FormaLekcji,
   PrzedmiotWidok,
@@ -9,9 +18,9 @@ import {
 } from "../../helpers/enums";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { WykladowcaWidok } from "../../helpers/types";
+import LekcjaEdycjaStyle from "../../styles/LekcjaEdycjaStyle";
 import WyborPrzedmiotu from "./WyborPrzedmiotu";
 import WyborSali from "./WyborSali";
-import dajDzienTygodnia from "../../helpers/dajDzienTygodnia";
 
 interface LekcjaEdycjaProps {
   grupa: string;
@@ -32,8 +41,8 @@ function LekcjaEdycja({
   const [sala, setSala] = useState({} as SalaWidok);
   const [zjazdy, setZjazdy] = useState([] as number[]);
   const [wybraneZjazdy, setWybraneZjazdy] = useState([] as number[]);
-  const [od, setOd] = useState("");
-  const [godzinaDo, setDo] = useState("");
+  const [od, setOd] = useState("08:00");
+  const [godzinaDo, setDo] = useState("08:00");
   const [forma, setForma] = useState(FormaLekcji.Wyklad);
   const [edycjaPrzedmiotu, setEdycjaPrzedmiotu] = useState(false);
   const [edycjaSali, setEdycjaSali] = useState(false);
@@ -107,76 +116,96 @@ function LekcjaEdycja({
   }
 
   return (
-    <div>
-      <h3>
-        Edycja zajęć dla grupy {grupa} na{" "}
-        {dajDzienTygodnia(dzienTygodnia).toLowerCase()}.
-      </h3>
+    <LekcjaEdycjaStyle>
       {blad && <p className="blad">{blad}</p>}
-      <span>Przedmiot: </span>
-      <input
-        onClick={() => setEdycjaPrzedmiotu(true)}
-        onChange={() => {}}
-        value={przedmiot.nazwa}
-      />
-      {edycjaPrzedmiotu && <WyborPrzedmiotu onWybierz={onWyborPrzedmiotu} />}
-      <p>Wykładowca: </p>
-      <Autocomplete
-        options={wykladowcy}
-        getOptionLabel={(w) => w.nazwa}
-        style={{ width: 300 }}
-        renderInput={(params) => (
-          <TextField {...params} label="Wykładowca" variant="outlined" />
-        )}
-        onChange={(e, v) => v && setWykladowca(v)}
-      />
-      <span>Sala: </span>
-      <input
-        onClick={() => setEdycjaSali(true)}
-        onChange={() => {}}
-        value={sala.nazwa}
-      />
-      {edycjaSali && <WyborSali onWybierz={onWyborSali} />}
-      {!zjazdOdpracowywany && (
-        <>
-          <p>Zjazdy: </p>
+      <p className="xl">
+        ZAJĘCIA DLA GRUPY {grupa} NA{" "}
+        {dajDzienTygodnia(dzienTygodnia).toUpperCase()}
+      </p>
+      <form>
+        <TextField
+          label="Przedmiot"
+          variant="outlined"
+          onClick={() => setEdycjaPrzedmiotu(true)}
+          value={przedmiot.nazwa}
+        />
+        <Autocomplete
+          options={wykladowcy}
+          getOptionLabel={(w) => w.nazwa}
+          renderInput={(params) => (
+            <TextField {...params} label="Wykładowca" variant="outlined" />
+          )}
+          onChange={(e, v) => v && setWykladowca(v)}
+        />
+        <TextField
+          label="Sala"
+          variant="outlined"
+          onClick={() => setEdycjaSali(true)}
+          value={sala.nazwa}
+        />
+        {!zjazdOdpracowywany && (
           <Autocomplete
             multiple
             options={zjazdy}
             getOptionLabel={(w) => w.toString()}
-            style={{ width: 300 }}
             renderInput={(params) => (
               <TextField {...params} label="Zjazdy" variant="outlined" />
             )}
             onChange={(e, v) => v && setWybraneZjazdy(v)}
           />
-        </>
-      )}
-      <span>Godzina: </span>
-      <input
-        type="time"
-        value={od}
-        onChange={(e) => setOd(e.target.value)}
-        placeholder="Godzina od"
-      />
-      <span> - </span>
-      <input
-        type="time"
-        value={godzinaDo}
-        onChange={(e) => setDo(e.target.value)}
-        placeholder="Godzina do"
-      />
-      <p></p>
-      <select
-        value={forma}
-        onChange={(e) => setForma(e.target.value as FormaLekcji)}
+        )}
+        <div>
+          <TextField
+            variant="outlined"
+            type="time"
+            value={od}
+            onChange={(e) => setOd(e.target.value)}
+            label="Godzina od"
+          />
+          <span> - </span>
+          <TextField
+            variant="outlined"
+            type="time"
+            value={godzinaDo}
+            onChange={(e) => setDo(e.target.value)}
+            label="Godzina do"
+          />
+        </div>
+        <FormControl variant="outlined">
+          <InputLabel>Forma zajęć</InputLabel>
+          <Select
+            label="Forma zajęć"
+            value={forma}
+            onChange={(e) => setForma(e.target.value as FormaLekcji)}
+          >
+            <MenuItem value={FormaLekcji.Wyklad}>Wykład</MenuItem>
+            <MenuItem value={FormaLekcji.Cwiczenia}>Ćwiczenie</MenuItem>
+          </Select>
+        </FormControl>
+        <Button
+          className="zapiszBtn"
+          variant="contained"
+          color="secondary"
+          onClick={zapisz}
+        >
+          ZAPISZ
+        </Button>
+      </form>
+      <Drawer
+        open={edycjaPrzedmiotu}
+        anchor="right"
+        onClose={() => setEdycjaPrzedmiotu(false)}
       >
-        <option value={FormaLekcji.Wyklad}>Wykład</option>
-        <option value={FormaLekcji.Cwiczenia}>Ćwiczenie</option>
-      </select>
-      <p></p>
-      <button onClick={zapisz}>ZAPISZ</button>
-    </div>
+        <WyborPrzedmiotu onWybierz={onWyborPrzedmiotu} />
+      </Drawer>
+      <Drawer
+        open={edycjaSali}
+        anchor="right"
+        onClose={() => setEdycjaSali(false)}
+      >
+        <WyborSali onWybierz={onWyborSali} />
+      </Drawer>
+    </LekcjaEdycjaStyle>
   );
 }
 
