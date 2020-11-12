@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="App1.Views.WykladowcaSzczegolyPage"
+             xmlns:vm="clr-namespace:App1.ViewModels"
+             Title="Szczegóły">
+
+    <ContentPage.BindingContext>
+        <vm:WykladowcyViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout Spacing="20" Padding="15">
+        <Label Text="Imię i nazwisko:" FontSize="Medium" />
+        <Label Text="{Binding Szczegoly.NazwaPelna}" d:Text="Nazwa zajęć" FontSize="Small" AutomationId="WykladowcaSzczegolyNazwa"/>
+        <Label Text="Specjalizacja:" FontSize="Medium" />
+        <Label Text="{Binding Szczegoly.Specjalizacja}" d:Text="Godzina zajęć" FontSize="Small"/>
+        <Label Text="Najbliższe zajęcia:" FontSize="Medium" />
+        <ListView x:Name="ItemsListView"
+                ItemsSource="{Binding Szczegoly.Zajecia}"
+                VerticalOptions="FillAndExpand"
+                HasUnevenRows="true"
+                IsPullToRefreshEnabled="true"
+                CachingStrategy="RecycleElement">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="10">
+                            <Label Text="{Binding Nazwa}" 
+                                d:Text="{Binding .}"
+                                LineBreakMode="NoWrap" 
+                                FontSize="16"
+                                AutomationId="ZajeciaWykladowcyNazwa"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+
+</ContentPage>

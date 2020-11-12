@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="App1.Views.ZajeciaSzczegolyPage"
+             Title="{Binding Title}">
+
+    <StackLayout Spacing="20" Padding="15">
+        <Label Text="Nazwa:" FontSize="Medium" />
+        <Label Text="{Binding Szczegoly.Nazwa}" d:Text="Nazwa zajęć" FontSize="Small" AutomationId="ZajeciaNazwa"/>
+        <Label Text="Godzina:" FontSize="Medium" />
+        <Label Text="{Binding Szczegoly.Godzina}" d:Text="Godzina zajęć" FontSize="Small"/>
+        <Label Text="Wykładowca:" FontSize="Medium" />
+        <Label Text="{Binding Szczegoly.Wykladowca}" FontSize="Small"/>
+        <Label Text="Sala:" FontSize="Medium" />
+        <Label Text="{Binding Szczegoly.Sala}" FontSize="Small"/>
+        <Label Text="Alternatywne zajęcia:" FontSize="Medium" />
+        <ListView x:Name="ItemsListView"
+                ItemsSource="{Binding Szczegoly.Alternatywy}"
+                VerticalOptions="FillAndExpand"
+                HasUnevenRows="true"
+                IsPullToRefreshEnabled="true"
+                CachingStrategy="RecycleElement">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="10">
+                            <Label Text="{Binding Nazwa}" 
+                                d:Text="{Binding .}"
+                                LineBreakMode="NoWrap" 
+                                FontSize="16" 
+                                AutomationId="AlternatywaNazwa"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+
+</ContentPage>
