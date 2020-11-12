@@ -1,5 +1,5 @@
-﻿using App1.Models;
-using App1.Services;
+﻿using PlanWWSI.Models;
+using PlanWWSI.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace App1.ViewModels
+namespace PlanWWSI.ViewModels
 {
     public class WykladowcyViewModel : BaseViewModel
     {

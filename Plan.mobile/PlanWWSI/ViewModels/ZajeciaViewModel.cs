@@ -3,12 +3,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using App1.Models;
-using App1.Views;
+using PlanWWSI.Models;
+using PlanWWSI.Views;
 using System.Collections.Generic;
-using App1.Services;
+using PlanWWSI.Services;
 
-namespace App1.ViewModels
+namespace PlanWWSI.ViewModels
 {
     public class ZajeciaViewModel : BaseViewModel
     {

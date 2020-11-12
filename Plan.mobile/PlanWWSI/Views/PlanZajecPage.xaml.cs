@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using Xamarin.Forms;
-using App1.Models;
-using App1.ViewModels;
+using PlanWWSI.Models;
+using PlanWWSI.ViewModels;
 
-namespace App1.Views
+namespace PlanWWSI.Views
 {
     [DesignTimeVisible(false)]
     public partial class PlanZajecPage : ContentPage

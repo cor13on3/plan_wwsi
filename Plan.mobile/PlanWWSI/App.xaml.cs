@@ -1,10 +1,10 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using App1.Services;
-using App1.Views;
+using PlanWWSI.Services;
+using PlanWWSI.Views;
 
-namespace App1
+namespace PlanWWSI
 {
     public partial class App : Application
     {

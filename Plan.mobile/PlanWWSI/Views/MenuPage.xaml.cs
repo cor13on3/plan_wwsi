@@ -1,9 +1,9 @@
-﻿using App1.Models;
+﻿using PlanWWSI.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Xamarin.Forms;
 
-namespace App1.Views
+namespace PlanWWSI.Views
 {
     [DesignTimeVisible(false)]
     public partial class MenuPage : ContentPage

@@ -1,8 +1,8 @@
-﻿using App1.Models;
+﻿using PlanWWSI.Models;
 using System;
 using System.Linq;
 
-namespace App1.ViewModels
+namespace PlanWWSI.ViewModels
 {
     public class ZajeciaSzczegolyViewModel : BaseViewModel
     {

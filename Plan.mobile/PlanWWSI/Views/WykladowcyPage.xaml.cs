@@ -1,9 +1,9 @@
-﻿using App1.Models;
-using App1.ViewModels;
+﻿using PlanWWSI.Models;
+using PlanWWSI.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace App1.Views
+namespace PlanWWSI.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WykladowcyPage : ContentPage

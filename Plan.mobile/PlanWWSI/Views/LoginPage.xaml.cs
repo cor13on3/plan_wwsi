@@ -1,4 +1,4 @@
-﻿using App1.ViewModels;
+﻿using PlanWWSI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace App1.Views
+namespace PlanWWSI.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
@@ -16,9 +16,18 @@ namespace App1.Views
         public LoginPage()
         {
             InitializeComponent();
-            var vm = new LoginViewModel();
-            vm.Navigation = this.Navigation;
-            this.BindingContext = vm;
+            if (Application.Current.Properties.ContainsKey("grupa"))
+            {
+                var zajecia = new ZajeciaViewModel();
+                zajecia.NumerGrupy = Application.Current.Properties["grupa"].ToString();
+                Navigation.PushAsync(new PlanZajecPage(zajecia), true);
+            }
+            else
+            {
+                var vm = new LoginViewModel();
+                vm.Navigation = this.Navigation;
+                this.BindingContext = vm;
+            }
         }
     }
 }

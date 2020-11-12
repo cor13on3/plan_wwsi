@@ -1,4 +1,4 @@
-﻿namespace App1.Models
+﻿namespace PlanWWSI.Models
 {
     public class Zajecia : ModelBase
     {

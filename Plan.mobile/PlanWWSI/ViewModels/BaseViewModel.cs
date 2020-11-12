@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Xamarin.Forms;
-using App1.Services;
-using App1.Models;
+using PlanWWSI.Services;
+using PlanWWSI.Models;
 
-namespace App1.ViewModels
+namespace PlanWWSI.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {

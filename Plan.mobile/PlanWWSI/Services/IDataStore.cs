@@ -1,8 +1,8 @@
-﻿using App1.Models;
+﻿using PlanWWSI.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace App1.Services
+namespace PlanWWSI.Services
 {
     public interface IDataStore<T> where T : ModelBase
     {

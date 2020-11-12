@@ -1,17 +1,17 @@
-﻿using App1.Views;
+﻿using PlanWWSI.Views;
 using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 using Xamarin.Forms;
 
-namespace App1.ViewModels
+namespace PlanWWSI.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
         public LoginViewModel()
         {
             Title = "Wybór grupy";
-
             ZapiszCommand = new Command(ExecuteZapiszCommand);
         }
 
@@ -21,6 +21,7 @@ namespace App1.ViewModels
 
         private async void ExecuteZapiszCommand()
         {
+            Application.Current.Properties.Add("grupa", NumerGrupy);
             var vm = new ZajeciaViewModel();
             vm.NumerGrupy = NumerGrupy;
             await Navigation.PushAsync(new PlanZajecPage(vm), true);

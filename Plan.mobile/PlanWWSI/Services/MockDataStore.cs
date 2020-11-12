@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using App1.Models;
+using PlanWWSI.Models;
 
-namespace App1.Services
+namespace PlanWWSI.Services
 {
     public class MockDataStore<T> : IDataStore<T> where T : ModelBase
     {
