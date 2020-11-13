@@ -27,13 +27,8 @@ namespace PlanWWSI.Views
             {
                 NazwaPelna = item.NazwaPelna,
                 Specjalizacja = "Grafika",
-                Zajecia = new Zajecia[]
-                {
-                    new Zajecia{Nazwa = "Monitory" },
-                    new Zajecia{Nazwa = "Telewizory"}
-                }
             };
-            await Navigation.PushAsync(new WykladowcaSzczegolyPage(viewModel));
+            Application.Current.MainPage = new WykladowcaSzczegolyPage(viewModel);
 
             ItemsListView.SelectedItem = null;
         }

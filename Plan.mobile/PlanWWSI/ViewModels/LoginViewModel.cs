@@ -1,8 +1,6 @@
 ﻿using PlanWWSI.Views;
-using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
-
 using Xamarin.Forms;
 
 namespace PlanWWSI.ViewModels
@@ -21,10 +19,14 @@ namespace PlanWWSI.ViewModels
 
         private async void ExecuteZapiszCommand()
         {
-            Application.Current.Properties.Add("grupa", NumerGrupy);
-            var vm = new ZajeciaViewModel();
-            vm.NumerGrupy = NumerGrupy;
-            await Navigation.PushAsync(new PlanZajecPage(vm), true);
+            if (!Application.Current.Properties.ContainsKey("grupa"))
+                Application.Current.Properties.Add("grupa", NumerGrupy);
+            else
+                Application.Current.Properties["grupa"] = NumerGrupy;
+            await Application.Current.SavePropertiesAsync();
+            Application.Current.MainPage = new MainPage();
+            //Navigation.InsertPageBefore(new PlanZajecPage(), Navigation.NavigationStack.Last());
+            //await Navigation.PopAsync();
         }
     }
 }

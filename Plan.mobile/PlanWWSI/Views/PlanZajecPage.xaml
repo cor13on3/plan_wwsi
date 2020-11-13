@@ -15,8 +15,7 @@
                 RefreshCommand="{Binding LoadItemsCommand}"
                 IsPullToRefreshEnabled="true"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                CachingStrategy="RecycleElement"
-                ItemSelected="OnItemSelected">
+                CachingStrategy="RecycleElement">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -27,7 +26,17 @@
                                 Style="{DynamicResource ListItemTextStyle}" 
                                 FontSize="24" 
                                 AutomationId="PlanItem"/>
-                            <Label Text="{Binding Godzina}" 
+                            <Label Text="{Binding Wykladowca}" 
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap"
+                                Style="{DynamicResource ListItemDetailTextStyle}"
+                                FontSize="16" />
+                            <Label Text="{Binding Sala}" 
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap"
+                                Style="{DynamicResource ListItemDetailTextStyle}"
+                                FontSize="16" />
+                            <Label Text="{Binding Godziny}" 
                                 d:Text="Item descripton"
                                 LineBreakMode="NoWrap"
                                 Style="{DynamicResource ListItemDetailTextStyle}"

@@ -32,7 +32,7 @@ namespace Plan.API.Controllers
             _lekcjaService.PrzypiszGrupe(req.IdLekcji, req.NrGrupy, req.NrZjazdu, req.DzienTygodnia, req.CzyOdpracowanie);
         }
 
-        [HttpGet("daj-plan")]
+        [HttpGet("daj-plan/{data}/{grupa}")]
         public LekcjaWidokDTO[] DajPlanNaDzien(DateTime data, string grupa)
         {
             var wynik = _lekcjaService.DajPlanNaDzien(data, grupa);

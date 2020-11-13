@@ -14,8 +14,8 @@ namespace PlanWWSI.Views
         public MainPage()
         {
             InitializeComponent();
-
             MasterBehavior = MasterBehavior.Popover;
+            Detail = new NavigationPage(new PlanZajecPage());
         }
 
         public async Task NavigateFromMenu(int id)
@@ -31,20 +31,18 @@ namespace PlanWWSI.Views
                         MenuPages.Add(id, new NavigationPage(new WykladowcyPage()));
                         break;
                     case (int)MenuItemType.ZmienGrupe:
+                        Application.Current.Properties.Remove("grupa");
                         MenuPages.Add(id, new NavigationPage(new LoginPage()));
                         break;
                 }
             }
 
             var newPage = MenuPages[id];
-
             if (newPage != null && Detail != newPage)
             {
                 Detail = newPage;
-
                 if (Device.RuntimePlatform == Device.Android)
                     await Task.Delay(100);
-
                 IsPresented = false;
             }
         }

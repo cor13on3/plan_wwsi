@@ -14,7 +14,10 @@ namespace PlanWWSI
             InitializeComponent();
 
             // DependencyService.Register<MockDataStore>();
-            MainPage = new MainPage();
+            if (Properties.ContainsKey("grupa"))
+                MainPage = new MainPage();
+            else
+                MainPage = new LoginPage();
         }
 
         protected override void OnStart()

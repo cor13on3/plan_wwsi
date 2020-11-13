@@ -4,63 +4,57 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using PlanWWSI.Models;
-using PlanWWSI.Views;
-using System.Collections.Generic;
-using PlanWWSI.Services;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace PlanWWSI.ViewModels
 {
     public class ZajeciaViewModel : BaseViewModel
     {
-        public ObservableCollection<Zajecia> Items { get; set; }
+        public ObservableCollection<Lekcja> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
         public string NumerGrupy { get; set; }
-        private IDataStore<Zajecia> _dataStore;
+        private HttpClient _httpClient;
+        public INavigation Navigation { get; set; }
 
         public ZajeciaViewModel()
         {
             Title = "Zajęcia";
-            Items = new ObservableCollection<Zajecia>();
+            Items = new ObservableCollection<Lekcja>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-            _dataStore = GetDataStore<Zajecia>();
-
-            var mockItems = new List<Zajecia>
-            {
-                new Zajecia { Id = Guid.NewGuid().ToString(), Nazwa = "Programowanie", Godzina="8:00 - 9:35" },
-                new Zajecia { Id = Guid.NewGuid().ToString(), Nazwa = "Grafika", Godzina="9:45 - 11:20" },
-                new Zajecia { Id = Guid.NewGuid().ToString(), Nazwa = "Sieci", Godzina="11:30 - 13:05" },
-                new Zajecia { Id = Guid.NewGuid().ToString(), Nazwa = "Algorytmy", Godzina="13:45 - 15:20" },
-            };
-
-            foreach (var item in mockItems)
-            {
-                _dataStore.AddItemAsync(item);
-            }
+            _httpClient = new HttpClient();
+            if (String.IsNullOrEmpty(NumerGrupy))
+                NumerGrupy = Application.Current.Properties["grupa"].ToString();
         }
 
         async Task ExecuteLoadItemsCommand()
         {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-
             try
             {
                 Items.Clear();
-                var items = await _dataStore.GetItemsAsync(null, true);
-                foreach (var item in items)
+                var data = DateTime.Today.ToString("yyyy-MM-dd");
+                var res = await _httpClient.GetAsync(new Uri($"http://10.0.2.2:60211/api/lekcja/daj-plan/{data}/{NumerGrupy}"));
+                if (res.IsSuccessStatusCode)
                 {
-                    Items.Add(item);
+                    string content = await res.Content.ReadAsStringAsync();
+                    var lista = JsonConvert.DeserializeObject<LekcjaWidokDTO[]>(content);
+                    foreach (var item in lista)
+                    {
+                        Items.Add(new Lekcja
+                        {
+                            IdLekcji = item.IdLekcji,
+                            Nazwa = item.Nazwa,
+                            Godziny = $"{item.Od} - {item.Do}",
+                            Sala = item.Sala,
+                            Wykladowca = item.Wykladowca,
+                            Forma = item.Forma
+                        });
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
     }

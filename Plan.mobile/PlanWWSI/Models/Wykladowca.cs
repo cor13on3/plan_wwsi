@@ -10,6 +10,5 @@
     public class WykladowcaSzczegoly : Wykladowca
     {
         public string Specjalizacja { get; set; }
-        public Zajecia[] Zajecia { get; set; }
     }
 }

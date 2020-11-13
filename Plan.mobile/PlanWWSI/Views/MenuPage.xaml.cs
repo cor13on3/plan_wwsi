@@ -20,16 +20,13 @@ namespace PlanWWSI.Views
                 new AppMenuItem {Id = MenuItemType.Wykladowcy, Title = "Wykładowcy" },
                 new AppMenuItem {Id = MenuItemType.ZmienGrupe, Title = "Zmień grupę" },
             };
-
             ListViewMenu.ItemsSource = menuItems;
-
-            ListViewMenu.SelectedItem = menuItems[2];
             ListViewMenu.ItemSelected += async (sender, e) =>
             {
                 if (e.SelectedItem == null)
                     return;
-
                 var id = (int)((AppMenuItem)e.SelectedItem).Id;
+                ListViewMenu.SelectedItem = menuItems[id];
                 await RootPage.NavigateFromMenu(id);
             };
         }

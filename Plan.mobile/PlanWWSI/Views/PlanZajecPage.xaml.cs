@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using Xamarin.Forms;
-using PlanWWSI.Models;
 using PlanWWSI.ViewModels;
 
 namespace PlanWWSI.Views
@@ -13,26 +12,7 @@ namespace PlanWWSI.Views
         public PlanZajecPage()
         {
             InitializeComponent();
-
             BindingContext = viewModel = new ZajeciaViewModel();
-        }
-
-        public PlanZajecPage(ZajeciaViewModel vm)
-        {
-            InitializeComponent();
-
-            BindingContext = viewModel = vm;
-        }
-
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
-        {
-            var item = args.SelectedItem as Zajecia;
-            if (item == null)
-                return;
-
-            await Navigation.PushAsync(new ZajeciaSzczegolyPage(new ZajeciaSzczegolyViewModel(item)));
-
-            ItemsListView.SelectedItem = null;
         }
 
         protected override void OnAppearing()
