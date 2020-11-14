@@ -8,6 +8,15 @@
              Title="{Binding NumerGrupy}">
 
     <StackLayout>
+        <Label Text="{Binding ZjazdInfo}" 
+                d:Text="{Binding .}"
+                Style="{DynamicResource ListItemTextStyle}" 
+                FontSize="16" HorizontalOptions="Center" Margin="0,4,0,0" />
+        <StackLayout Orientation="Horizontal"  HorizontalOptions="Center">
+            <Button Text="&lt;" Clicked="OnWsteczClicked" WidthRequest="32" BackgroundColor="Transparent" FontSize="Large" TextColor="{StaticResource NavigationPrimary}"/>
+            <DatePicker Date="{Binding Data, Mode=TwoWay}" Format="dddd, dd-MM-yyyy" Margin="8, 0" DateSelected="OnDateChange"  />
+            <Button Text="&gt;" Clicked="OnDalejClicked" WidthRequest="32" BackgroundColor="Transparent" FontSize="Large" TextColor="{StaticResource NavigationPrimary}"/>
+        </StackLayout>
         <ListView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"

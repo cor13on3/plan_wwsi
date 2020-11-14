@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using PlanWWSI.Models;
-using System.Net.Http;
-using Newtonsoft.Json;
+using PlanWWSI.Services;
+using System.Linq;
 
 namespace PlanWWSI.ViewModels
 {
@@ -13,17 +13,34 @@ namespace PlanWWSI.ViewModels
     {
         public ObservableCollection<Lekcja> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
-        public string NumerGrupy { get; set; }
-        private HttpClient _httpClient;
+        public Command PobierzZjazdyCommand { get; set; }
+        private HTTP _httpClient;
         public INavigation Navigation { get; set; }
+        public string NumerGrupy { get; set; }
+        private ZjazdWidokDTO[] _zjazdy;
+
+        private DateTime _data = DateTime.Today;
+        public DateTime Data
+        {
+            get { return _data; }
+            set { _data = value; OnPropertyChanged(nameof(Data)); }
+        }
+
+        private string _zjazdInfo = null;
+        public string ZjazdInfo
+        {
+            get { return _zjazdInfo; }
+            set { _zjazdInfo = value; OnPropertyChanged(nameof(ZjazdInfo)); }
+        }
 
         public ZajeciaViewModel()
         {
             Title = "Zajęcia";
             Items = new ObservableCollection<Lekcja>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-            _httpClient = new HttpClient();
-            if (String.IsNullOrEmpty(NumerGrupy))
+            PobierzZjazdyCommand = new Command(async () => await ExecutePobierzZjazdyCommand());
+            _httpClient = new HTTP();
+            if (string.IsNullOrEmpty(NumerGrupy))
                 NumerGrupy = Application.Current.Properties["grupa"].ToString();
         }
 
@@ -32,29 +49,68 @@ namespace PlanWWSI.ViewModels
             try
             {
                 Items.Clear();
-                var data = DateTime.Today.ToString("yyyy-MM-dd");
-                var res = await _httpClient.GetAsync(new Uri($"http://10.0.2.2:60211/api/lekcja/daj-plan/{data}/{NumerGrupy}"));
-                if (res.IsSuccessStatusCode)
+                var lista = await _httpClient.GetAsync<LekcjaWidokDTO[]>($"/api/lekcja/daj-plan/{Data:yyyy-MM-dd}/{NumerGrupy}");
+                foreach (var item in lista)
                 {
-                    string content = await res.Content.ReadAsStringAsync();
-                    var lista = JsonConvert.DeserializeObject<LekcjaWidokDTO[]>(content);
-                    foreach (var item in lista)
+                    Items.Add(new Lekcja
                     {
-                        Items.Add(new Lekcja
-                        {
-                            IdLekcji = item.IdLekcji,
-                            Nazwa = item.Nazwa,
-                            Godziny = $"{item.Od} - {item.Do}",
-                            Sala = item.Sala,
-                            Wykladowca = item.Wykladowca,
-                            Forma = item.Forma
-                        });
-                    }
+                        IdLekcji = item.IdLekcji,
+                        Nazwa = item.Nazwa,
+                        Godziny = $"{item.Od} - {item.Do}",
+                        Sala = item.Sala,
+                        Wykladowca = item.Wykladowca,
+                        Forma = item.Forma
+                    });
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+            }
+        }
+
+        async Task ExecutePobierzZjazdyCommand()
+        {
+            _zjazdy = await _httpClient.GetAsync<ZjazdWidokDTO[]>($"/api/kalendarium/{NumerGrupy}");
+            UstawZjazdInfo();
+        }
+
+        private void UstawZjazdInfo()
+        {
+            var aktualnyZjazd = _zjazdy.First(x => x.DataOd <= Data && Data <= x.DataDo);
+            string value = $"Zjazd {aktualnyZjazd.Nr}.";
+            if (aktualnyZjazd.CzyOdpracowanie)
+                value += " (odpracowanie)";
+            ZjazdInfo = value;
+        }
+
+        public void UstawPoprzedniDzien()
+        {
+            var poprzedniDzien = Data.AddDays(-1);
+            var aktualnyZjazd = _zjazdy.First(x => x.DataOd <= Data && Data <= x.DataDo);
+            if (aktualnyZjazd != null && poprzedniDzien >= aktualnyZjazd.DataOd)
+                Data = poprzedniDzien;
+            else
+            {
+                var poprzedniZjazd = _zjazdy.OrderByDescending(x => x.DataOd).FirstOrDefault(x => x.DataDo < Data);
+                if (poprzedniZjazd != null)
+                    Data = poprzedniZjazd.DataDo;
+                UstawZjazdInfo();
+            }
+        }
+
+        public void UstawKolejnyDzien()
+        {
+            var kolejnyDzien = Data.AddDays(1);
+            var aktualnyZjazd = _zjazdy.FirstOrDefault(x => x.DataOd <= Data && Data <= x.DataDo);
+            if (aktualnyZjazd != null && kolejnyDzien <= aktualnyZjazd.DataDo)
+                Data = kolejnyDzien;
+            else
+            {
+                var kolejnyZjazd = _zjazdy.OrderBy(x => x.DataOd).FirstOrDefault(x => x.DataOd > Data);
+                if (kolejnyZjazd != null)
+                    Data = kolejnyZjazd.DataOd;
+                UstawZjazdInfo();
             }
         }
     }

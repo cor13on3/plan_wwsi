@@ -31,6 +31,7 @@ namespace Plan.Core.Services
                 NrZjazdu = zjazdNr,
                 DzienTygodnia = (int)data.DayOfWeek
             });
+            wynik = wynik.Where(x => x.CzyOdpracowanie == zjazd.First().CzyOdpracowanie);
 
             return wynik.ToArray();
         }
