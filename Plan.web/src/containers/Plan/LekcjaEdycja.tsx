@@ -18,6 +18,7 @@ import {
 } from "../../helpers/enums";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { WykladowcaWidok } from "../../helpers/types";
+import { ErrorStyle } from "../../styles/ErrorStyle";
 import LekcjaEdycjaStyle from "../../styles/LekcjaEdycjaStyle";
 import WyborPrzedmiotu from "./WyborPrzedmiotu";
 import WyborSali from "./WyborSali";
@@ -117,7 +118,7 @@ function LekcjaEdycja({
 
   return (
     <LekcjaEdycjaStyle>
-      {blad && <p className="blad">{blad}</p>}
+      {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <p className="xl">
         ZAJĘCIA DLA GRUPY {grupa} NA{" "}
         {dajDzienTygodnia(dzienTygodnia).toUpperCase()}

@@ -37,6 +37,7 @@ function Logowanie({ onZalogowano }: LogowanieProps) {
           onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
+          type="password"
           variant="outlined"
           color="secondary"
           label="Hasło"

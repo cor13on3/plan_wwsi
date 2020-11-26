@@ -1,5 +1,12 @@
 import { StopienStudiow, TrybStudiow } from "./enums";
 
+export interface Grupa {
+  nrGrupy: string;
+  semestr: number;
+  trybStudiow: TrybStudiow;
+  stopienStudiow: StopienStudiow;
+}
+
 export interface GrupaWidok {
   numer: string;
   semestr: number;

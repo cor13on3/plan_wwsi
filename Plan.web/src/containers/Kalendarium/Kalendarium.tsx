@@ -18,6 +18,7 @@ import {
   Select,
 } from "@material-ui/core";
 import ContextMenu from "../../components/ContextMenu";
+import { ErrorStyle } from "../../styles/ErrorStyle";
 
 function Kalendarium() {
   const [stopien, setStopien] = useState(
@@ -85,6 +86,7 @@ function Kalendarium() {
 
   return (
     <div className="kalendarium">
+      {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="kalendarium_header">
         <span className="xxl">Zarządzanie zjazdami</span>
         <Button
@@ -95,7 +97,6 @@ function Kalendarium() {
           PRZYPISZ ZJAZD
         </Button>
       </div>
-      {blad && <p className="blad">{blad}</p>}
       <div className="kalendarium_main">
         <div className="filters">
           <FormControl variant="outlined">

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import ContextMenu from "../../components/ContextMenu";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { WykladowcaWidok } from "../../helpers/types";
+import { ErrorStyle } from "../../styles/ErrorStyle";
 import "./Kadra.css";
 import KadraEdycja from "./KadraEdycja";
 
@@ -45,6 +46,7 @@ function Kadra() {
 
   return (
     <div className="kadra">
+      {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="kadra_header">
         <span className="xxl">Zarządzanie kadrą</span>
         <Button
@@ -55,7 +57,6 @@ function Kadra() {
           DODAJ
         </Button>
       </div>
-      {blad && <p className="blad">{blad}</p>}
       <div className="lista">
         <div className="kadra_lista_header disabled">
           <span>NAZWISKO</span>

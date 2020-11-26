@@ -2,6 +2,7 @@ import { Button, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { SalaWidok } from "../../helpers/enums";
 import { Blad, httpClient } from "../../helpers/httpClient";
+import { ErrorStyle } from "../../styles/ErrorStyle";
 import WyborSaliStyle from "../../styles/WyborSaliStyle";
 
 interface WyborSaliProps {
@@ -41,8 +42,8 @@ function WyborSali(props: WyborSaliProps) {
 
   return (
     <WyborSaliStyle>
+      {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <span className="xl">SALE</span>
-      {blad && <p className="blad">{blad}</p>}
       <div>
         {lista.map((x) => (
           <div className="element">

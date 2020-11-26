@@ -15,6 +15,7 @@ import {
   MenuItem,
   Select,
 } from "@material-ui/core";
+import { ErrorStyle } from "../../styles/ErrorStyle";
 
 interface LekcjaWidok {
   idLekcji: number;
@@ -38,13 +39,15 @@ interface PlanDnia {
 }
 
 function Plan() {
+  const SELECT_PUSTY = "Wybierz";
+
   const [trybStudiow, setTrybStudiow] = useState(
-    TrybStudiow.Niestacjonarne as TrybStudiow | "Wybierz"
+    SELECT_PUSTY as TrybStudiow | string
   );
   const [grupy, setGrupy] = useState([] as GrupaWidok[]);
-  const [grupa, setGrupa] = useState("Z715");
+  const [grupa, setGrupa] = useState(SELECT_PUSTY);
   const [tryb, setTryb] = useState(
-    "Standardowy" as "Wybierz" | "Standardowy" | "Odpracowania"
+    "Standardowy" as "Standardowy" | "Odpracowania"
   );
   const [plan, setPlan] = useState([] as PlanDnia[]);
   const [blad, setBlad] = useState("");
@@ -73,7 +76,9 @@ function Plan() {
   }, [grupa, tryb]);
 
   useEffect(() => {
-    if (trybStudiow !== "Wybierz") {
+    setPlan([]);
+    setGrupa(SELECT_PUSTY);
+    if (trybStudiow !== SELECT_PUSTY) {
       httpClient
         .GET(`/api/grupa/${trybStudiow}`)
         .then((res: GrupaWidok[]) => {
@@ -84,7 +89,8 @@ function Plan() {
   }, [trybStudiow]);
 
   useEffect(() => {
-    if (grupa !== "Wybierz" && tryb !== "Wybierz") {
+    setPlan([]);
+    if (grupa !== SELECT_PUSTY) {
       odswiezListe();
     }
     // eslint-disable-next-line
@@ -104,9 +110,9 @@ function Plan() {
   }
 
   function dajLekcje(dzienTygodnia: number) {
-    return plan
-      .find((x) => x.dzienTygodnia === dzienTygodnia)
-      ?.lekcje.map((l, i) => (
+    var lekcje = plan.find((x) => x.dzienTygodnia === dzienTygodnia)?.lekcje;
+    if (lekcje && lekcje.length > 0)
+      return lekcje.map((l, i) => (
         <div className="lekcja" key={i}>
           {tryb === "Standardowy" && (
             <>
@@ -126,6 +132,7 @@ function Plan() {
           <p>{l.lekcja.sala}</p>
         </div>
       ));
+    return <div />;
   }
 
   function onZapisz() {
@@ -135,6 +142,7 @@ function Plan() {
 
   return (
     <div className="plan">
+      {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="plan-header">
         <span className="xxl">Zarządzanie planem zajęć</span>
       </div>
@@ -146,7 +154,7 @@ function Plan() {
             onChange={(e) => setTrybStudiow(e.target.value as TrybStudiow)}
             label="Tryb studiów"
           >
-            <MenuItem value="Wybierz">Wybierz</MenuItem>
+            <MenuItem value={SELECT_PUSTY}>Wybierz</MenuItem>
             <MenuItem value={TrybStudiow.Niestacjonarne}>
               Niestacjonarne
             </MenuItem>
@@ -160,7 +168,7 @@ function Plan() {
             value={grupa}
             onChange={(e) => setGrupa(e.target.value as string)}
           >
-            <MenuItem value="Wybierz">Wybierz</MenuItem>
+            <MenuItem value={SELECT_PUSTY}>Wybierz</MenuItem>
             {grupy.map((x, i) => (
               <MenuItem key={i} value={x.numer}>
                 {x.numer}
@@ -177,7 +185,7 @@ function Plan() {
             }
             label="Tryb planu"
           >
-            <MenuItem value="Wybierz">Wybierz</MenuItem>
+            <MenuItem value={SELECT_PUSTY}>Wybierz</MenuItem>
             <MenuItem value="Standardowy">Standardowy</MenuItem>
             <MenuItem value="Odpracowania">Odpracowania</MenuItem>
           </Select>
@@ -211,8 +219,8 @@ function Plan() {
           </div>
         )}
       </div>
-      {blad && <p className="blad">{blad}</p>}
-      {trybStudiow !== "Wybierz" && grupa !== "Wybierz" && (
+
+      {trybStudiow !== SELECT_PUSTY && grupa !== SELECT_PUSTY && (
         <div>
           {trybStudiow === TrybStudiow.Niestacjonarne ? (
             <div className="tydzien3">
@@ -258,27 +266,62 @@ function Plan() {
               <div className="dzien">
                 <span>{dajDzienTygodnia(1)}</span>
                 {dajLekcje(1)}
-                <button onClick={() => setEdytowanyDzien(1)}>DODAJ</button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="dodajBtn"
+                  onClick={() => setEdytowanyDzien(1)}
+                >
+                  +
+                </Button>
               </div>
               <div className="dzien">
                 <span>{dajDzienTygodnia(2)}</span>
                 {dajLekcje(2)}
-                <button onClick={() => setEdytowanyDzien(2)}>DODAJ</button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="dodajBtn"
+                  onClick={() => setEdytowanyDzien(2)}
+                >
+                  +
+                </Button>
               </div>
               <div className="dzien">
                 <span>{dajDzienTygodnia(3)}</span>
                 {dajLekcje(3)}
-                <button onClick={() => setEdytowanyDzien(3)}>DODAJ</button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="dodajBtn"
+                  onClick={() => setEdytowanyDzien(3)}
+                >
+                  +
+                </Button>
               </div>
               <div className="dzien">
                 <span>{dajDzienTygodnia(4)}</span>
                 {dajLekcje(4)}
-                <button onClick={() => setEdytowanyDzien(4)}>DODAJ</button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="dodajBtn"
+                  onClick={() => setEdytowanyDzien(4)}
+                >
+                  +
+                </Button>
               </div>
               <div className="dzien">
                 <span>{dajDzienTygodnia(5)}</span>
                 {dajLekcje(5)}
-                <button onClick={() => setEdytowanyDzien(5)}>DODAJ</button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="dodajBtn"
+                  onClick={() => setEdytowanyDzien(5)}
+                >
+                  +
+                </Button>
               </div>
             </div>
           )}

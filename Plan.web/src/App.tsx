@@ -2,7 +2,7 @@ import { Button } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
-import Grupy from "./containers/Grupy";
+import Grupy from "./containers/Grupy/Grupy";
 import Kadra from "./containers/Kadra/Kadra";
 import Kalendarium from "./containers/Kalendarium/Kalendarium";
 import Logowanie from "./containers/Logowanie";

@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { Blad, httpClient } from "../../helpers/httpClient";
+import { ErrorStyle } from "../../styles/ErrorStyle";
 import { KadraEdycjaStyle } from "../../styles/KadraEdycjaStyle";
 import WyborSpecjalnosci, { Specjalnosc } from "./WyborSpecjalnosci";
 
@@ -75,7 +76,7 @@ function KadraEdycja(props: Props) {
 
   return (
     <KadraEdycjaStyle>
-      {blad && <p>{blad}</p>}
+      {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <p className="xl">NOWY WYKŁADOWCA</p>
       <form>
         <TextField

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import formatujDate from "../../helpers/formatujDate";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { ZjazdWidok } from "../../helpers/types";
+import { ErrorStyle } from "../../styles/ErrorStyle";
 import KalendariumEdycjaStyle from "../../styles/KalendariumEdycjaStyle";
 import ZjazdyEdycja from "./ZjazdyEdycja";
 
@@ -41,7 +42,7 @@ function KalendariumEdycja(props: KalendariumEdycjaProps) {
 
   return (
     <KalendariumEdycjaStyle>
-      {blad && <p className="blad">{blad}</p>}
+      {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <p className="xl">PRZYPISANIE ZJAZDU</p>
       <form>
         <TextField

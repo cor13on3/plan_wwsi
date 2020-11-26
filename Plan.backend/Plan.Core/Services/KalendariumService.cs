@@ -94,6 +94,10 @@ namespace Plan.Core.Services
         {
             var repo = _baza.Daj<GrupaZjazd>();
             var repoGrupa = _baza.Daj<Grupa>();
+            var repoZjazd = _baza.Daj<Zjazd>();
+            var z = repoZjazd.Znajdz(zjazd.IdZjazdu);
+            if (z == null)
+                throw new BladBiznesowy($"Wybierz zjazd");
             foreach (var nr in grupy)
             {
                 var grupa = repoGrupa.Znajdz(nr);

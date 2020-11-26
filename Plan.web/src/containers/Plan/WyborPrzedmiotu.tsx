@@ -2,6 +2,7 @@ import { Button, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { PrzedmiotWidok } from "../../helpers/enums";
 import { Blad, httpClient } from "../../helpers/httpClient";
+import { ErrorStyle } from "../../styles/ErrorStyle";
 import WyborPrzedmiotuStyle from "../../styles/WyborPrzedmiotuStyle";
 
 interface WyborPrzedmiotuProps {
@@ -41,8 +42,8 @@ function WyborPrzedmiotu(props: WyborPrzedmiotuProps) {
 
   return (
     <WyborPrzedmiotuStyle>
+      {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <span className="xl">PRZEDMIOTY</span>
-      {blad && <p className="blad">{blad}</p>}
       <div>
         {lista.map((x) => (
           <div className="element">

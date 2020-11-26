@@ -1,9 +1,9 @@
 .plan {
-  width: 1600px;
+  max-width: 1600px;
 }
 
 .plan-header {
-  width: 100%;
+  max-width: 100%;
   padding: 12px 16px;
 }
 
@@ -38,11 +38,13 @@
 }
 
 .dzien {
-  width: 256px;
+  min-width: 196px;
   background-color: rgba(0, 0, 0, 0.08);
   padding: 12px;
   display: grid;
-  grid-template-rows: 48px 1fr 48px;
+  grid-template-rows: 24px 1fr 36px;
+  box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 }
 
 .dodajBtn {
@@ -51,7 +53,7 @@
 }
 
 .lekcja {
-  border-bottom: 2px solid black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.87);
 }
 
 p {
