@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
-using Plan.Core.Entities;
 using Plan.Core.IServices;
 
 namespace Plan.API.Controllers
@@ -20,38 +17,17 @@ namespace Plan.API.Controllers
             _service = service;
         }
 
-        [HttpGet("daj-proponowane-zjazdy")]
-        public PropozycjaZjazduWidokDTO[] DajProponowaneZjazdy(DateTime dataOd, DateTime dataDo, TrybStudiow tryb)
-        {
-            return _service.PrzygotujZjazdy(dataOd, dataDo, tryb);
-        }
-
-        [Authorize]
         [HttpPost("dodaj-zjazd")]
-        public void DodajZjazd([FromBody] ZjazdDTO zjazd)
+        [Authorize]
+        public void DodajZjazd([FromBody] KomendaDodajZjazd req)
         {
-            _service.DodajZjazd(zjazd);
+            _service.DodajZjazd(req.DataOd, req.DataDo, req.RodzajSemestru);
         }
 
-        [Authorize]
-        [HttpPost("przyporzadkuj-zjazdy-grupie")]
-        public void PrzyporzadkujZjazdyGrupie([FromBody] KomendaPrzypiszZjazdyGrupie req)
+        [HttpGet]
+        public ZjazdWidokDTO[] PrzegladajZjazdy()
         {
-            _service.PrzyporzadkujZjazdyGrupie(req.NrGrupy, req.Zjazdy);
-        }
-
-        [Authorize]
-        [HttpPost("przyporzadkuj-grupy-do-zjazdu")]
-        public void PrzyporzadkujGrupyDoZjazdu([FromBody] KomendaPrzypiszGrupyDoZjazdu req)
-        {
-            _service.PrzyporzadkujGrupyDoZjazdu(req.Zjazd, req.Grupy);
-        }
-
-        [Authorize]
-        [HttpPost("usun-grupy-z-zjazdu")]
-        public void UsunGrupyZZjazdu([FromBody] KomendaUsunGrupyZZjazdu req)
-        {
-            _service.UsunGrupyZZjazdu(req.Grupy, req.NrKolejny);
+            return _service.PrzegladajZjazdy();
         }
 
         [HttpGet("{nrGrupy}")]
@@ -60,10 +36,18 @@ namespace Plan.API.Controllers
             return _service.PrzegladajZjazdyGrupy(nrGrupy);
         }
 
-        [HttpGet("zjazdy")]
-        public ZjazdWidokDTO[] DajZjazdy()
+        [HttpPost("przyporzadkuj-grupy-do-zjazdu")]
+        [Authorize]
+        public void PrzyporzadkujGrupyDoZjazdu([FromBody] KomendaPrzypiszGrupyDoZjazdu req)
         {
-            return _service.PrzegladajZjazdy();
+            _service.PrzyporzadkujGrupyDoZjazdu(req.Zjazd, req.Grupy);
+        }
+
+        [HttpPost("usun-grupy-z-zjazdu")]
+        [Authorize]
+        public void UsunGrupyZZjazdu([FromBody] KomendaUsunGrupyZZjazdu req)
+        {
+            _service.UsunGrupyZZjazdu(req.Grupy, req.NrKolejny);
         }
     }
 }

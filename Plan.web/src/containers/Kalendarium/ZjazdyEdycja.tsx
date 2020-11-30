@@ -21,7 +21,7 @@ function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
   const [lista, setLista] = useState([] as ZjazdWidok[]);
 
   function odswiezListe() {
-    httpClient.GET("/api/kalendarium/zjazdy").then((res: ZjazdWidok[]) => {
+    httpClient.GET("/api/kalendarium").then((res: ZjazdWidok[]) => {
       setLista(res);
     });
   }

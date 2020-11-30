@@ -19,26 +19,26 @@ namespace Plan.Core.Services
             _baza = baza;
         }
 
-        public LekcjaWidokDTO[] DajPlanNaDzien(DateTime data, string nrGrupy)
+        public LekcjaWidokDTO[] DajPlanGrupyNaDzien(DateTime data, string nrGrupy)
         {
             var zjazd = _baza.Daj<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy(nrGrupy, data));
             if (zjazd.Count() == 0)
                 return new LekcjaWidokDTO[0];
             var zjazdNr = zjazd.First().Nr;
-            var wynik = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
+            var wynik = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
             {
                 NrGrupy = nrGrupy,
                 NrZjazdu = zjazdNr,
-                DzienTygodnia = (int)data.DayOfWeek
+                DzienTygodnia = (int)data.DayOfWeek,
             });
             wynik = wynik.Where(x => x.CzyOdpracowanie == zjazd.First().CzyOdpracowanie);
 
             return wynik.ToArray();
         }
 
-        public PlanDnia[] DajPlanNaTydzien(string nrGrupy)
+        public PlanDnia[] DajPlanGrupyNaTydzien(string nrGrupy)
         {
-            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
+            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
             {
                 NrGrupy = nrGrupy,
             });
@@ -70,10 +70,10 @@ namespace Plan.Core.Services
 
         public PlanDnia[] DajPlanOdpracowania(string nrGrupy, int nrZjazdu)
         {
-            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
+            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
             {
                 NrGrupy = nrGrupy,
-                NrZjazdu = nrZjazdu
+                NrZjazdu = nrZjazdu,
             });
 
             var dni = lekcje.GroupBy(x => x.DzienTygodnia).Select(x => new PlanDnia
@@ -99,6 +99,19 @@ namespace Plan.Core.Services
             });
 
             return dni.ToArray();
+        }
+
+        public LekcjaDTO[] DajLekcjeNaDzienTygodnia(TrybStudiow trybStudiow, int semestr, int dzienTygodnia)
+        {
+            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
+            {
+                Tryb = trybStudiow,
+                Semestr = semestr,
+            })
+             .GroupBy(x => x.IdLekcji)
+             .Select(x => x.First());
+            return lekcje.ToArray();
+
         }
 
         public int Dodaj(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
@@ -152,9 +165,10 @@ namespace Plan.Core.Services
         public void Usun(int lekcjaId)
         {
             // TODO: sprawdzić czy usuwając lekcję nie usunie się z automaty grupa, sala itd..
-            if (_baza.Daj<Lekcja>().Znajdz(lekcjaId) == null)
+            var repo = _baza.Daj<Lekcja>();
+            if (repo.Znajdz(lekcjaId) == null)
                 throw new BladBiznesowy($"Nie istnieje lekcja o id {lekcjaId}");
-            _baza.Daj<Lekcja>().Usun(lekcjaId);
+            repo.Usun(lekcjaId);
             _baza.Zapisz();
         }
 
@@ -177,10 +191,16 @@ namespace Plan.Core.Services
 
         private void WalidujDane(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo)
         {
+            if (przedmiotId <= 0)
+                throw new BladBiznesowy($"Wybierz przedmiot.");
             if (_baza.Daj<Przedmiot>().Znajdz(przedmiotId) == null)
                 throw new BladBiznesowy($"Przedmiot o id {przedmiotId} nie istnieje.");
+            if (wykladowcaId <= 0)
+                throw new BladBiznesowy($"Wybierz wykładowcę.");
             if (_baza.Daj<Wykladowca>().Znajdz(wykladowcaId) == null)
                 throw new BladBiznesowy($"Wykładowca o id {wykladowcaId} nie istnieje.");
+            if (salaId <= 0)
+                throw new BladBiznesowy($"Wybierz salę.");
             if (_baza.Daj<Sala>().Znajdz(salaId) == null)
                 throw new BladBiznesowy($"Sala o id {salaId} nie istnieje.");
             try

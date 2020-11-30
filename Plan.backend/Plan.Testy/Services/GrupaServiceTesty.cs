@@ -58,9 +58,9 @@ namespace Plan.Testy.Services
         [TestMethod]
         public void Przegladaj_ZwracaWynikZapytania()
         {
-            var lista = new GrupaWidokDTO[]
+            var lista = new GrupaDTO[]
             {
-                new GrupaWidokDTO()
+                new GrupaDTO()
             };
             _repo.Setup(x => x.Wybierz(It.IsAny<ZapytanieGrupy>())).Returns(lista);
 

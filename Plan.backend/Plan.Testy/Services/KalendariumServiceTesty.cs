@@ -95,7 +95,7 @@ namespace Plan.Testy.Services
         {
             _repoGrupa.Setup(x => x.Znajdz(It.IsAny<string>())).Returns((Grupa)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejnyDTO[] { }),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejny[] { }),
                 "Grupa o numerze Z101 nie istnieje");
         }
 
@@ -108,9 +108,9 @@ namespace Plan.Testy.Services
                 new ZjazdWidokDTO{ IdZjazdu = 2}
             });
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejnyDTO[]
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejny[]
             {
-                new ZjazdKolejnyDTO{IdZjazdu = 2}
+                new ZjazdKolejny{IdZjazdu = 2}
             }),
                 "Grupa Z101 ma już przypisany zjazd o id: 2");
         }
@@ -121,9 +121,9 @@ namespace Plan.Testy.Services
             _repoGrupa.Setup(x => x.Znajdz(It.IsAny<string>())).Returns(new Grupa());
             _repoGrupaZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadyGrupy>())).Returns(new ZjazdWidokDTO[] { });
 
-            _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejnyDTO[]
+            _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejny[]
             {
-                new ZjazdKolejnyDTO
+                new ZjazdKolejny
                 {
                     IdZjazdu = 1,
                     NrZjazdu = 2,

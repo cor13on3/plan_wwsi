@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Plan.Core.Entities;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
@@ -30,7 +29,7 @@ namespace Plan.API
         {
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                // TODO: Obeznaæ te CORS jebane
+                // TODO: Obeznaæ CORS
                 builder.WithOrigins("http://localhost:3000")
                        .AllowAnyMethod()
                        .AllowAnyHeader()
@@ -50,7 +49,7 @@ namespace Plan.API
             services.AddScoped<ILekcjaService, LekcjaService>();
             services.AddScoped<IUzytkownikService, UzytkownikService>();
             services.AddScoped<ISpecjalnoscService, SpecjalnoscService>();
-            // TODO: Rozwazyæ sprytne DI ¿eby nie by³o tu referencji do infry
+            // TODO: Rozwazyæ sprytne rozwi¹zanie ¿eby nie by³o tu referencji do infry
             services.AddScoped<IBazaDanych, EfBazaDanych>();
             services.AddScoped(typeof(IRepozytorium<>), typeof(EfRepozytorium<>));
 
@@ -68,35 +67,16 @@ namespace Plan.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // TODO: ZnaleŸæ lepsze rozwi¹zanie
-            // OSTRO¯NIE BO PRZY UPDACIE BAZY MOG¥ ZNIKAÆ DANE ! ! !
+            // TODO: Przy takim rozwi¹zaniu baza aktualizuje siê od razu po uruchomieniu serwera.
             using (var context = new PlanContext())
             {
                 context.Database.Migrate();
             }
-            // ! ! !
-
-
-
-
-
-
-
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-            //else
-            //{
             app.UseExceptionHandler("/error");
-            //}
             app.UseCors("MyPolicy");
-
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

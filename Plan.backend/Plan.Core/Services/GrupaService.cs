@@ -34,18 +34,33 @@ namespace Plan.Core.Services
             _db.Zapisz();
         }
 
-        public GrupaWidokDTO[] Filtruj(TrybStudiow? tryb, StopienStudiow? stopien, int? semestr)
+        public GrupaDTO[] Filtruj(TrybStudiow? tryb, StopienStudiow? stopien, int? semestr)
         {
             var repo = _db.Daj<Grupa>();
             var wynik = repo.Wybierz(new ZapytanieGrupy(tryb, stopien, semestr)).ToArray();
             return wynik;
         }
 
-        public GrupaWidokDTO[] Przegladaj()
+        public GrupaDTO[] Przegladaj()
         {
             var repo = _db.Daj<Grupa>();
             var wynik = repo.Wybierz(new ZapytanieGrupy()).ToArray();
             return wynik;
+        }
+
+        public GrupaDTO Daj(string numer)
+        {
+            var repo = _db.Daj<Grupa>();
+            var grupa = repo.Znajdz(numer);
+            if (grupa == null)
+                return null;
+            return new GrupaDTO
+            {
+                Numer = grupa.NrGrupy,
+                Semestr = grupa.Semestr,
+                TrybStudiow = grupa.TrybStudiow,
+                StopienStudiow = grupa.StopienStudiow
+            };
         }
 
         public void Usun(string numer)

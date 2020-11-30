@@ -8,10 +8,10 @@ namespace Plan.Core.IServices
 {
     public interface IWykladowcaService
     {
-        void DodajWykladowce(string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci);
-        void ZmienWykladowce(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci);
-        void UsunWykladowce(int id);
-        WykladowcaWidokDTO[] DajWykladowcow(string fraza = null);
+        void Dodaj(string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci);
+        void Zmien(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci);
+        void Usun(int id);
+        WykladowcaWidokDTO[] Przegladaj(string fraza = null);
         WykladowcaDTO Daj(int id);
     }
 }

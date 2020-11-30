@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Plan.Core.DTO
 {
-    public class GrupaWidokDTO
+    public class GrupaDTO
     {
         public string Numer { get; set; }
         public int Semestr { get; set; }

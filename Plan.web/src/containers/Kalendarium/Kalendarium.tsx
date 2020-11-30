@@ -35,7 +35,7 @@ function Kalendarium() {
 
   function odswiezListe() {
     httpClient
-      .GET(`/api/grupa/${tryb}/${stopien}/${semestr}`)
+      .GET(`/api/grupa/filtruj/${tryb}/${stopien}/${semestr}`)
       .then((res: GrupaWidok[]) => setGrupy(res.map((x) => x.numer)))
       .catch((err: Blad) => setBlad(err.Tresc));
   }

@@ -16,8 +16,8 @@ namespace Plan.Core.Zapytania
         }
 
         public Expression<Func<T, bool>> Kryteria { get; private set; }
-        public List<Expression<Func<T, object>>> Skladowe { get; } = new List<Expression<Func<T, object>>>();
-        public List<string> SkladoweString { get; } = new List<string>();
+        public List<Expression<Func<T, object>>> Skladowe { get; private set; } = new List<Expression<Func<T, object>>>();
+        public List<string> SkladoweString { get; private set; } = new List<string>();
         public Expression<Func<T, TMAP>> Mapowanie { get; private set; }
 
         protected virtual void UstawKryteria(Expression<Func<T, bool>> kryteria)

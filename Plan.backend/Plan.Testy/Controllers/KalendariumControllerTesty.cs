@@ -23,27 +23,6 @@ namespace Plan.Testy
         }
 
         [TestMethod]
-        public void DajProponowaneZjazdy_ZwracaProponowaneZjazdy()
-        {
-            _kalendariumService.Setup(x => x.PrzygotujZjazdy(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<TrybStudiow>()))
-                .Returns(new PropozycjaZjazduWidokDTO[]
-                {
-                    new PropozycjaZjazduWidokDTO
-                    {
-                        DataOd = new DateTime(),
-                        DataDo = new DateTime().AddDays(1)
-                    }
-                });
-
-            var wynik = _controller.DajProponowaneZjazdy(new DateTime(), new DateTime(), TrybStudiow.Niestacjonarne);
-
-            Assert.IsNotNull(wynik);
-            Assert.AreEqual(1, wynik.Length);
-            Assert.AreEqual(new DateTime(), wynik[0].DataOd);
-            Assert.AreEqual(new DateTime().AddDays(1), wynik[0].DataDo);
-        }
-
-        [TestMethod]
         public void DodajZjazd_WywolujeDodanieZjazdu()
         {
             var zjazd = new ZjazdDTO();
@@ -55,7 +34,7 @@ namespace Plan.Testy
         [TestMethod]
         public void PrzyporzadkujZjazdyGrupie_WywolujePrzyporzadkujZjazdyGrupie()
         {
-            var zjazdy = new ZjazdKolejnyDTO[] { new ZjazdKolejnyDTO() };
+            var zjazdy = new ZjazdKolejny[] { new ZjazdKolejny() };
             _controller.PrzyporzadkujZjazdyGrupie(new KomendaPrzypiszZjazdyGrupie
             {
                 NrGrupy = "Z101",

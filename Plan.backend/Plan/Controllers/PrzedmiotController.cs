@@ -16,17 +16,17 @@ namespace Plan.API.Controllers
             _przedmiotService = przedmiotService;
         }
 
+        [HttpPost]
+        [Authorize]
+        public void Dodaj([FromBody] string nazwa)
+        {
+            _przedmiotService.Dodaj(nazwa);
+        }
+
         [HttpGet]
         public PrzedmiotWidokDTO[] Przegladaj()
         {
             return _przedmiotService.Przegladaj();
-        }
-
-        [Authorize]
-        [HttpPost]
-        public void Dodaj([FromBody] string nazwa)
-        {
-            _przedmiotService.Dodaj(nazwa);
         }
 
         [Authorize]

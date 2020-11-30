@@ -62,7 +62,7 @@ namespace Plan.Testy.Services
                 new WykladowcaWidokDTO{Id = 1}
             });
 
-            var wynik = _service.DajWykladowcow();
+            var wynik = _service.Przegladaj();
 
             Assert.IsNotNull(wynik);
             Assert.AreEqual(1, wynik.Length);
@@ -72,11 +72,11 @@ namespace Plan.Testy.Services
         [TestMethod]
         public void Dodaj_WyjatekNiekompletneInformacje()
         {
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.DodajWykladowce("T1", "I1", "N1", null, new int[] { 1, 2 }),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj("T1", "I1", "N1", null, new int[] { 1, 2 }),
                 "Uzupełnij komplet informacji");
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.DodajWykladowce("T1", "I1", null, "E1", new int[] { 1, 2 }),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj("T1", "I1", null, "E1", new int[] { 1, 2 }),
                 "Uzupełnij komplet informacji");
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.DodajWykladowce("T1", null, "N1", "E1", new int[] { 1, 2 }),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj("T1", null, "N1", "E1", new int[] { 1, 2 }),
                 "Uzupełnij komplet informacji");
         }
 
@@ -85,7 +85,7 @@ namespace Plan.Testy.Services
         {
             _repoSpecjalnosc.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Specjalnosc)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.DodajWykladowce("T1", "I1", "N1", "E1", new int[] { 1, 2 }),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj("T1", "I1", "N1", "E1", new int[] { 1, 2 }),
                 "Specjalność o id 1 nie istnieje.");
         }
 
@@ -95,7 +95,7 @@ namespace Plan.Testy.Services
             _repoSpecjalnosc.Setup(x => x.Znajdz(1)).Returns(new Specjalnosc { IdSpecjalnosci = 1 });
             _repoSpecjalnosc.Setup(x => x.Znajdz(2)).Returns(new Specjalnosc { IdSpecjalnosci = 2 });
 
-            _service.DodajWykladowce("T1", "I1", "N1", "E1", new int[] { 1, 2 });
+            _service.Dodaj("T1", "I1", "N1", "E1", new int[] { 1, 2 });
 
             _repoWykladowca.Verify(x => x.Dodaj(It.Is<Wykladowca>(x =>
                 x.Imie == "I1" &&
@@ -111,7 +111,7 @@ namespace Plan.Testy.Services
             _repoSpecjalnosc.Setup(x => x.Znajdz(1)).Returns(new Specjalnosc { IdSpecjalnosci = 1 });
             _repoSpecjalnosc.Setup(x => x.Znajdz(2)).Returns(new Specjalnosc { IdSpecjalnosci = 2 });
 
-            _service.DodajWykladowce("T1", "I1", "N1", "E1", new int[] { 1, 2 });
+            _service.Dodaj("T1", "I1", "N1", "E1", new int[] { 1, 2 });
 
             _repoWyklSpec.Verify(x => x.Dodaj(It.Is<WykladowcaSpecjalizacja>(x =>
                 x.Wykladowca.Imie == "I1" &&
@@ -129,7 +129,7 @@ namespace Plan.Testy.Services
         {
             _repoWykladowca.Setup(x => x.Znajdz(1)).Returns((Wykladowca)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.UsunWykladowce(1),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Usun(1),
                 "Wykładowca o id 1 nie istnieje.");
         }
 
@@ -138,7 +138,7 @@ namespace Plan.Testy.Services
         {
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Wykladowca { IdWykladowcy = 1 });
 
-            _service.UsunWykladowce(1);
+            _service.Usun(1);
 
             _repoWykladowca.Verify(x => x.Usun(It.Is<Wykladowca>(x => x.IdWykladowcy == 1)), Times.Once);
             _db.Verify(x => x.Zapisz(), Times.Once);
@@ -149,7 +149,7 @@ namespace Plan.Testy.Services
         {
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Wykladowca)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.ZmienWykladowce(1, "T1", "I1", "N1", "E1", new int[] { 1, 2 }),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Zmien(1, "T1", "I1", "N1", "E1", new int[] { 1, 2 }),
                 "Wykładowca o id 1 nie istnieje.");
         }
 
@@ -159,7 +159,7 @@ namespace Plan.Testy.Services
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Wykladowca());
             _repoSpecjalnosc.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Specjalnosc)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.ZmienWykladowce(1, "T1", "I1", "N1", "E1", new int[] { 1, 2 }),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Zmien(1, "T1", "I1", "N1", "E1", new int[] { 1, 2 }),
                 "Specjalność o id 1 nie istnieje.");
         }
 
@@ -175,7 +175,7 @@ namespace Plan.Testy.Services
                 Email = "E1"
             });
 
-            _service.ZmienWykladowce(1, "T0", "I0", "N0", "E0", new int[0]);
+            _service.Zmien(1, "T0", "I0", "N0", "E0", new int[0]);
 
             _repoWykladowca.Verify(x => x.Edytuj(It.Is<Wykladowca>(x =>
                 x.IdWykladowcy == 1 &&
@@ -203,7 +203,7 @@ namespace Plan.Testy.Services
             var wyklSpec = new WykladowcaSpecjalizacja[] { new WykladowcaSpecjalizacja()};
             _repoWyklSpec.Setup(x => x.Wybierz(It.IsAny<ZapytanieWykladowcaSpecjalizacja>())).Returns(wyklSpec);
 
-            _service.ZmienWykladowce(1, "T0", "I0", "N0", "E0", new int[] { 1,2 });
+            _service.Zmien(1, "T0", "I0", "N0", "E0", new int[] { 1,2 });
 
             _repoWyklSpec.Verify(x => x.UsunWiele(wyklSpec), Times.Once);
             _repoWyklSpec.Verify(x => x.Dodaj(It.Is<WykladowcaSpecjalizacja>(x =>

@@ -19,6 +19,20 @@ namespace Plan.Core.DTO
         public int DzienTygodnia { get; set; }
     }
 
+    public class LekcjaDTO
+    {
+        public int IdLekcji { get; set; }
+        public string GodzinaOd { get; set; }
+        public string GodzinaDo { get; set; }
+        public FormaLekcji Forma { get; set; }
+        public int IdPrzedmiotu { get; set; }
+        public string Przedmiot { get; set; }
+        public int IdSali { get; set; }
+        public string Sala { get; set; }
+        public int IdWykladowcy { get; set; }
+        public string Wykladowca { get; set; }
+    }
+
     public class LekcjaWZjazdach
     {
         public int[] Zjazdy { get; set; }

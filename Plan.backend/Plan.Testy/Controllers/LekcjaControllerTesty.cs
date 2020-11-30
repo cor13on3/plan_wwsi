@@ -60,7 +60,7 @@ namespace Plan.Testy
             {
                 new LekcjaWidokDTO{ Nazwa = "N1"}
             };
-            _lekcjaService.Setup(x => x.DajPlanNaDzien(It.IsAny<DateTime>(), It.IsAny<string>())).Returns(plan);
+            _lekcjaService.Setup(x => x.DajPlanGrupyNaDzien(It.IsAny<DateTime>(), It.IsAny<string>())).Returns(plan);
 
             var wynik = _controller.DajPlanNaDzien(new DateTime(), "Z101");
             Assert.IsNotNull(wynik);

@@ -25,13 +25,13 @@ namespace Plan.Core.Services
             return wynik.First();
         }
 
-        public WykladowcaWidokDTO[] DajWykladowcow(string fraza = null)
+        public WykladowcaWidokDTO[] Przegladaj(string fraza = null)
         {
             var wynik = _baza.Daj<Wykladowca>().Wybierz(new ZapytanieWykladowcy());
             return wynik.ToArray();
         }
 
-        public void DodajWykladowce(string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
+        public void Dodaj(string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
         {
             if (string.IsNullOrEmpty(imie) || string.IsNullOrEmpty(nazwisko) || string.IsNullOrEmpty(email))
                 throw new BladBiznesowy("Uzupełnij komplet informacji");
@@ -58,7 +58,7 @@ namespace Plan.Core.Services
             _baza.Zapisz();
         }
 
-        public void UsunWykladowce(int id)
+        public void Usun(int id)
         {
             var repo = _baza.Daj<Wykladowca>();
             var wykladowca = repo.Znajdz(id);
@@ -68,7 +68,7 @@ namespace Plan.Core.Services
             _baza.Zapisz();
         }
 
-        public void ZmienWykladowce(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
+        public void Zmien(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
         {
             var repoWykladowca = _baza.Daj<Wykladowca>();
             var wykladowca = repoWykladowca.Znajdz(id);

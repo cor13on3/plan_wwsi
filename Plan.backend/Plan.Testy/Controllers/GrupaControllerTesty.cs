@@ -24,13 +24,13 @@ namespace Plan.Testy
         [TestMethod]
         public void Przegladaj_ZwracaListeGrup()
         {
-            _grupaService.Setup(x => x.Przegladaj()).Returns(new GrupaWidokDTO[]
+            _grupaService.Setup(x => x.Przegladaj()).Returns(new GrupaDTO[]
             {
-                new GrupaWidokDTO
+                new GrupaDTO
                 {
                     Numer = "Z101"
                 },
-                new GrupaWidokDTO
+                new GrupaDTO
                 {
                     Numer = "Z102"
                 }
@@ -47,7 +47,7 @@ namespace Plan.Testy
         [TestMethod]
         public void Post_WywolujeDodanieGrupy()
         {
-            _controller.Post(new KomendaDodajGrupe
+            _controller.Dodaj(new KomendaDodajGrupe
             {
                 NrGrupy = "Z101",
                 Semestr = 1,
@@ -61,7 +61,7 @@ namespace Plan.Testy
         [TestMethod]
         public void Delete_WywolujeUsuniecieGrupy()
         {
-            _controller.Delete("Z101");
+            _controller.Usun("Z101");
             _grupaService.Verify(x => x.Usun("Z101"), Times.Once);
         }
     }

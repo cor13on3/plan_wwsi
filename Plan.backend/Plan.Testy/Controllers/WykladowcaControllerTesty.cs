@@ -26,7 +26,7 @@ namespace Plan.Testy
             {
                 new WykladowcaWidokDTO()
             };
-            _wykladowcaService.Setup(x => x.DajWykladowcow(null)).Returns(lista).Verifiable();
+            _wykladowcaService.Setup(x => x.Przegladaj(null)).Returns(lista).Verifiable();
 
             var wynik = _controller.Get();
             Assert.IsNotNull(wynik);
@@ -56,7 +56,7 @@ namespace Plan.Testy
                 Specjalnosci = new int[] { 1, 2 }
             });
 
-            _wykladowcaService.Verify(x => x.DodajWykladowce("T1", "I1", "N1", "E1", new int[] { 1, 2 }), Times.Once);
+            _wykladowcaService.Verify(x => x.Dodaj("T1", "I1", "N1", "E1", new int[] { 1, 2 }), Times.Once);
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace Plan.Testy
                 Specjalnosci = new int[] { 1, 2 }
             });
 
-            _wykladowcaService.Verify(x => x.ZmienWykladowce(1, "T1", "I1", "N1", "E1", new int[] { 1, 2 }), Times.Once);
+            _wykladowcaService.Verify(x => x.Zmien(1, "T1", "I1", "N1", "E1", new int[] { 1, 2 }), Times.Once);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace Plan.Testy
         {
             _controller.Delete(1);
 
-            _wykladowcaService.Verify(x => x.UsunWykladowce(1), Times.Once);
+            _wykladowcaService.Verify(x => x.Usun(1), Times.Once);
         }
     }
 }

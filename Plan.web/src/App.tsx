@@ -32,7 +32,8 @@ function App({ zalogowano, imie, nazwisko, onWyloguj }: AppProps) {
   }, []);
 
   function wyloguj() {
-    httpClient.POST("/api/uzytkownik/wyloguj", null).then(() => onWyloguj());
+    httpClient.POST("/api/uzytkownik/wyloguj", null);
+    onWyloguj();
   }
 
   return (

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
@@ -18,21 +17,21 @@ namespace Plan.API.Controllers
             _salaService = salaService;
         }
 
-        [HttpGet]
-        public IEnumerable<SalaWidokDTO> Przegladaj()
-        {
-            return _salaService.Przegladaj();
-        }
-
-        [Authorize]
         [HttpPost]
+        [Authorize]
         public void Dodaj([FromBody] KomendaDodajSale req)
         {
             _salaService.Dodaj(req.Nazwa, req.Rodzaj);
         }
 
-        [Authorize]
+        [HttpGet]
+        public SalaWidokDTO[] Przegladaj()
+        {
+            return _salaService.Przegladaj();
+        }
+
         [HttpDelete("{id}")]
+        [Authorize]
         public void Usun(int id)
         {
             _salaService.Usun(id);

@@ -16,21 +16,21 @@ namespace Plan.API.Controllers
             _specjalnoscService = specjalnoscService;
         }
 
+        [HttpPost]
+        [Authorize]
+        public void Dodaj([FromBody] string nazwa)
+        {
+            _specjalnoscService.Dodaj(nazwa);
+        }
+
         [HttpGet]
         public SpecjalnoscDTO[] Przegladaj()
         {
             return _specjalnoscService.Przegladaj();
         }
 
-        [Authorize]
-        [HttpPost]
-        public void Dodaj([FromBody] string nazwa)
-        {
-            _specjalnoscService.Dodaj(nazwa);
-        }
-
-        [Authorize]
         [HttpDelete("{id}")]
+        [Authorize]
         public void Usun(int id)
         {
             _specjalnoscService.Usun(id);

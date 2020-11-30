@@ -18,30 +18,37 @@ namespace Plan.API.Controllers
             _grupaService = grupaService;
         }
 
-        [HttpGet]
-        public GrupaWidokDTO[] Przegladaj()
-        {
-            var wynik = _grupaService.Przegladaj();
-            return wynik;
-        }
-
-        [HttpGet("{tryb?}/{stopien?}/{semestr?}")]
-        public GrupaWidokDTO[] Filtruj(TrybStudiow? tryb = null, StopienStudiow? stopien = null, int? semestr = null)
-        {
-            var wynik = _grupaService.Filtruj(tryb, stopien, semestr);
-            return wynik;
-        }
-
-        [Authorize]
         [HttpPost]
-        public void Post([FromBody] KomendaDodajGrupe req)
+        [Authorize]
+        public void Dodaj([FromBody] KomendaDodajGrupe req)
         {
             _grupaService.Dodaj(req.NrGrupy, req.Semestr, req.TrybStudiow, req.StopienStudiow);
         }
 
-        [Authorize]
+        [HttpGet]
+        public GrupaDTO[] Przegladaj()
+        {
+            var lista = _grupaService.Przegladaj();
+            return lista;
+        }
+
+        [HttpGet("filtruj/{tryb?}/{stopien?}/{semestr?}")]
+        public GrupaDTO[] Filtruj(TrybStudiow? tryb = null, StopienStudiow? stopien = null, int? semestr = null)
+        {
+            var lista = _grupaService.Filtruj(tryb, stopien, semestr);
+            return lista;
+        }
+
+        [HttpGet("{numer}")]
+        public GrupaDTO Daj(string numer)
+        {
+            var grupa = _grupaService.Daj(numer);
+            return grupa;
+        }
+
         [HttpDelete("{numer}")]
-        public void Delete(string numer)
+        [Authorize]
+        public void Usun(string numer)
         {
             _grupaService.Usun(numer);
         }

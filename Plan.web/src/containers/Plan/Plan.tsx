@@ -42,10 +42,10 @@ function Plan() {
   const SELECT_PUSTY = "Wybierz";
 
   const [trybStudiow, setTrybStudiow] = useState(
-    SELECT_PUSTY as TrybStudiow | string
+    TrybStudiow.Niestacjonarne as TrybStudiow | string
   );
   const [grupy, setGrupy] = useState([] as GrupaWidok[]);
-  const [grupa, setGrupa] = useState(SELECT_PUSTY);
+  const [grupa, setGrupa] = useState("Z715");
   const [tryb, setTryb] = useState(
     "Standardowy" as "Standardowy" | "Odpracowania"
   );
@@ -80,7 +80,7 @@ function Plan() {
     setGrupa(SELECT_PUSTY);
     if (trybStudiow !== SELECT_PUSTY) {
       httpClient
-        .GET(`/api/grupa/${trybStudiow}`)
+        .GET(`/api/grupa/filtruj/${trybStudiow}`)
         .then((res: GrupaWidok[]) => {
           setGrupy(res);
         })
@@ -114,22 +114,23 @@ function Plan() {
     if (lekcje && lekcje.length > 0)
       return lekcje.map((l, i) => (
         <div className="lekcja" key={i}>
+          <span>
+            {formatujGodzine(l.lekcja.od)} - {formatujGodzine(l.lekcja.do)}
+          </span>
+          <span>
+            {l.lekcja.nazwa} ({l.lekcja.forma.toString().toLowerCase()})
+          </span>
+          <span>{l.lekcja.wykladowca}</span>
+          <span>Sala {l.lekcja.sala}</span>
           {tryb === "Standardowy" && (
             <>
-              <p>
+              <span>
                 Zjazdy:
                 {l.zjazdy.join(", ")}
-              </p>
+              </span>
             </>
           )}
-          <p>
-            {formatujGodzine(l.lekcja.od)} - {formatujGodzine(l.lekcja.do)}
-          </p>
-          <p>
-            {l.lekcja.nazwa} ({l.lekcja.forma.toString().toLowerCase()})
-          </p>
-          <p>{l.lekcja.wykladowca}</p>
-          <p>{l.lekcja.sala}</p>
+          <p></p>
         </div>
       ));
     return <div />;
@@ -225,7 +226,7 @@ function Plan() {
           {trybStudiow === TrybStudiow.Niestacjonarne ? (
             <div className="tydzien3">
               <div className="dzien">
-                <span>{dajDzienTygodnia(5)}</span>
+                <b>{dajDzienTygodnia(5)}</b>
                 <div>{dajLekcje(5)}</div>
                 <Button
                   variant="contained"
@@ -237,7 +238,7 @@ function Plan() {
                 </Button>
               </div>
               <div className="dzien">
-                <span>{dajDzienTygodnia(6)}</span>
+                <b>{dajDzienTygodnia(6)}</b>
                 <div>{dajLekcje(6)}</div>
                 <Button
                   variant="contained"
@@ -249,7 +250,7 @@ function Plan() {
                 </Button>
               </div>
               <div className="dzien">
-                <span>{dajDzienTygodnia(0)}</span>
+                <b>{dajDzienTygodnia(0)}</b>
                 <div>{dajLekcje(0)}</div>
                 <Button
                   variant="contained"
@@ -264,7 +265,7 @@ function Plan() {
           ) : (
             <div className="tydzien5">
               <div className="dzien">
-                <span>{dajDzienTygodnia(1)}</span>
+                <b>{dajDzienTygodnia(1)}</b>
                 {dajLekcje(1)}
                 <Button
                   variant="contained"
@@ -276,7 +277,7 @@ function Plan() {
                 </Button>
               </div>
               <div className="dzien">
-                <span>{dajDzienTygodnia(2)}</span>
+                <b>{dajDzienTygodnia(2)}</b>
                 {dajLekcje(2)}
                 <Button
                   variant="contained"
@@ -288,7 +289,7 @@ function Plan() {
                 </Button>
               </div>
               <div className="dzien">
-                <span>{dajDzienTygodnia(3)}</span>
+                <b>{dajDzienTygodnia(3)}</b>
                 {dajLekcje(3)}
                 <Button
                   variant="contained"
@@ -300,7 +301,7 @@ function Plan() {
                 </Button>
               </div>
               <div className="dzien">
-                <span>{dajDzienTygodnia(4)}</span>
+                <b>{dajDzienTygodnia(4)}</b>
                 {dajLekcje(4)}
                 <Button
                   variant="contained"
@@ -312,7 +313,7 @@ function Plan() {
                 </Button>
               </div>
               <div className="dzien">
-                <span>{dajDzienTygodnia(5)}</span>
+                <b>{dajDzienTygodnia(5)}</b>
                 {dajLekcje(5)}
                 <Button
                   variant="contained"

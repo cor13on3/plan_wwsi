@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
+using Plan.Komendy;
 
 namespace Plan.API.Controllers
 {
@@ -16,27 +17,27 @@ namespace Plan.API.Controllers
         }
 
         [HttpPost("dodaj")]
-        public void Dodaj([FromBody] UzytkownikDTO dto)
+        public void Dodaj([FromBody] KomendaDodajUzytkownika req)
         {
-            _uzytkownikService.Dodaj(dto.Imie, dto.Nazwisko, dto.Email, dto.Haslo);
-        }
-
-        [HttpPost("zaloguj")]
-        public DaneUzytkownikaDTO Zaloguj([FromBody] LogowanieDTO dto)
-        {
-            return _uzytkownikService.Zaloguj(dto.Email, dto.Haslo);
-        }
-
-        [HttpPost("wyloguj")]
-        public void Wyloguj()
-        {
-            _uzytkownikService.Wyloguj();
+            _uzytkownikService.Dodaj(req.Imie, req.Nazwisko, req.Email, req.Haslo);
         }
 
         [HttpGet("czy-zalogowany")]
         public bool CzyZalogowany()
         {
             return User.Identity.IsAuthenticated;
+        }
+
+        [HttpPost("zaloguj")]
+        public DaneUzytkownikaDTO Zaloguj([FromBody] KomendaZaloguj req)
+        {
+            return _uzytkownikService.Zaloguj(req.Email, req.Haslo);
+        }
+
+        [HttpPost("wyloguj")]
+        public void Wyloguj()
+        {
+            _uzytkownikService.Wyloguj();
         }
     }
 }

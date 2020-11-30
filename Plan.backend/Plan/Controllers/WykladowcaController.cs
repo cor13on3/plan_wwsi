@@ -17,37 +17,37 @@ namespace Plan.API.Controllers
             _wykladowcaService = wykladowcaService;
         }
 
-        [HttpGet]
-        public WykladowcaWidokDTO[] Get()
+        [HttpPost]
+        [Authorize]
+        public void Dodaj([FromBody] KomendaDodajWykladowce dto)
         {
-            return _wykladowcaService.DajWykladowcow();
+            _wykladowcaService.Dodaj(dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalnosci);
+        }
+
+        [HttpGet]
+        public WykladowcaWidokDTO[] Przegladaj()
+        {
+            return _wykladowcaService.Przegladaj();
         }
 
         [HttpGet("{id}")]
-        public WykladowcaDTO Get(int id)
+        public WykladowcaDTO Daj(int id)
         {
             return _wykladowcaService.Daj(id);
         }
 
-        [Authorize]
-        [HttpPost]
-        public void Post([FromBody] KomendaDodajWykladowce dto)
-        {
-            _wykladowcaService.DodajWykladowce(dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalnosci);
-        }
-
-        [Authorize]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] KomendaEdytujWykladowce dto)
+        [Authorize]
+        public void Zmien(int id, [FromBody] KomendaEdytujWykladowce dto)
         {
-            _wykladowcaService.ZmienWykladowce(id, dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalnosci);
+            _wykladowcaService.Zmien(id, dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalnosci);
         }
 
-        [Authorize]
         [HttpDelete("{id}")]
+        [Authorize]
         public void Delete(int id)
         {
-            _wykladowcaService.UsunWykladowce(id);
+            _wykladowcaService.Usun(id);
         }
     }
 }

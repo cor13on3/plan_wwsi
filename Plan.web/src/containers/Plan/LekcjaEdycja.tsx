@@ -14,14 +14,17 @@ import {
   FormaLekcji,
   PrzedmiotWidok,
   SalaWidok,
+  TrybStudiow,
   ZjazdGrupyWidok,
 } from "../../helpers/enums";
 import { Blad, httpClient } from "../../helpers/httpClient";
-import { WykladowcaWidok } from "../../helpers/types";
+import { Grupa, WykladowcaWidok } from "../../helpers/types";
 import { ErrorStyle } from "../../styles/ErrorStyle";
 import LekcjaEdycjaStyle from "../../styles/LekcjaEdycjaStyle";
 import WyborPrzedmiotu from "./WyborPrzedmiotu";
 import WyborSali from "./WyborSali";
+import WyborLekcji from "./WyborLekcji";
+import { LekcjaWybor } from "../../helpers/types";
 
 interface LekcjaEdycjaProps {
   grupa: string;
@@ -47,6 +50,10 @@ function LekcjaEdycja({
   const [forma, setForma] = useState(FormaLekcji.Wyklad);
   const [edycjaPrzedmiotu, setEdycjaPrzedmiotu] = useState(false);
   const [edycjaSali, setEdycjaSali] = useState(false);
+  const [wyborLekcji, setWyborLekcji] = useState(false);
+  const [semestr, setSemestr] = useState(0);
+  const [trybStudiow, setTrybStudiow] = useState(TrybStudiow.Niestacjonarne);
+  const [idLekcji, setIdLekcji] = useState(0);
   const [blad, setBlad] = useState("");
 
   useEffect(() => {
@@ -85,25 +92,43 @@ function LekcjaEdycja({
   }
 
   function zapisz() {
-    httpClient
-      .POST("/api/lekcja/dodaj", {
-        IdPrzedmiotu: przedmiot.id,
-        IdWykladowcy: wykladowca.id,
-        IdSali: sala.id,
-        GodzinaOd: od,
-        GodzinaDo: godzinaDo,
-        FormaLekcji: forma,
-      })
-      .then((id: number) => {
-        if (zjazdOdpracowywany) {
-          przypiszGrupe(id, zjazdOdpracowywany, true);
-        } else {
-          wybraneZjazdy.forEach((x) => {
-            przypiszGrupe(id, x, false);
-          });
-        }
-      })
-      .catch((err: Blad) => setBlad(err.Tresc));
+    if (wybraneZjazdy.length === 0) {
+      setBlad("Wybierz zjazdy");
+      return;
+    }
+    if (idLekcji > 0) {
+      if (zjazdOdpracowywany) {
+        przypiszGrupe(idLekcji, zjazdOdpracowywany, true);
+      } else {
+        wybraneZjazdy.forEach((x) => {
+          przypiszGrupe(idLekcji, x, false);
+        });
+      }
+    } else {
+      if (!przedmiot.id || !wykladowca.id || !sala.id) {
+        setBlad("Uzupełnij dane");
+        return;
+      }
+      httpClient
+        .POST("/api/lekcja/dodaj", {
+          IdPrzedmiotu: przedmiot.id,
+          IdWykladowcy: wykladowca.id,
+          IdSali: sala.id,
+          GodzinaOd: od,
+          GodzinaDo: godzinaDo,
+          FormaLekcji: forma,
+        })
+        .then((id: number) => {
+          if (zjazdOdpracowywany) {
+            przypiszGrupe(id, zjazdOdpracowywany, true);
+          } else {
+            wybraneZjazdy.forEach((x) => {
+              przypiszGrupe(id, x, false);
+            });
+          }
+        })
+        .catch((err: Blad) => setBlad(err.Tresc));
+    }
   }
 
   function onWyborPrzedmiotu(wybrany: PrzedmiotWidok) {
@@ -116,21 +141,52 @@ function LekcjaEdycja({
     setEdycjaSali(false);
   }
 
+  function onWyborLekcji(wybrana: LekcjaWybor) {
+    setIdLekcji(wybrana.idLekcji);
+    setPrzedmiot({ nazwa: wybrana.przedmiot } as PrzedmiotWidok);
+    setWykladowca({ nazwa: wybrana.wykladowca } as WykladowcaWidok);
+    setSala({ nazwa: wybrana.sala } as SalaWidok);
+    setOd(wybrana.godzinaOd);
+    setDo(wybrana.godzinaDo);
+    setForma(wybrana.forma);
+    setWyborLekcji(false);
+    setBlad("");
+  }
+
+  function otworzWybor() {
+    httpClient.GET(`/api/grupa/${grupa}`).then((dto: Grupa) => {
+      setTrybStudiow(dto.trybStudiow);
+      setSemestr(dto.semestr);
+      setWyborLekcji(true);
+    });
+  }
+
   return (
     <LekcjaEdycjaStyle>
       {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <p className="xl">
-        ZAJĘCIA DLA GRUPY {grupa} NA{" "}
-        {dajDzienTygodnia(dzienTygodnia).toUpperCase()}
+        {grupa} / {dajDzienTygodnia(dzienTygodnia).toUpperCase()}
       </p>
+      <Button variant="outlined" color="secondary" onClick={otworzWybor}>
+        DOŁĄCZ DO ZAJĘĆ
+      </Button>
+      <p className="l">Lub dodaj nowe:</p>
       <form>
         <TextField
+          disabled={idLekcji > 0}
           label="Przedmiot"
           variant="outlined"
-          onClick={() => setEdycjaPrzedmiotu(true)}
+          onClick={() => {
+            if (idLekcji === 0) setEdycjaPrzedmiotu(true);
+          }}
           value={przedmiot.nazwa}
+          InputLabelProps={{
+            shrink: !!przedmiot.nazwa,
+          }}
         />
         <Autocomplete
+          disabled={idLekcji > 0}
+          value={wykladowca}
           options={wykladowcy}
           getOptionLabel={(w) => w.nazwa}
           renderInput={(params) => (
@@ -139,10 +195,16 @@ function LekcjaEdycja({
           onChange={(e, v) => v && setWykladowca(v)}
         />
         <TextField
+          disabled={idLekcji > 0}
           label="Sala"
           variant="outlined"
-          onClick={() => setEdycjaSali(true)}
+          onClick={() => {
+            if (idLekcji === 0) setEdycjaSali(true);
+          }}
           value={sala.nazwa}
+          InputLabelProps={{
+            shrink: !!sala.nazwa,
+          }}
         />
         {!zjazdOdpracowywany && (
           <Autocomplete
@@ -157,6 +219,7 @@ function LekcjaEdycja({
         )}
         <div>
           <TextField
+            disabled={idLekcji > 0}
             variant="outlined"
             type="time"
             value={od}
@@ -165,6 +228,7 @@ function LekcjaEdycja({
           />
           <span> - </span>
           <TextField
+            disabled={idLekcji > 0}
             variant="outlined"
             type="time"
             value={godzinaDo}
@@ -175,6 +239,7 @@ function LekcjaEdycja({
         <FormControl variant="outlined">
           <InputLabel>Forma zajęć</InputLabel>
           <Select
+            disabled={idLekcji > 0}
             label="Forma zajęć"
             value={forma}
             onChange={(e) => setForma(e.target.value as FormaLekcji)}
@@ -205,6 +270,18 @@ function LekcjaEdycja({
         onClose={() => setEdycjaSali(false)}
       >
         <WyborSali onWybierz={onWyborSali} />
+      </Drawer>
+      <Drawer
+        open={wyborLekcji}
+        anchor="right"
+        onClose={() => setWyborLekcji(false)}
+      >
+        <WyborLekcji
+          onWybierz={onWyborLekcji}
+          semestr={semestr}
+          tryb={trybStudiow}
+          dzienTygodnia={dzienTygodnia}
+        />
       </Drawer>
     </LekcjaEdycjaStyle>
   );

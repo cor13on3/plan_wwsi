@@ -3,32 +3,31 @@ using Plan.Core.Entities;
 
 namespace Plan.Core.Zapytania
 {
-    public class ZapytanieLekcje : ZapytanieBase<LekcjaGrupa, LekcjaWidokDTO>
+    public class ZapytanieLekcje : ZapytanieBase<LekcjaGrupa, LekcjaDTO>
     {
-        public string NrGrupy { get; set; }
-        public int? NrZjazdu { get; set; }
-        public int? DzienTygodnia { get; set; }
+        public TrybStudiow Tryb { get; set; }
+        public int Semestr { get; set; }
+        public int DzienTygodnia { get; set; }
 
         public ZapytanieLekcje()
         {
-            UstawKryteria(x => x.NrGrupy == NrGrupy &&
-                (DzienTygodnia == null || x.DzienTygodnia == DzienTygodnia) &&
-                (NrZjazdu == null || x.NrZjazdu == NrZjazdu));
+            UstawKryteria(x => x.Grupa.TrybStudiow == Tryb && x.Grupa.Semestr == Semestr && x.DzienTygodnia == DzienTygodnia);
+            DodajSkladowa("Grupa");
             DodajSkladowa("Lekcja.Wykladowca");
             DodajSkladowa("Lekcja.Przedmiot");
             DodajSkladowa("Lekcja.Sala");
-            DodajMapowanie(x => new LekcjaWidokDTO
+            DodajMapowanie(x => new LekcjaDTO
             {
                 IdLekcji = x.Lekcja.IdLekcji,
-                Od = x.Lekcja.GodzinaOd,
-                Do = x.Lekcja.GodzinaDo,
+                GodzinaOd = x.Lekcja.GodzinaOd,
+                GodzinaDo = x.Lekcja.GodzinaDo,
                 Wykladowca = $"{x.Lekcja.Wykladowca.Tytul}. {x.Lekcja.Wykladowca.Imie[0]} {x.Lekcja.Wykladowca.Nazwisko}",
-                Nazwa = x.Lekcja.Przedmiot.Nazwa,
+                IdWykladowcy = x.Lekcja.Wykladowca.IdWykladowcy,
                 Sala = x.Lekcja.Sala.Nazwa,
+                IdSali = x.Lekcja.IdSali,
+                Przedmiot = x.Lekcja.Przedmiot.Nazwa,
+                IdPrzedmiotu = x.Lekcja.IdPrzedmiotu,
                 Forma = x.Lekcja.Forma,
-                CzyOdpracowanie = x.CzyOdpracowanie,
-                NrZjazdu = x.NrZjazdu,
-                DzienTygodnia = x.DzienTygodnia
             });
         }
     }

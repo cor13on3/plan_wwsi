@@ -29,6 +29,12 @@ namespace Plan.Infrastructure.DB
             dbSet.Add(entity);
         }
 
+        public void Edytuj(T entityToUpdate)
+        {
+            dbSet.Attach(entityToUpdate);
+            context.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+
         public void Usun(object id)
         {
             T entityToDelete = dbSet.Find(id);
@@ -56,47 +62,19 @@ namespace Plan.Infrastructure.DB
             dbSet.Remove(entityToDelete);
         }
 
-        public void Edytuj(T entityToUpdate)
-        {
-            dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
-        }
-
         public void UsunWiele(IEnumerable<T> entities)
         {
             foreach (var entity in entities)
                 Usun(entity);
         }
 
-        public bool Istnieje<TDTO>(ISpecification<T, TDTO> spec)
-        {
-            var queryableResultWithIncludes = spec.Skladowe
-                                                    .Aggregate(dbSet.AsQueryable(),
-            (current, include) => current.Include(include));
-
-            var secondaryResult = spec.SkladoweString
-                .Aggregate(queryableResultWithIncludes,
-                    (current, include) => current.Include(include));
-
-            return secondaryResult.Any(spec.Kryteria);
-        }
-
         public IEnumerable<TDTO> Wybierz<TDTO>(ISpecification<T, TDTO> spec)
         {
-            var queryableResultWithIncludes = spec.Skladowe
-                                                    .Aggregate(dbSet.AsQueryable(),
-            (current, include) => current.Include(include));
+            var aggregateQuery = spec.Skladowe.Aggregate(dbSet.AsQueryable(), (current, include) => current.Include(include));
+            aggregateQuery = spec.SkladoweString.Aggregate(aggregateQuery, (current, include) => current.Include(include));
 
-            // modify the IQueryable to include any string-based include statements
-            var secondaryResult = spec.SkladoweString
-                .Aggregate(queryableResultWithIncludes,
-                    (current, include) => current.Include(include));
-
-            // return the result of the query using the specification's criteria expression
-            return secondaryResult
-                            .Where(spec.Kryteria)
-                            .Select(spec.Mapowanie)
-                            .ToArray();
+            var query = aggregateQuery.Where(spec.Kryteria).Select(spec.Mapowanie);
+            return query.ToArray();
         }
     }
 }
