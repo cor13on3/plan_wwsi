@@ -9,8 +9,8 @@ namespace Plan.Core.IServices
 {
     public interface IUzytkownikService
     {
-        void Dodaj(string imie, string nazwisko, string email, string haslo);
-        DaneUzytkownikaDTO Zaloguj(string email, string haslo);
+        Task Dodaj(string imie, string nazwisko, string email, string haslo);
+        Task<DaneUzytkownikaDTO> Zaloguj(string email, string haslo);
         void Wyloguj();
     }
 }

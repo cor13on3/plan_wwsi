@@ -3,6 +3,7 @@ using Plan.Core.DTO;
 using Plan.Core.Entities;
 using Plan.Core.Exceptions;
 using Plan.Core.IServices;
+using System.Threading.Tasks;
 
 namespace Plan.Core.Services
 {
@@ -17,9 +18,9 @@ namespace Plan.Core.Services
             _signInManager = signInManager;
         }
 
-        public void Dodaj(string imie, string nazwisko, string email, string haslo)
+        public async Task Dodaj(string imie, string nazwisko, string email, string haslo)
         {
-            var res = _userManager.FindByNameAsync(email).Result;
+            var res = await _userManager.FindByNameAsync(email);
             if (res != null)
                 throw new BladBiznesowy("Użytkownik o podanym adresie e-mail jest już zarejestrowany.");
             var user = new Uzytkownik(email)
@@ -30,12 +31,12 @@ namespace Plan.Core.Services
             _userManager.CreateAsync(user, haslo).Wait();
         }
 
-        public DaneUzytkownikaDTO Zaloguj(string email, string haslo)
+        public async Task<DaneUzytkownikaDTO> Zaloguj(string email, string haslo)
         {
-            var wynik = _signInManager.PasswordSignInAsync(email, haslo, false, false).Result;
+            var wynik = await _signInManager.PasswordSignInAsync(email, haslo, false, false);
             if (!wynik.Succeeded)
                 throw new BladBiznesowy("Podano nieprawidłowy e-mail lub hasło.");
-            var uzytkownik = _userManager.FindByNameAsync(email).Result;
+            var uzytkownik = await _userManager.FindByNameAsync(email);
             return new DaneUzytkownikaDTO
             {
                 Email = uzytkownik.Email,

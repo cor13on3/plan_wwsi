@@ -9,6 +9,7 @@ using Plan.Core.Entities;
 using Plan.Core.Exceptions;
 using Plan.Core.Services;
 using Plan.Testy.Helpers;
+using System.Threading.Tasks;
 
 namespace Plan.Testy.Services
 {
@@ -44,15 +45,15 @@ namespace Plan.Testy.Services
         {
             _userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(new Uzytkownik());
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj("I1", "N1", "E1", "H1"),
+            AssertHelper.OczekiwanyWyjatekAsync<BladBiznesowy>(() => _service.Dodaj("I1", "N1", "E1", "H1"),
                 "Użytkownik o podanym adresie e-mail jest już zarejestrowany.");
         }
 
         [TestMethod]
-        public void Dodaj_WywolujeDodanie()
+        public async Task Dodaj_WywolujeDodanie()
         {
             _userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((Uzytkownik)null);
-            _service.Dodaj("I1", "N1", "E1", "H1");
+            await _service.Dodaj("I1", "N1", "E1", "H1");
 
             _userManager.Verify(x => x.CreateAsync(It.Is<Uzytkownik>(x =>
                 x.Imie == "I1" &&
@@ -66,12 +67,12 @@ namespace Plan.Testy.Services
             _signInManager.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
                 .ReturnsAsync(SignInResult.Failed);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Zaloguj("E1", "H1"),
+            AssertHelper.OczekiwanyWyjatekAsync<BladBiznesowy>(() => _service.Zaloguj("E1", "H1"),
                 "Podano nieprawidłowy e-mail lub hasło.");
         }
 
         [TestMethod]
-        public void Zaloguj_ZwracaDaneUzytkownika()
+        public async Task Zaloguj_ZwracaDaneUzytkownika()
         {
             _signInManager.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
                 .ReturnsAsync(SignInResult.Success);
@@ -82,7 +83,7 @@ namespace Plan.Testy.Services
                 Nazwisko = "B"
             });
 
-            var wynik = _service.Zaloguj("E1", "H1");
+            var wynik = await _service.Zaloguj("E1", "H1");
 
             Assert.IsNotNull(wynik);
             Assert.AreEqual("a@a.pl", wynik.Email);

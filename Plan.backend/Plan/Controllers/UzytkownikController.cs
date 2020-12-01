@@ -2,6 +2,7 @@
 using Plan.Core.DTO;
 using Plan.Core.IServices;
 using Plan.Komendy;
+using System.Threading.Tasks;
 
 namespace Plan.API.Controllers
 {
@@ -29,9 +30,9 @@ namespace Plan.API.Controllers
         }
 
         [HttpPost("zaloguj")]
-        public DaneUzytkownikaDTO Zaloguj([FromBody] KomendaZaloguj req)
+        public async Task<DaneUzytkownikaDTO> Zaloguj([FromBody] KomendaZaloguj req)
         {
-            return _uzytkownikService.Zaloguj(req.Email, req.Haslo);
+            return await _uzytkownikService.Zaloguj(req.Email, req.Haslo);
         }
 
         [HttpPost("wyloguj")]
