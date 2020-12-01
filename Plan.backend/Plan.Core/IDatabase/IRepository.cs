@@ -13,6 +13,6 @@ namespace Plan.Core.IDatabase
         void Usun(T entity);
         void UsunWiele(IEnumerable<T> entities);
         void Usun(Expression<Func<T, bool>> match);
-        IEnumerable<TDTO> Wybierz<TDTO>(ISpecification<T, TDTO> spec);
+        IEnumerable<TDTO> Wybierz<TDTO>(IZapytanie<T, TDTO> spec);
     }
 }

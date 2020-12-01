@@ -68,7 +68,7 @@ namespace Plan.Infrastructure.DB
                 Usun(entity);
         }
 
-        public IEnumerable<TDTO> Wybierz<TDTO>(ISpecification<T, TDTO> spec)
+        public IEnumerable<TDTO> Wybierz<TDTO>(IZapytanie<T, TDTO> spec)
         {
             var aggregateQuery = spec.Skladowe.Aggregate(dbSet.AsQueryable(), (current, include) => current.Include(include));
             aggregateQuery = spec.SkladoweString.Aggregate(aggregateQuery, (current, include) => current.Include(include));

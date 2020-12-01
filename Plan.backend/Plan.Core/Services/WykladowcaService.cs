@@ -19,7 +19,7 @@ namespace Plan.Core.Services
 
         public WykladowcaDTO Daj(int id)
         {
-            var wynik = _baza.Daj<Wykladowca>().Wybierz(new ZapytanieWykladowca(id));
+            var wynik = _baza.DajTabele<Wykladowca>().Wybierz(new ZapytanieWykladowca { IdWykladowcy = id });
             if (wynik.Count() == 0)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
             return wynik.First();
@@ -27,7 +27,7 @@ namespace Plan.Core.Services
 
         public WykladowcaWidokDTO[] Przegladaj(string fraza = null)
         {
-            var wynik = _baza.Daj<Wykladowca>().Wybierz(new ZapytanieWykladowcy());
+            var wynik = _baza.DajTabele<Wykladowca>().Wybierz(new ZapytanieWykladowcy());
             return wynik.ToArray();
         }
 
@@ -42,10 +42,10 @@ namespace Plan.Core.Services
                 Tytul = tytul,
                 Email = email,
             };
-            _baza.Daj<Wykladowca>().Dodaj(wykladowca);
+            _baza.DajTabele<Wykladowca>().Dodaj(wykladowca);
             foreach (var id in idSpecjalnosci)
             {
-                var specjalnosc = _baza.Daj<Specjalnosc>().Znajdz(id);
+                var specjalnosc = _baza.DajTabele<Specjalnosc>().Znajdz(id);
                 if (specjalnosc == null)
                     throw new BladBiznesowy($"Specjalność o id {id} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
@@ -53,14 +53,14 @@ namespace Plan.Core.Services
                     Wykladowca = wykladowca,
                     Specjalnosc = specjalnosc
                 };
-                _baza.Daj<WykladowcaSpecjalizacja>().Dodaj(ws);
+                _baza.DajTabele<WykladowcaSpecjalizacja>().Dodaj(ws);
             }
             _baza.Zapisz();
         }
 
         public void Usun(int id)
         {
-            var repo = _baza.Daj<Wykladowca>();
+            var repo = _baza.DajTabele<Wykladowca>();
             var wykladowca = repo.Znajdz(id);
             if (wykladowca == null)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
@@ -70,7 +70,7 @@ namespace Plan.Core.Services
 
         public void Zmien(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
         {
-            var repoWykladowca = _baza.Daj<Wykladowca>();
+            var repoWykladowca = _baza.DajTabele<Wykladowca>();
             var wykladowca = repoWykladowca.Znajdz(id);
             if (wykladowca == null)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
@@ -79,12 +79,12 @@ namespace Plan.Core.Services
             wykladowca.Nazwisko = nazwisko;
             wykladowca.Email = email;
             repoWykladowca.Edytuj(wykladowca);
-            var repoWyklSpec = _baza.Daj<WykladowcaSpecjalizacja>();
-            var wyklSpec = repoWyklSpec.Wybierz(new ZapytanieWykladowcaSpecjalizacja());
+            var repoWyklSpec = _baza.DajTabele<WykladowcaSpecjalizacja>();
+            var wyklSpec = repoWyklSpec.Wybierz(new ZapytanieWykladowcaSpecjalizacja { IdWykladowcy = id });
             repoWyklSpec.UsunWiele(wyklSpec);
             foreach (var specId in idSpecjalnosci)
             {
-                var specjalnosc = _baza.Daj<Specjalnosc>().Znajdz(specId);
+                var specjalnosc = _baza.DajTabele<Specjalnosc>().Znajdz(specId);
                 if (specjalnosc == null)
                     throw new BladBiznesowy($"Specjalność o id {specId} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja

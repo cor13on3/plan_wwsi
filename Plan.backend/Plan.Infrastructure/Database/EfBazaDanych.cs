@@ -1,4 +1,5 @@
-﻿using Plan.Core.IDatabase;
+﻿using Microsoft.Extensions.Configuration;
+using Plan.Core.IDatabase;
 using Plan.Serwis.BazaDanych;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace Plan.Infrastructure.DB
         private PlanContext _db = null;
         private Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
 
-        public EfBazaDanych()
+        public EfBazaDanych(IConfiguration configuration)
         {
-            _db = new PlanContext();
+            _db = new PlanContext(configuration);
         }
 
-        public IRepozytorium<T> Daj<T>() where T : class
+        public IRepozytorium<T> DajTabele<T>() where T : class
         {
             if (_repositories.Keys.Contains(typeof(T)) == true)
                 return _repositories[typeof(T)] as IRepozytorium<T>;

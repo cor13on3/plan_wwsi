@@ -1,16 +1,11 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace Plan.Core.Zapytania
 {
     public class ZapytanieSpecjalnosci : ZapytanieBase<Specjalnosc, SpecjalnoscDTO>
     {
-        public ZapytanieSpecjalnosci() :
-            base(x => true)
+        public ZapytanieSpecjalnosci()
         {
             DodajMapowanie(x => new SpecjalnoscDTO
             {

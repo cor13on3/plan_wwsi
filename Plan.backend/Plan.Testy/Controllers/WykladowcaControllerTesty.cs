@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Plan.API.Controllers;
+using Plan.API.Komendy;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
 
@@ -28,7 +29,7 @@ namespace Plan.Testy
             };
             _wykladowcaService.Setup(x => x.Przegladaj(null)).Returns(lista).Verifiable();
 
-            var wynik = _controller.Get();
+            var wynik = _controller.Przegladaj();
             Assert.IsNotNull(wynik);
             Assert.AreEqual(lista, wynik);
         }
@@ -39,7 +40,7 @@ namespace Plan.Testy
             var wykladowca = new WykladowcaDTO();
             _wykladowcaService.Setup(x => x.Daj(It.IsAny<int>())).Returns(wykladowca).Verifiable();
 
-            var wynik = _controller.Get(1);
+            var wynik = _controller.Daj(1);
             Assert.IsNotNull(wynik);
             Assert.AreEqual(wykladowca, wynik);
         }
@@ -47,7 +48,7 @@ namespace Plan.Testy
         [TestMethod]
         public void Post_WykonujeDodanieWykladowcy()
         {
-            _controller.Post(new API.Komendy.KomendaDodajWykladowce
+            _controller.Dodaj(new KomendaDodajWykladowce
             {
                 Tytul = "T1",
                 Imie = "I1",
@@ -62,7 +63,7 @@ namespace Plan.Testy
         [TestMethod]
         public void Put_WykonujeEdycjeWykladowcy()
         {
-            _controller.Put(1, new API.Komendy.KomendaEdytujWykladowce
+            _controller.Zmien(1, new KomendaEdytujWykladowce
             {
                 Tytul = "T1",
                 Imie = "I1",

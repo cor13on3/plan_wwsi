@@ -25,23 +25,14 @@ namespace Plan.Testy
         [TestMethod]
         public void DodajZjazd_WywolujeDodanieZjazdu()
         {
-            var zjazd = new ZjazdDTO();
-            _controller.DodajZjazd(zjazd);
-
-            _kalendariumService.Verify(x => x.DodajZjazd(zjazd), Times.Once);
-        }
-
-        [TestMethod]
-        public void PrzyporzadkujZjazdyGrupie_WywolujePrzyporzadkujZjazdyGrupie()
-        {
-            var zjazdy = new ZjazdKolejny[] { new ZjazdKolejny() };
-            _controller.PrzyporzadkujZjazdyGrupie(new KomendaPrzypiszZjazdyGrupie
+            _controller.DodajZjazd(new KomendaDodajZjazd
             {
-                NrGrupy = "Z101",
-                Zjazdy = zjazdy
+                DataOd = new DateTime(2020, 10, 1),
+                DataDo = new DateTime(2020, 10, 3),
+                RodzajSemestru = RodzajSemestru.Zimowy
             });
 
-            _kalendariumService.Verify(x => x.PrzyporzadkujZjazdyGrupie("Z101", zjazdy));
+            _kalendariumService.Verify(x => x.DodajZjazd(new DateTime(2020, 10, 1), new DateTime(2020, 10, 3), RodzajSemestru.Zimowy), Times.Once);
         }
 
         [TestMethod]

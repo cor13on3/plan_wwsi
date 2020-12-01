@@ -1,19 +1,17 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace Plan.Core.Zapytania
 {
     public class ZapytanieWykladowca : ZapytanieBase<Wykladowca, WykladowcaDTO>
     {
-        public ZapytanieWykladowca(int id) :
-            base(x => x.IdWykladowcy == id)
+        public int IdWykladowcy { get; set; }
+
+        public ZapytanieWykladowca()
         {
-            DodajSkladowa("WyklSpecList.Specjalnosc");
+            DolaczEncje("WyklSpecList.Specjalnosc");
+            UstawKryteria(x => x.IdWykladowcy == IdWykladowcy);
             DodajMapowanie(x => new WykladowcaDTO
             {
                 Specjalnosci = x.WyklSpecList.Select(y => new SpecjalnoscDTO
@@ -32,8 +30,7 @@ namespace Plan.Core.Zapytania
 
     public class ZapytanieWykladowcy : ZapytanieBase<Wykladowca, WykladowcaWidokDTO>
     {
-        public ZapytanieWykladowcy() :
-            base(x => true)
+        public ZapytanieWykladowcy()
         {
             DodajMapowanie(w => new WykladowcaWidokDTO
             {
@@ -46,10 +43,12 @@ namespace Plan.Core.Zapytania
 
     public class ZapytanieWykladowcaSpecjalizacja : ZapytanieBase<WykladowcaSpecjalizacja, WykladowcaSpecjalizacja>
     {
-        public ZapytanieWykladowcaSpecjalizacja() :
-            base(x => true)
+        public int IdWykladowcy { get; set; }
+
+        public ZapytanieWykladowcaSpecjalizacja()
         {
-            DodajMapowanie(w => w);
+            UstawKryteria(x => x.IdWykladowcy == IdWykladowcy);
+            DodajMapowanie(x => x);
         }
     }
 }

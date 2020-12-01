@@ -21,7 +21,7 @@ namespace Plan.Core.Services
         {
             if (string.IsNullOrEmpty(nazwa))
                 throw new BladBiznesowy("Podaj nazwę");
-            var repo = _baza.Daj<Przedmiot>();
+            var repo = _baza.DajTabele<Przedmiot>();
             repo.Dodaj(new Przedmiot
             {
                 Nazwa = nazwa,
@@ -31,14 +31,14 @@ namespace Plan.Core.Services
 
         public PrzedmiotWidokDTO[] Przegladaj()
         {
-            var repo = _baza.Daj<Przedmiot>();
+            var repo = _baza.DajTabele<Przedmiot>();
             var wynik = repo.Wybierz(new ZapytaniePrzedmioty());
             return wynik.ToArray();
         }
 
         public void Usun(int id)
         {
-            var repo = _baza.Daj<Przedmiot>();
+            var repo = _baza.DajTabele<Przedmiot>();
             var przedmiot = repo.Znajdz(id);
             if (przedmiot == null)
                 throw new BladBiznesowy($"Przedmiot o id {id} nie istnieje");

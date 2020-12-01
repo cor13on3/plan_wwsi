@@ -2,11 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Plan.Core.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace Plan.Serwis.BazaDanych
 {
     public partial class PlanContext : IdentityDbContext<Uzytkownik>
     {
+        private IConfiguration _configuration;
         public virtual DbSet<Grupa> Grupa { get; set; }
         public virtual DbSet<GrupaZjazd> GrupaZjazd { get; set; }
         public virtual DbSet<Lekcja> Lekcja { get; set; }
@@ -18,10 +20,15 @@ namespace Plan.Serwis.BazaDanych
         public virtual DbSet<Wykladowca> Wykladowca { get; set; }
         public virtual DbSet<Zjazd> Zjazd { get; set; }
 
+        public PlanContext(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseNpgsql("Host=localhost;Database=plancodefirst;Username=postgres;Password=postgres", b => b.MigrationsAssembly("Plan.Infrastructure"));
+                optionsBuilder.UseNpgsql(ConfigurationExtensions.GetConnectionString(this._configuration, "PlanDB"), b => b.MigrationsAssembly("Plan.Infrastructure"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,7 +74,6 @@ namespace Plan.Serwis.BazaDanych
             });
 
 
-
             modelBuilder.Entity<GrupaZjazd>(entity =>
             {
                 entity.HasKey(e => new { e.IdZjazdu, e.NrGrupy });
@@ -82,8 +88,6 @@ namespace Plan.Serwis.BazaDanych
             .HasOne(gz => gz.Zjazd)
             .WithMany(z => z.GrupaZjazdList)
             .HasForeignKey(gz => gz.IdZjazdu);
-
-
 
 
             modelBuilder.Entity<Lekcja>(entity =>
@@ -109,8 +113,6 @@ namespace Plan.Serwis.BazaDanych
             .HasForeignKey(l => l.IdSali);
 
 
-
-
             modelBuilder.Entity<LekcjaGrupa>(entity =>
             {
                 entity.HasKey(e => new { e.IdLekcji, e.NrGrupy, e.NrZjazdu, e.DzienTygodnia });
@@ -125,11 +127,6 @@ namespace Plan.Serwis.BazaDanych
             .HasOne(lg => lg.Grupa)
             .WithMany(g => g.LekcjaGrupaList)
             .HasForeignKey(lg => lg.NrGrupy);
-
-
-
-
-
 
 
             modelBuilder.Entity<WykladowcaSpecjalizacja>(entity =>

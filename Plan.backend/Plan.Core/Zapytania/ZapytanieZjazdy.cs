@@ -1,19 +1,19 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace Plan.Core.Zapytania
 {
     public class ZapytanieZjadyGrupy : ZapytanieBase<GrupaZjazd, ZjazdWidokDTO>
     {
-        public ZapytanieZjadyGrupy(string nrGrupy, DateTime? data = null) :
-            base(x => (nrGrupy == null ||  x.NrGrupy == nrGrupy) &&
-                      (data == null || (x.Zjazd.DataOd <= data && data <= x.Zjazd.DataDo)))
+        public string NumerGrupy { get; set; }
+        public DateTime? Data { get; set; }
+
+        public ZapytanieZjadyGrupy()
         {
-            DodajSkladowa("Zjazd");
+            DolaczEncje("Zjazd");
+            UstawKryteria(x => (NumerGrupy == null || x.NrGrupy == NumerGrupy) &&
+                               (Data == null || (x.Zjazd.DataOd <= Data && Data <= x.Zjazd.DataDo)));
             DodajMapowanie(x => new ZjazdWidokDTO
             {
                 Nr = x.NrZjazdu,
@@ -27,9 +27,12 @@ namespace Plan.Core.Zapytania
 
     public class ZapytanieZjadOTerminie : ZapytanieBase<Zjazd, Zjazd>
     {
-        public ZapytanieZjadOTerminie(DateTime poczatek, DateTime koniec) :
-            base(x => x.DataOd == poczatek && x.DataDo == koniec)
+        public DateTime Poczatek { get; set; }
+        public DateTime Koniec { get; set; }
+
+        public ZapytanieZjadOTerminie()
         {
+            UstawKryteria(x => x.DataOd == Poczatek && x.DataDo == Koniec);
             DodajMapowanie(x => new Zjazd
             {
                 IdZjazdu = x.IdZjazdu
@@ -37,9 +40,9 @@ namespace Plan.Core.Zapytania
         }
     }
 
-    public class ZapytanieZjady: ZapytanieBase<Zjazd, ZjazdWidokDTO>
+    public class ZapytanieZjady : ZapytanieBase<Zjazd, ZjazdWidokDTO>
     {
-        public ZapytanieZjady() : base(x => true)
+        public ZapytanieZjady()
         {
             DodajMapowanie(x => new ZjazdWidokDTO
             {

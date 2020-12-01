@@ -5,37 +5,34 @@ using System.Linq.Expressions;
 
 namespace Plan.Core.Zapytania
 {
-    public abstract class ZapytanieBase<T, TMAP> : ISpecification<T, TMAP>
+    public abstract class ZapytanieBase<Entity, Result> : IZapytanie<Entity, Result>
     {
-        public ZapytanieBase(Expression<Func<T, bool>> kryteria)
-        {
-            Kryteria = kryteria;
-        }
+        public Expression<Func<Entity, bool>> Kryteria { get; private set; }
+        public List<Expression<Func<Entity, object>>> Skladowe { get; private set; } = new List<Expression<Func<Entity, object>>>();
+        public List<string> SkladoweString { get; private set; } = new List<string>();
+        public Expression<Func<Entity, Result>> Mapowanie { get; private set; }
+
         public ZapytanieBase()
         {
+            Kryteria = x => true;
         }
 
-        public Expression<Func<T, bool>> Kryteria { get; private set; }
-        public List<Expression<Func<T, object>>> Skladowe { get; private set; } = new List<Expression<Func<T, object>>>();
-        public List<string> SkladoweString { get; private set; } = new List<string>();
-        public Expression<Func<T, TMAP>> Mapowanie { get; private set; }
-
-        protected virtual void UstawKryteria(Expression<Func<T, bool>> kryteria)
+        protected virtual void UstawKryteria(Expression<Func<Entity, bool>> kryteria)
         {
             Kryteria = kryteria;
         }
 
-        protected virtual void DodajSkladowa(Expression<Func<T, object>> expr)
+        protected virtual void DodajSkladowa(Expression<Func<Entity, object>> expr)
         {
             Skladowe.Add(expr);
         }
 
-        protected virtual void DodajSkladowa(string includeString)
+        protected virtual void DolaczEncje(string includeString)
         {
             SkladoweString.Add(includeString);
         }
 
-        protected virtual void DodajMapowanie(Expression<Func<T, TMAP>> mapping)
+        protected virtual void DodajMapowanie(Expression<Func<Entity, Result>> mapping)
         {
             Mapowanie = mapping;
         }

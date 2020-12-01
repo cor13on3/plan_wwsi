@@ -11,11 +11,11 @@ namespace Plan.Core.Zapytania
 
         public ZapytanieLekcje()
         {
+            DolaczEncje("Grupa");
+            DolaczEncje("Lekcja.Wykladowca");
+            DolaczEncje("Lekcja.Przedmiot");
+            DolaczEncje("Lekcja.Sala");
             UstawKryteria(x => x.Grupa.TrybStudiow == Tryb && x.Grupa.Semestr == Semestr && x.DzienTygodnia == DzienTygodnia);
-            DodajSkladowa("Grupa");
-            DodajSkladowa("Lekcja.Wykladowca");
-            DodajSkladowa("Lekcja.Przedmiot");
-            DodajSkladowa("Lekcja.Sala");
             DodajMapowanie(x => new LekcjaDTO
             {
                 IdLekcji = x.Lekcja.IdLekcji,

@@ -21,7 +21,7 @@ namespace Plan.Core.Services
         {
             if (string.IsNullOrEmpty(nazwa))
                 throw new BladBiznesowy("Podaj nazwę");
-            _baza.Daj<Sala>().Dodaj(new Sala
+            _baza.DajTabele<Sala>().Dodaj(new Sala
             {
                 Nazwa = nazwa,
                 Rodzaj = rodzajSali
@@ -31,13 +31,13 @@ namespace Plan.Core.Services
 
         public SalaWidokDTO[] Przegladaj()
         {
-            var wynik = _baza.Daj<Sala>().Wybierz(new ZapytanieSale());
+            var wynik = _baza.DajTabele<Sala>().Wybierz(new ZapytanieSale());
             return wynik.ToArray();
         }
 
         public void Usun(int id)
         {
-            IRepozytorium<Sala> repo = _baza.Daj<Sala>();
+            IRepozytorium<Sala> repo = _baza.DajTabele<Sala>();
             if (repo.Znajdz(id) == null)
                 throw new BladBiznesowy($"Sala o id {id} nie istnieje");
             repo.Usun(id);

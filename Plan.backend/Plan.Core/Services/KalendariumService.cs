@@ -22,8 +22,12 @@ namespace Plan.Core.Services
 
         public void DodajZjazd(DateTime dataOd, DateTime dataDo, RodzajSemestru rodzajSemestru)
         {
-            var repo = _baza.Daj<Zjazd>();
-            var zjazdOTerminie = repo.Wybierz(new ZapytanieZjadOTerminie(dataOd, dataDo));
+            var repo = _baza.DajTabele<Zjazd>();
+            var zjazdOTerminie = repo.Wybierz(new ZapytanieZjadOTerminie
+            {
+                Poczatek = dataOd,
+                Koniec = dataDo
+            });
             if (zjazdOTerminie.Count() > 0)
                 throw new BladBiznesowy($"Istnieje już zjazd w terminie {dataOd:dd-MM-yyyy} - {dataDo:dd-MM-yyyy}");
             var zjazd = new Zjazd
@@ -39,23 +43,26 @@ namespace Plan.Core.Services
 
         public ZjazdWidokDTO[] PrzegladajZjazdyGrupy(string nrGrupy = null)
         {
-            var repo = _baza.Daj<GrupaZjazd>();
-            var wynik = repo.Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
+            var repo = _baza.DajTabele<GrupaZjazd>();
+            var wynik = repo.Wybierz(new ZapytanieZjadyGrupy
+            {
+                NumerGrupy = nrGrupy
+            });
             return wynik.ToArray();
         }
 
         public ZjazdWidokDTO[] PrzegladajZjazdy()
         {
-            var repo = _baza.Daj<Zjazd>();
+            var repo = _baza.DajTabele<Zjazd>();
             var wynik = repo.Wybierz(new ZapytanieZjady());
             return wynik.ToArray();
         }
 
         public void PrzyporzadkujGrupyDoZjazdu(ZjazdKolejny zjazd, string[] grupy)
         {
-            var repo = _baza.Daj<GrupaZjazd>();
-            var repoGrupa = _baza.Daj<Grupa>();
-            var repoZjazd = _baza.Daj<Zjazd>();
+            var repo = _baza.DajTabele<GrupaZjazd>();
+            var repoGrupa = _baza.DajTabele<Grupa>();
+            var repoZjazd = _baza.DajTabele<Zjazd>();
             var z = repoZjazd.Znajdz(zjazd.IdZjazdu);
             if (z == null)
                 throw new BladBiznesowy($"Wybierz zjazd");
@@ -64,7 +71,10 @@ namespace Plan.Core.Services
                 var grupa = repoGrupa.Znajdz(nr);
                 if (grupa == null)
                     throw new BladBiznesowy($"Grupa o numerze {nr} nie istnieje");
-                var zjazdyGrupy = repo.Wybierz(new ZapytanieZjadyGrupy(nr));
+                var zjazdyGrupy = repo.Wybierz(new ZapytanieZjadyGrupy
+                {
+                    NumerGrupy = nr
+                });
                 if (zjazdyGrupy.Any(x => x.IdZjazdu == zjazd.IdZjazdu))
                     throw new BladBiznesowy($"Grupa {nr} ma już przypisany zjazd o id: {zjazd.IdZjazdu}");
                 repo.Dodaj(new GrupaZjazd
@@ -80,8 +90,8 @@ namespace Plan.Core.Services
 
         public void UsunGrupyZZjazdu(string[] grupy, int nrKolejny)
         {
-            var repo = _baza.Daj<GrupaZjazd>();
-            var repoGrupa = _baza.Daj<Grupa>();
+            var repo = _baza.DajTabele<GrupaZjazd>();
+            var repoGrupa = _baza.DajTabele<Grupa>();
             foreach (var nr in grupy)
             {
                 var grupa = repoGrupa.Znajdz(nr);

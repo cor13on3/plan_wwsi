@@ -7,6 +7,7 @@ using Plan.Core.IDatabase;
 using Plan.Core.Services;
 using Plan.Core.Zapytania;
 using Plan.Testy.Helpers;
+using System;
 
 namespace Plan.Testy.Services
 {
@@ -25,9 +26,9 @@ namespace Plan.Testy.Services
             _repoGrupaZjazd = new Mock<IRepozytorium<GrupaZjazd>>();
             _repoZjazd = new Mock<IRepozytorium<Zjazd>>();
             _repoGrupa = new Mock<IRepozytorium<Grupa>>();
-            _db.Setup(x => x.Daj<GrupaZjazd>()).Returns(_repoGrupaZjazd.Object);
-            _db.Setup(x => x.Daj<Zjazd>()).Returns(_repoZjazd.Object);
-            _db.Setup(x => x.Daj<Grupa>()).Returns(_repoGrupa.Object);
+            _db.Setup(x => x.DajTabele<GrupaZjazd>()).Returns(_repoGrupaZjazd.Object);
+            _db.Setup(x => x.DajTabele<Zjazd>()).Returns(_repoZjazd.Object);
+            _db.Setup(x => x.DajTabele<Grupa>()).Returns(_repoGrupa.Object);
             _service = new KalendariumService(_db.Object);
         }
 
@@ -36,11 +37,12 @@ namespace Plan.Testy.Services
         {
             _repoZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadOTerminie>())).Returns(new Zjazd[] { new Zjazd() });
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.DodajZjazd(new ZjazdDTO
-            {
-                DataOd = new System.DateTime(2020, 10, 19),
-                DataDo = new System.DateTime(2020, 10, 21),
-            }), "Istnieje już zjazd w terminie 19-10-2020 - 21-10-2020");
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.DodajZjazd(
+
+                new DateTime(2020, 10, 19),
+                new DateTime(2020, 10, 21),
+                RodzajSemestru.Zimowy
+            ), "Istnieje już zjazd w terminie 19-10-2020 - 21-10-2020");
         }
 
         [TestMethod]
@@ -48,16 +50,11 @@ namespace Plan.Testy.Services
         {
             _repoZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadOTerminie>())).Returns(new Zjazd[] { });
 
-            _service.DodajZjazd(new ZjazdDTO
-            {
-                DataOd = new System.DateTime(2020, 10, 19),
-                DataDo = new System.DateTime(2020, 10, 21),
-                RodzajSemestru = RodzajSemestru.Zimowy
-            });
+            _service.DodajZjazd(new DateTime(2020, 10, 19), new DateTime(2020, 10, 21), RodzajSemestru.Zimowy);
 
             _repoZjazd.Verify(x => x.Dodaj(It.Is<Zjazd>(x =>
-                x.DataOd == new System.DateTime(2020, 10, 19) &&
-                x.DataDo == new System.DateTime(2020, 10, 21) &&
+                x.DataOd == new DateTime(2020, 10, 19) &&
+                x.DataDo == new DateTime(2020, 10, 21) &&
                 x.RodzajSemestru == RodzajSemestru.Zimowy
             )), Times.Once);
 
@@ -71,8 +68,8 @@ namespace Plan.Testy.Services
             {
                 new ZjazdWidokDTO
                 {
-                    DataOd = new System.DateTime(2020,10,19),
-                    DataDo = new System.DateTime(2020,10,21),
+                    DataOd = new DateTime(2020,10,19),
+                    DataDo = new DateTime(2020,10,21),
                     IdZjazdu = 2,
                     CzyOdpracowanie = true,
                     Nr = 4
@@ -83,62 +80,11 @@ namespace Plan.Testy.Services
 
             Assert.IsNotNull(wynik);
             Assert.AreEqual(1, wynik.Length);
-            Assert.AreEqual(new System.DateTime(2020, 10, 19), wynik[0].DataOd);
-            Assert.AreEqual(new System.DateTime(2020, 10, 21), wynik[0].DataDo);
+            Assert.AreEqual(new DateTime(2020, 10, 19), wynik[0].DataOd);
+            Assert.AreEqual(new DateTime(2020, 10, 21), wynik[0].DataDo);
             Assert.AreEqual(2, wynik[0].IdZjazdu);
             Assert.AreEqual(true, wynik[0].CzyOdpracowanie);
             Assert.AreEqual(4, wynik[0].Nr);
-        }
-
-        [TestMethod]
-        public void PrzyporzadkujZjazdyGrupie_WyjatekGrupaNieIstnieje()
-        {
-            _repoGrupa.Setup(x => x.Znajdz(It.IsAny<string>())).Returns((Grupa)null);
-
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejny[] { }),
-                "Grupa o numerze Z101 nie istnieje");
-        }
-
-        [TestMethod]
-        public void PrzyporzadkujZjazdyGrupie_GrupaMaJuzPrzypisanyTenZjazd()
-        {
-            _repoGrupa.Setup(x => x.Znajdz(It.IsAny<string>())).Returns(new Grupa());
-            _repoGrupaZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadyGrupy>())).Returns(new ZjazdWidokDTO[]
-            {
-                new ZjazdWidokDTO{ IdZjazdu = 2}
-            });
-
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejny[]
-            {
-                new ZjazdKolejny{IdZjazdu = 2}
-            }),
-                "Grupa Z101 ma już przypisany zjazd o id: 2");
-        }
-
-        [TestMethod]
-        public void PrzyporzadkujZjazdyGrupie_DodajePowiazanie()
-        {
-            _repoGrupa.Setup(x => x.Znajdz(It.IsAny<string>())).Returns(new Grupa());
-            _repoGrupaZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadyGrupy>())).Returns(new ZjazdWidokDTO[] { });
-
-            _service.PrzyporzadkujZjazdyGrupie("Z101", new ZjazdKolejny[]
-            {
-                new ZjazdKolejny
-                {
-                    IdZjazdu = 1,
-                    NrZjazdu = 2,
-                    CzyOdpracowanie = true
-                }
-            });
-
-            _repoGrupaZjazd.Verify(x => x.Dodaj(It.Is<GrupaZjazd>(x =>
-
-                x.NrGrupy == "Z101" &&
-                x.IdZjazdu == 1 &&
-                x.NrZjazdu == 2 &&
-                x.CzyOdpracowanie == true
-            )), Times.Once);
-            _db.Verify(x => x.Zapisz(), Times.Once);
         }
     }
 }

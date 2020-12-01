@@ -21,7 +21,7 @@ namespace Plan.Testy.Services
         {
             _db = new Mock<IBazaDanych>();
             _repo = new Mock<IRepozytorium<Grupa>>();
-            _db.Setup(x => x.Daj<Grupa>()).Returns(_repo.Object);
+            _db.Setup(x => x.DajTabele<Grupa>()).Returns(_repo.Object);
             _service = new GrupaService(_db.Object);
         }
 

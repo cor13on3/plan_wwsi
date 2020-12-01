@@ -21,11 +21,15 @@ namespace Plan.Core.Services
 
         public LekcjaWidokDTO[] DajPlanGrupyNaDzien(DateTime data, string nrGrupy)
         {
-            var zjazd = _baza.Daj<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy(nrGrupy, data));
+            var zjazd = _baza.DajTabele<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy
+            {
+                NumerGrupy = nrGrupy,
+                Data = data
+            });
             if (zjazd.Count() == 0)
                 return new LekcjaWidokDTO[0];
             var zjazdNr = zjazd.First().Nr;
-            var wynik = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
+            var wynik = _baza.DajTabele<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
             {
                 NrGrupy = nrGrupy,
                 NrZjazdu = zjazdNr,
@@ -38,7 +42,7 @@ namespace Plan.Core.Services
 
         public PlanDnia[] DajPlanGrupyNaTydzien(string nrGrupy)
         {
-            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
+            var lekcje = _baza.DajTabele<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
             {
                 NrGrupy = nrGrupy,
             });
@@ -70,7 +74,7 @@ namespace Plan.Core.Services
 
         public PlanDnia[] DajPlanOdpracowania(string nrGrupy, int nrZjazdu)
         {
-            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
+            var lekcje = _baza.DajTabele<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy()
             {
                 NrGrupy = nrGrupy,
                 NrZjazdu = nrZjazdu,
@@ -103,7 +107,7 @@ namespace Plan.Core.Services
 
         public LekcjaDTO[] DajLekcjeNaDzienTygodnia(TrybStudiow trybStudiow, int semestr, int dzienTygodnia)
         {
-            var lekcje = _baza.Daj<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
+            var lekcje = _baza.DajTabele<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
             {
                 Tryb = trybStudiow,
                 Semestr = semestr,
@@ -126,7 +130,7 @@ namespace Plan.Core.Services
                 GodzinaDo = godzinaDo,
                 Forma = forma
             };
-            _baza.Daj<Lekcja>().Dodaj(lekcja);
+            _baza.DajTabele<Lekcja>().Dodaj(lekcja);
             _baza.Zapisz();
             var id = lekcja.IdLekcji;
             return id;
@@ -134,15 +138,18 @@ namespace Plan.Core.Services
 
         public void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu, int dzienTygodnia, bool czyOdpracowanie)
         {
-            if (_baza.Daj<Lekcja>().Znajdz(lekcjaId) == null)
+            if (_baza.DajTabele<Lekcja>().Znajdz(lekcjaId) == null)
                 throw new BladBiznesowy($"Lekcja o id {lekcjaId} nie istnieje.");
-            if (_baza.Daj<Grupa>().Znajdz(nrGrupy) == null)
+            if (_baza.DajTabele<Grupa>().Znajdz(nrGrupy) == null)
                 throw new BladBiznesowy($"Grupa o numerze {nrGrupy} nie istnieje.");
             if (nrZjazdu < 0)
                 throw new BladBiznesowy("Podano niepoprawny numer zjazdu.");
             if (dzienTygodnia < 0 || dzienTygodnia > 6)
                 throw new BladBiznesowy("Podano niepoprawny dzień tygodnia.");
-            var zjazdy = _baza.Daj<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy(nrGrupy));
+            var zjazdy = _baza.DajTabele<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy
+            {
+                NumerGrupy = nrGrupy
+            });
             if (!zjazdy.Any(x => x.Nr == nrZjazdu))
                 throw new BladBiznesowy($"Brak ustalonego zjazdu o numerze {nrZjazdu} dla grupy {nrGrupy}.");
             if (czyOdpracowanie)
@@ -150,7 +157,7 @@ namespace Plan.Core.Services
                 if (!zjazdy.Any(x => x.Nr == nrZjazdu && x.CzyOdpracowanie))
                     throw new BladBiznesowy($"Brak ustalonej daty odpracowania zjazdu nr {nrZjazdu} dla grupy {nrGrupy}. Dodaj zjazd z datą odpracowania.");
             }
-            _baza.Daj<LekcjaGrupa>().Dodaj(new LekcjaGrupa
+            _baza.DajTabele<LekcjaGrupa>().Dodaj(new LekcjaGrupa
             {
                 IdLekcji = lekcjaId,
                 NrGrupy = nrGrupy,
@@ -165,7 +172,7 @@ namespace Plan.Core.Services
         public void Usun(int lekcjaId)
         {
             // TODO: sprawdzić czy usuwając lekcję nie usunie się z automaty grupa, sala itd..
-            var repo = _baza.Daj<Lekcja>();
+            var repo = _baza.DajTabele<Lekcja>();
             if (repo.Znajdz(lekcjaId) == null)
                 throw new BladBiznesowy($"Nie istnieje lekcja o id {lekcjaId}");
             repo.Usun(lekcjaId);
@@ -175,7 +182,7 @@ namespace Plan.Core.Services
         public void Zmien(int lekcjaId, int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
         {
             WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
-            IRepozytorium<Lekcja> repo = _baza.Daj<Lekcja>();
+            IRepozytorium<Lekcja> repo = _baza.DajTabele<Lekcja>();
             var lekcja = repo.Znajdz(lekcjaId);
             if (lekcja == null)
                 throw new BladBiznesowy($"Nie istnieje lekcja o id {lekcjaId}");
@@ -193,15 +200,15 @@ namespace Plan.Core.Services
         {
             if (przedmiotId <= 0)
                 throw new BladBiznesowy($"Wybierz przedmiot.");
-            if (_baza.Daj<Przedmiot>().Znajdz(przedmiotId) == null)
+            if (_baza.DajTabele<Przedmiot>().Znajdz(przedmiotId) == null)
                 throw new BladBiznesowy($"Przedmiot o id {przedmiotId} nie istnieje.");
             if (wykladowcaId <= 0)
                 throw new BladBiznesowy($"Wybierz wykładowcę.");
-            if (_baza.Daj<Wykladowca>().Znajdz(wykladowcaId) == null)
+            if (_baza.DajTabele<Wykladowca>().Znajdz(wykladowcaId) == null)
                 throw new BladBiznesowy($"Wykładowca o id {wykladowcaId} nie istnieje.");
             if (salaId <= 0)
                 throw new BladBiznesowy($"Wybierz salę.");
-            if (_baza.Daj<Sala>().Znajdz(salaId) == null)
+            if (_baza.DajTabele<Sala>().Znajdz(salaId) == null)
                 throw new BladBiznesowy($"Sala o id {salaId} nie istnieje.");
             try
             {

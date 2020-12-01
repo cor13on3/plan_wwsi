@@ -22,7 +22,7 @@ namespace Plan.Testy.Services
                      new Mock<ILogger<SignInManager<Uzytkownik>>>().Object,
                      new Mock<IAuthenticationSchemeProvider>().Object,
                      new Mock<IUserConfirmation<Uzytkownik>>().Object)
-        { } 
+        { }
     }
 
     [TestClass]
@@ -71,12 +71,23 @@ namespace Plan.Testy.Services
         }
 
         [TestMethod]
-        public void Zaloguj_NieZglaszaWyjatku()
+        public void Zaloguj_ZwracaDaneUzytkownika()
         {
             _signInManager.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
                 .ReturnsAsync(SignInResult.Success);
+            _userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(new Uzytkownik
+            {
+                Email = "a@a.pl",
+                Imie = "A",
+                Nazwisko = "B"
+            });
 
-            _service.Zaloguj("E1", "H1");
+            var wynik = _service.Zaloguj("E1", "H1");
+
+            Assert.IsNotNull(wynik);
+            Assert.AreEqual("a@a.pl", wynik.Email);
+            Assert.AreEqual("A", wynik.Imie);
+            Assert.AreEqual("B", wynik.Nazwisko);
         }
     }
 }

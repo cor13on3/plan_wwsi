@@ -5,6 +5,7 @@ using Plan.API.Komendy;
 using Plan.Core.DTO;
 using Plan.Core.Entities;
 using Plan.Core.IServices;
+using Plan.Komendy;
 
 namespace Plan.Testy
 {
@@ -24,7 +25,7 @@ namespace Plan.Testy
         [TestMethod]
         public void Dodaj_WywolujeDodanie()
         {
-            _controller.Dodaj(new UzytkownikDTO
+            _controller.Dodaj(new KomendaDodajUzytkownika
             {
                 Imie = "I1",
                 Nazwisko = "N1",
@@ -38,7 +39,7 @@ namespace Plan.Testy
         [TestMethod]
         public void Zaloguj_WywolujeLogowanie()
         {
-            _controller.Zaloguj(new LogowanieDTO
+            _controller.Zaloguj(new KomendaZaloguj
             {
                 Email = "E1",
                 Haslo = "H1"

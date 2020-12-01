@@ -68,7 +68,7 @@ namespace Plan.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // TODO: Przy takim rozwi¹zaniu baza aktualizuje siê od razu po uruchomieniu serwera.
-            using (var context = new PlanContext())
+            using (var context = new PlanContext(Configuration))
             {
                 context.Database.Migrate();
             }

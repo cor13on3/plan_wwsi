@@ -36,14 +36,14 @@ namespace Plan.Testy.Services
             _repoWykladowca = new Mock<IRepozytorium<Wykladowca>>();
             _repoSala = new Mock<IRepozytorium<Sala>>();
             _repoLekcja = new Mock<IRepozytorium<Lekcja>>();
-            _db.Setup(x => x.Daj<GrupaZjazd>()).Returns(_repoGrupaZjazd.Object);
-            _db.Setup(x => x.Daj<Zjazd>()).Returns(_repoZjazd.Object);
-            _db.Setup(x => x.Daj<Grupa>()).Returns(_repoGrupa.Object);
-            _db.Setup(x => x.Daj<LekcjaGrupa>()).Returns(_repoLekcjaGrupa.Object);
-            _db.Setup(x => x.Daj<Przedmiot>()).Returns(_repoPrzedmiot.Object);
-            _db.Setup(x => x.Daj<Wykladowca>()).Returns(_repoWykladowca.Object);
-            _db.Setup(x => x.Daj<Sala>()).Returns(_repoSala.Object);
-            _db.Setup(x => x.Daj<Lekcja>()).Returns(_repoLekcja.Object);
+            _db.Setup(x => x.DajTabele<GrupaZjazd>()).Returns(_repoGrupaZjazd.Object);
+            _db.Setup(x => x.DajTabele<Zjazd>()).Returns(_repoZjazd.Object);
+            _db.Setup(x => x.DajTabele<Grupa>()).Returns(_repoGrupa.Object);
+            _db.Setup(x => x.DajTabele<LekcjaGrupa>()).Returns(_repoLekcjaGrupa.Object);
+            _db.Setup(x => x.DajTabele<Przedmiot>()).Returns(_repoPrzedmiot.Object);
+            _db.Setup(x => x.DajTabele<Wykladowca>()).Returns(_repoWykladowca.Object);
+            _db.Setup(x => x.DajTabele<Sala>()).Returns(_repoSala.Object);
+            _db.Setup(x => x.DajTabele<Lekcja>()).Returns(_repoLekcja.Object);
             _service = new LekcjaService(_db.Object);
         }
 
@@ -58,11 +58,11 @@ namespace Plan.Testy.Services
         }
 
         [TestMethod]
-        public void ZwracaWynikZapytania()
+        public void DajPlanGrupyNaDzien_ZwracaPoprawnyWynik()
         {
             _repoGrupaZjazd.Setup(x => x.Wybierz(It.IsAny<ZapytanieZjadyGrupy>())).Returns(new ZjazdWidokDTO[]
             {
-                new ZjazdWidokDTO{ Nr = 2 }
+                new ZjazdWidokDTO{ Nr = 2, CzyOdpracowanie = true }
             });
             _repoLekcjaGrupa.Setup(x => x.Wybierz(It.IsAny<ZapytanieLekcjeGrupy>())).Returns(new LekcjaWidokDTO[]
             {
@@ -78,7 +78,7 @@ namespace Plan.Testy.Services
                 }
             });
 
-            var wynik = _service.DajPlanGrupyNaDzien(new System.DateTime(), "Z101");
+            var wynik = _service.DajPlanGrupyNaDzien(new DateTime(), "Z101");
 
             _repoLekcjaGrupa.Verify(x => x.Wybierz(It.Is<ZapytanieLekcjeGrupy>(x =>
                 x.DzienTygodnia == (int)new DateTime().DayOfWeek &&
@@ -134,7 +134,7 @@ namespace Plan.Testy.Services
             _repoSala.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Sala());
 
             AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, "080000", "093500", FormaLekcji.Cwiczenia),
-                "Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm:ss (np. 09:45:00)");
+                "Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm (np. 09:45)");
         }
 
         [TestMethod]
@@ -144,14 +144,14 @@ namespace Plan.Testy.Services
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Wykladowca());
             _repoSala.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Sala());
 
-            _service.Dodaj(1, 2, 3, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia);
+            _service.Dodaj(1, 2, 3, "08:00", "09:35", FormaLekcji.Cwiczenia);
 
             _repoLekcja.Verify(x => x.Dodaj(It.Is<Lekcja>(x =>
                 x.IdPrzedmiotu == 1 &&
                 x.IdWykladowcy == 2 &&
                 x.IdSali == 3 &&
-                x.GodzinaOd == "08:00:00" &&
-                x.GodzinaDo == "09:35:00" &&
+                x.GodzinaOd == "08:00" &&
+                x.GodzinaDo == "09:35" &&
                 x.Forma == FormaLekcji.Cwiczenia
             )), Times.Once);
         }
@@ -302,7 +302,7 @@ namespace Plan.Testy.Services
             _repoSala.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Sala());
 
             AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Zmien(1, 1, 2, 3, "080000", "093500", FormaLekcji.Cwiczenia),
-                "Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm:ss (np. 09:45:00)");
+                "Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm (np. 09:45)");
         }
 
         [TestMethod]
@@ -313,7 +313,7 @@ namespace Plan.Testy.Services
             _repoSala.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Sala());
             _repoLekcja.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Lekcja)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Zmien(1, 1, 2, 3, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Zmien(1, 1, 2, 3, "08:00", "09:35", FormaLekcji.Cwiczenia),
                 "Nie istnieje lekcja o id 1");
         }
 
@@ -329,20 +329,20 @@ namespace Plan.Testy.Services
                 IdPrzedmiotu = 1,
                 IdWykladowcy = 2,
                 IdSali = 3,
-                GodzinaOd = "13:45:00",
-                GodzinaDo = "15:15:00",
+                GodzinaOd = "13:45",
+                GodzinaDo = "15:15",
                 Forma = FormaLekcji.Wyklad
             });
 
-            _service.Zmien(1, 10, 20, 30, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia);
+            _service.Zmien(1, 10, 20, 30, "08:00", "09:35", FormaLekcji.Cwiczenia);
 
             _repoLekcja.Verify(x => x.Edytuj(It.Is<Lekcja>(x =>
                 x.IdLekcji == 1 &&
                 x.IdPrzedmiotu == 10 &&
                 x.IdWykladowcy == 20 &&
                 x.IdSali == 30 &&
-                x.GodzinaOd == "08:00:00" &&
-                x.GodzinaDo == "09:35:00" &&
+                x.GodzinaOd == "08:00" &&
+                x.GodzinaDo == "09:35" &&
                 x.Forma == FormaLekcji.Cwiczenia
             )), Times.Once);
             _db.Verify(x => x.Zapisz(), Times.Once);
