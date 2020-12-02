@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\PlanWykladowcyPage.xaml.cs">
+      <DependentUpon>PlanWykladowcyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\PlanZajecPage.xaml.cs">
       <DependentUpon>PlanZajecPage.xaml</DependentUpon>
     </Compile>
@@ -24,6 +27,9 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Views\LoginPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PlanWykladowcyPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\WykladowcyPage.xaml">

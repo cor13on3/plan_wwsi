@@ -25,8 +25,6 @@ namespace PlanWWSI.ViewModels
                 Application.Current.Properties["grupa"] = NumerGrupy;
             await Application.Current.SavePropertiesAsync();
             Application.Current.MainPage = new MainPage();
-            //Navigation.InsertPageBefore(new PlanZajecPage(), Navigation.NavigationStack.Last());
-            //await Navigation.PopAsync();
         }
     }
 }

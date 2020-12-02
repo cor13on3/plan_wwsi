@@ -13,5 +13,6 @@ namespace Plan.Core.IServices
         void Usun(int id);
         WykladowcaWidokDTO[] Przegladaj(string fraza = null);
         WykladowcaDTO Daj(int id);
+        LekcjaWidokDTO[] DajPlan(int id, DateTime data);
     }
 }

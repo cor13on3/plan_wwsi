@@ -40,6 +40,20 @@ namespace Plan.Core.Zapytania
         }
     }
 
+    public class ZapytanieZjazd : ZapytanieBase<Zjazd, Zjazd>
+    {
+        public DateTime Data { get; set; }
+
+        public ZapytanieZjazd()
+        {
+            UstawKryteria(x => x.DataOd <= Data && x.DataDo >= Data);
+            DodajMapowanie(x => new Zjazd
+            {
+                IdZjazdu = x.IdZjazdu
+            });
+        }
+    }
+
     public class ZapytanieZjady : ZapytanieBase<Zjazd, ZjazdWidokDTO>
     {
         public ZapytanieZjady()

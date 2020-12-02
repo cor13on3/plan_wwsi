@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plan.API.Komendy;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
+using System;
 
 namespace Plan.API.Controllers
 {
@@ -28,6 +29,12 @@ namespace Plan.API.Controllers
         public WykladowcaWidokDTO[] Przegladaj()
         {
             return _wykladowcaService.Przegladaj();
+        }
+
+        [HttpGet("plan/{id}/{data}")]
+        public LekcjaWidokDTO[] DajPlanWykladowcy(int id, DateTime data)
+        {
+            return _wykladowcaService.DajPlan(id, data);
         }
 
         [HttpGet("{id}")]

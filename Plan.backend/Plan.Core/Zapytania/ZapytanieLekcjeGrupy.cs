@@ -1,5 +1,6 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
+using System.Linq;
 
 namespace Plan.Core.Zapytania
 {
@@ -22,6 +23,7 @@ namespace Plan.Core.Zapytania
                 IdLekcji = x.Lekcja.IdLekcji,
                 Od = x.Lekcja.GodzinaOd,
                 Do = x.Lekcja.GodzinaDo,
+                IdWykladowcy = x.Lekcja.Wykladowca.IdWykladowcy,
                 Wykladowca = $"{x.Lekcja.Wykladowca.Tytul}. {x.Lekcja.Wykladowca.Imie[0]} {x.Lekcja.Wykladowca.Nazwisko}",
                 Nazwa = x.Lekcja.Przedmiot.Nazwa,
                 Sala = x.Lekcja.Sala.Nazwa,

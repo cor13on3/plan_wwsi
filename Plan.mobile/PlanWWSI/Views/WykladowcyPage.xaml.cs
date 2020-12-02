@@ -17,19 +17,12 @@ namespace PlanWWSI.Views
             BindingContext = viewModel = new WykladowcyViewModel();
         }
 
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-            var item = args.SelectedItem as Wykladowca;
+            var item = args.SelectedItem as WykladowcaWidok;
             if (item == null)
                 return;
-
-            viewModel.Szczegoly = new WykladowcaSzczegoly
-            {
-                NazwaPelna = item.NazwaPelna,
-                Specjalizacja = "Grafika",
-            };
-            Application.Current.MainPage = new WykladowcaSzczegolyPage(viewModel);
-
+            Navigation.PushAsync(new PlanWykladowcyPage(item));
             ItemsListView.SelectedItem = null;
         }
 

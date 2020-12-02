@@ -126,7 +126,7 @@ function Plan() {
             <>
               <span>
                 Zjazdy:
-                {l.zjazdy.join(", ")}
+                {l.zjazdy.sort((a, b) => a - b).join(", ")}
               </span>
             </>
           )}

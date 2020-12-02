@@ -5,17 +5,13 @@ namespace Plan.Core.Zapytania
 {
     public class ZapytanieLekcje : ZapytanieBase<LekcjaGrupa, LekcjaDTO>
     {
-        public TrybStudiow Tryb { get; set; }
-        public int Semestr { get; set; }
-        public int DzienTygodnia { get; set; }
-
-        public ZapytanieLekcje()
+        public ZapytanieLekcje(TrybStudiow tryb, int semestr, int dzienTygodnia)
         {
             DolaczEncje("Grupa");
             DolaczEncje("Lekcja.Wykladowca");
             DolaczEncje("Lekcja.Przedmiot");
             DolaczEncje("Lekcja.Sala");
-            UstawKryteria(x => x.Grupa.TrybStudiow == Tryb && x.Grupa.Semestr == Semestr && x.DzienTygodnia == DzienTygodnia);
+            UstawKryteria(x => x.Grupa.TrybStudiow == tryb && x.Grupa.Semestr == semestr && x.DzienTygodnia == dzienTygodnia);
             DodajMapowanie(x => new LekcjaDTO
             {
                 IdLekcji = x.Lekcja.IdLekcji,

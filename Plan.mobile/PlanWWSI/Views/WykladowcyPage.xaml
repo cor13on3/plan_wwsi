@@ -21,12 +21,16 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Padding="10">
-                            <Label Text="{Binding NazwaPelna}" 
+                            <Label Text="{Binding Nazwa}" 
                                 d:Text="{Binding .}"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
-                                FontSize="24" 
-                                   AutomationId="WykladowcaNazwa"/>
+                                FontSize="24"/>
+                            <Label Text="{Binding Email}" 
+                                d:Text="{Binding .}"
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                FontSize="16"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

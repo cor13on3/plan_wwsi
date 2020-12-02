@@ -1,5 +1,6 @@
 ﻿using Plan.Core.DTO;
 using Plan.Core.Entities;
+using System;
 using System.Linq;
 
 namespace Plan.Core.Zapytania

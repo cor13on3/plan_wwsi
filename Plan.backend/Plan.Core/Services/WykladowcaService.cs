@@ -4,6 +4,7 @@ using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Plan.Core.Services
@@ -23,6 +24,23 @@ namespace Plan.Core.Services
             if (wynik.Count() == 0)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
             return wynik.First();
+        }
+
+        public LekcjaWidokDTO[] DajPlan(int id, System.DateTime data)
+        {
+            var zjazd = _baza.DajTabele<Zjazd>().WybierzPierwszy(x => x.DataOd <= data && data <= x.DataDo);
+            if (zjazd == null)
+                return new LekcjaWidokDTO[0];
+            var grupy = _baza.DajTabele<GrupaZjazd>().Wybierz(new ZapytanieGrupyWZjezdzie { IdZjazdu = zjazd.IdZjazdu });
+            IEnumerable<LekcjaWidokDTO> lista = new List<LekcjaWidokDTO>();
+            foreach (var grupa in grupy)
+                lista = lista.Concat(_baza.DajTabele<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy
+                {
+                    NrGrupy = grupa.NrGrupy,
+                    NrZjazdu = grupa.NrZjazdu,
+                    DzienTygodnia = (int)data.DayOfWeek
+                }));
+            return lista.Where(x => x.IdWykladowcy == id).ToArray();
         }
 
         public WykladowcaWidokDTO[] Przegladaj(string fraza = null)

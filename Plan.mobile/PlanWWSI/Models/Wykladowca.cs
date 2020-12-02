@@ -1,14 +1,9 @@
 ﻿namespace PlanWWSI.Models
 {
-    public class Wykladowca : ModelBase
+    public class WykladowcaWidok
     {
-        public string Imie { get; set; }
-        public string Nazwisko { get; set; }
-        public string NazwaPelna { get; set; }
-    }
-
-    public class WykladowcaSzczegoly : Wykladowca
-    {
-        public string Specjalizacja { get; set; }
+        public int Id { get; set; }
+        public string Nazwa { get; set; }
+        public string Email { get; set; }
     }
 }

@@ -11,13 +11,14 @@ namespace PlanWWSI.ViewModels
 {
     public class ZajeciaViewModel : BaseViewModel
     {
-        public ObservableCollection<Lekcja> Items { get; set; }
+        public ObservableCollection<LekcjaWidok> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
         public Command PobierzZjazdyCommand { get; set; }
         private HTTP _httpClient;
         public INavigation Navigation { get; set; }
-        public string NumerGrupy { get; set; }
         private ZjazdWidokDTO[] _zjazdy;
+
+        public string NumerGrupy { get; set; }
 
         private DateTime _data = DateTime.Today;
         public DateTime Data
@@ -36,7 +37,7 @@ namespace PlanWWSI.ViewModels
         public ZajeciaViewModel()
         {
             Title = "Zajęcia";
-            Items = new ObservableCollection<Lekcja>();
+            Items = new ObservableCollection<LekcjaWidok>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             PobierzZjazdyCommand = new Command(async () => await ExecutePobierzZjazdyCommand());
             _httpClient = new HTTP();
@@ -52,7 +53,7 @@ namespace PlanWWSI.ViewModels
                 var lista = await _httpClient.GetAsync<LekcjaWidokDTO[]>($"/api/lekcja/daj-plan/{Data:yyyy-MM-dd}/{NumerGrupy}");
                 foreach (var item in lista)
                 {
-                    Items.Add(new Lekcja
+                    Items.Add(new LekcjaWidok
                     {
                         IdLekcji = item.IdLekcji,
                         Nazwa = item.Nazwa,
@@ -77,7 +78,9 @@ namespace PlanWWSI.ViewModels
 
         private void UstawZjazdInfo()
         {
-            var aktualnyZjazd = _zjazdy.First(x => x.DataOd <= Data && Data <= x.DataDo);
+            var aktualnyZjazd = _zjazdy.FirstOrDefault(x => x.DataOd <= Data && Data <= x.DataDo);
+            if (aktualnyZjazd == null)
+                return;
             string value = $"Zjazd {aktualnyZjazd.Nr}.";
             if (aktualnyZjazd.CzyOdpracowanie)
                 value += " (odpracowanie)";
@@ -87,7 +90,7 @@ namespace PlanWWSI.ViewModels
         public void UstawPoprzedniDzien()
         {
             var poprzedniDzien = Data.AddDays(-1);
-            var aktualnyZjazd = _zjazdy.First(x => x.DataOd <= Data && Data <= x.DataDo);
+            var aktualnyZjazd = _zjazdy.FirstOrDefault(x => x.DataOd <= Data && Data <= x.DataDo);
             if (aktualnyZjazd != null && poprzedniDzien >= aktualnyZjazd.DataOd)
                 Data = poprzedniDzien;
             else

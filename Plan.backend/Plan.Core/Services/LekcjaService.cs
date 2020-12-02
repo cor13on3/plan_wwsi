@@ -107,11 +107,7 @@ namespace Plan.Core.Services
 
         public LekcjaDTO[] DajLekcjeNaDzienTygodnia(TrybStudiow trybStudiow, int semestr, int dzienTygodnia)
         {
-            var lekcje = _baza.DajTabele<LekcjaGrupa>().Wybierz(new ZapytanieLekcje()
-            {
-                Tryb = trybStudiow,
-                Semestr = semestr,
-            })
+            var lekcje = _baza.DajTabele<LekcjaGrupa>().Wybierz(new ZapytanieLekcje(trybStudiow, semestr, dzienTygodnia))
              .GroupBy(x => x.IdLekcji)
              .Select(x => x.First());
             return lekcje.ToArray();

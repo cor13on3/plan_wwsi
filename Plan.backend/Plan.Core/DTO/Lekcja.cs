@@ -9,6 +9,7 @@ namespace Plan.Core.DTO
     {
         public int IdLekcji { get; set; }
         public string Nazwa { get; set; }
+        public int IdWykladowcy { get; set; }
         public string Wykladowca { get; set; }
         public FormaLekcji Forma { get; set; }
         public string Od { get; set; }

@@ -20,7 +20,7 @@
         public int DzienTygodnia { get; set; }
     }
 
-    public class Lekcja
+    public class LekcjaWidok
     {
         public int IdLekcji { get; set; }
         public string Nazwa { get; set; }

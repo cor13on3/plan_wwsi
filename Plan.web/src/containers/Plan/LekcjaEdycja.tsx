@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Drawer,
   FormControl,
   InputLabel,
@@ -116,7 +117,7 @@ function LekcjaEdycja({
           IdSali: sala.id,
           GodzinaOd: od,
           GodzinaDo: godzinaDo,
-          FormaLekcji: forma,
+          Forma: forma,
         })
         .then((id: number) => {
           if (zjazdOdpracowywany) {
@@ -209,10 +210,17 @@ function LekcjaEdycja({
         {!zjazdOdpracowywany && (
           <Autocomplete
             multiple
+            disableCloseOnSelect
             options={zjazdy}
             getOptionLabel={(w) => w.toString()}
             renderInput={(params) => (
               <TextField {...params} label="Zjazdy" variant="outlined" />
+            )}
+            renderOption={(option, { selected }) => (
+              <React.Fragment>
+                <Checkbox style={{ marginRight: 8 }} checked={selected} />
+                {option}
+              </React.Fragment>
             )}
             onChange={(e, v) => v && setWybraneZjazdy(v)}
           />

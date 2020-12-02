@@ -19,4 +19,19 @@ namespace Plan.Core.Zapytania
             });
         }
     }
+
+    public class ZapytanieGrupyWZjezdzie : ZapytanieBase<GrupaZjazd, GrupaZjazd>
+    {
+        public int IdZjazdu { get; set; }
+
+        public ZapytanieGrupyWZjezdzie()
+        {
+            UstawKryteria(x => x.IdZjazdu == IdZjazdu);
+            DodajMapowanie(x => new GrupaZjazd
+            {
+                NrGrupy = x.NrGrupy,
+                NrZjazdu = x.NrZjazdu
+            });
+        }
+    }
 }

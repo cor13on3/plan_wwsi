@@ -24,6 +24,11 @@ namespace Plan.Infrastructure.DB
             return dbSet.Find(id);
         }
 
+        public T WybierzPierwszy(Expression<Func<T, bool>> kryteria)
+        {
+            return dbSet.FirstOrDefault(kryteria);
+        }
+
         public void Dodaj(T entity)
         {
             dbSet.Add(entity);
@@ -37,29 +42,25 @@ namespace Plan.Infrastructure.DB
 
         public void Usun(object id)
         {
-            T entityToDelete = dbSet.Find(id);
-            Usun(entityToDelete);
+            T rekord = dbSet.Find(id);
+            Usun(rekord);
         }
 
-        public void Usun(T entityToDelete)
+        public void Usun(T encja)
         {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                dbSet.Attach(entityToDelete);
-            }
-            dbSet.Remove(entityToDelete);
+            if (context.Entry(encja).State == EntityState.Detached)
+                dbSet.Attach(encja);
+            dbSet.Remove(encja);
         }
 
-        public void Usun(Expression<Func<T, bool>> match)
+        public void Usun(Expression<Func<T, bool>> kryteria)
         {
-            var entityToDelete = dbSet.FirstOrDefault(match);
-            if (entityToDelete == null)
+            var rekord = dbSet.FirstOrDefault(kryteria);
+            if (rekord == null)
                 return;
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                dbSet.Attach(entityToDelete);
-            }
-            dbSet.Remove(entityToDelete);
+            if (context.Entry(rekord).State == EntityState.Detached)
+                dbSet.Attach(rekord);
+            dbSet.Remove(rekord);
         }
 
         public void UsunWiele(IEnumerable<T> entities)
