@@ -14,6 +14,7 @@ namespace Plan.Core.IServices
     public interface IKalendariumService
     {
         void DodajZjazd(DateTime dataOd, DateTime dataDo, RodzajSemestru rodzajSemestru);
+        void UsunZjazd(int id);
         void PrzyporzadkujGrupyDoZjazdu(ZjazdKolejny zjazd, string[] grupy);
         void UsunGrupyZZjazdu(string[] grupy, int nrKolejny);
 

@@ -1,4 +1,5 @@
 import { Button, Checkbox, TextField } from "@material-ui/core";
+import { DeleteOutline } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { httpClient } from "../../helpers/httpClient";
@@ -7,6 +8,12 @@ const WyborSpecjalnosciStyle = styled.div`
   display: grid;
   grid-template-rows: auto 1fr 1fr;
   row-gap: 12px;
+
+  .element {
+    display: grid;
+    grid-template-columns: 36px 1fr 36px;
+    align-items: center;
+  }
 
   .dodaj {
     padding-left: 14px;
@@ -61,16 +68,25 @@ function WyborSpecjalnosci(props: WyborSpecjalnosciProps) {
     });
   }
 
+  function usun(id: number) {
+    httpClient.DELETE(`/api/specjalnosc/${id}`).then(() => {
+      odswiezListe();
+    });
+  }
+
   return (
     <WyborSpecjalnosciStyle>
-      <div className="opcje">
+      <div>
         {lista.map((x, i) => (
-          <div key={i}>
+          <div className="element" key={i}>
             <Checkbox
               onChange={(e) => zmienWybrane(x, e.target.checked)}
               checked={wybrane.some((y) => y.id === x.id)}
             />
             <span>{x.nazwa}</span>
+            <Button onClick={() => usun(x.id)}>
+              <DeleteOutline color="secondary" />
+            </Button>
           </div>
         ))}
       </div>

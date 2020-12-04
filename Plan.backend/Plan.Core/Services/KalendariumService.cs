@@ -41,6 +41,16 @@ namespace Plan.Core.Services
             _baza.Zapisz();
         }
 
+        public void UsunZjazd(int id)
+        {
+            var repo = _baza.DajTabele<Zjazd>();
+            var zjazd = repo.Znajdz(id);
+            if (zjazd == null)
+                throw new BladBiznesowy($"Zjazd o id: {id} nie istnieje");
+            repo.Usun(zjazd);
+            _baza.Zapisz();
+        }
+
         public ZjazdWidokDTO[] PrzegladajZjazdyGrupy(string nrGrupy = null)
         {
             var repo = _baza.DajTabele<GrupaZjazd>();

@@ -59,6 +59,7 @@ function KalendariumEdycja(props: KalendariumEdycjaProps) {
             value={`${formatujDate(wybranyZjazd.dataOd)} - ${formatujDate(
               wybranyZjazd.dataDo
             )}`}
+            onClick={() => setEdycjaZjazdow(true)}
           />
           <Button color="secondary" onClick={() => setEdycjaZjazdow(true)}>
             WYBIERZ

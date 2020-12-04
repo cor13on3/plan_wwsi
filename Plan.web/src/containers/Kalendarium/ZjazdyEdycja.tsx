@@ -10,6 +10,7 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
+import { DeleteOutline } from "@material-ui/icons";
 
 interface ZjazdyEdycjaProps {
   onWybierz: (zjazd: ZjazdWidok) => void;
@@ -41,12 +42,21 @@ function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
       });
   }
 
+  function usun(id: number) {
+    httpClient.DELETE(`/api/kalendarium/${id}`).then(() => {
+      odswiezListe();
+    });
+  }
+
   return (
     <ZjazdyEdycjaStyle>
       <p className="xl">ZJAZDY</p>
       <div className="zjazdy">
         {lista.map((x, i) => (
           <div key={i} className="element">
+            <Button onClick={() => usun(x.idZjazdu)}>
+              <DeleteOutline color="secondary" />
+            </Button>
             <span>{formatujDate(x.dataOd)}</span>
             <span> - </span>
             <span>{formatujDate(x.dataDo)}</span>

@@ -9,7 +9,8 @@ const ZjazdyEdycjaStyle = styled.div`
 
   .element {
     display: grid;
-    grid-template-columns: 116px 32px 128px auto;
+    grid-template-columns: 36px 116px 32px 128px auto;
+    align-items: center;
 
     button {
       justify-self: end;

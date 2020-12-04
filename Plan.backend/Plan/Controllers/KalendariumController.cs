@@ -49,5 +49,12 @@ namespace Plan.API.Controllers
         {
             _service.UsunGrupyZZjazdu(req.Grupy, req.NrKolejny);
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public void UsunZjazd(int id)
+        {
+            _service.UsunZjazd(id);
+        }
     }
 }
