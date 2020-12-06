@@ -7,7 +7,6 @@ namespace Plan.Core.Entities
     public class LekcjaGrupa
     {
         public int NrZjazdu { get; set; }
-        public int DzienTygodnia { get; set; }
         public bool CzyOdpracowanie { get; set; }
 
         public int IdLekcji { get; set; }

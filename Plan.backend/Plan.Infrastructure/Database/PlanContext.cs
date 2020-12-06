@@ -115,7 +115,7 @@ namespace Plan.Serwis.BazaDanych
 
             modelBuilder.Entity<LekcjaGrupa>(entity =>
             {
-                entity.HasKey(e => new { e.IdLekcji, e.NrGrupy, e.NrZjazdu, e.DzienTygodnia });
+                entity.HasKey(e => new { e.IdLekcji, e.NrGrupy, e.NrZjazdu });
             });
 
             modelBuilder.Entity<LekcjaGrupa>()

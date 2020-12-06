@@ -198,6 +198,9 @@ namespace Plan.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("DzienTygodnia")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Forma")
                         .IsRequired()
                         .HasColumnType("text");
@@ -239,13 +242,10 @@ namespace Plan.Infrastructure.Migrations
                     b.Property<int>("NrZjazdu")
                         .HasColumnType("integer");
 
-                    b.Property<int>("DzienTygodnia")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("CzyOdpracowanie")
                         .HasColumnType("boolean");
 
-                    b.HasKey("IdLekcji", "NrGrupy", "NrZjazdu", "DzienTygodnia");
+                    b.HasKey("IdLekcji", "NrGrupy", "NrZjazdu");
 
                     b.HasIndex("NrGrupy");
 

@@ -85,7 +85,6 @@ function LekcjaEdycja({
         IdLekcji: id,
         NrGrupy: grupa,
         NrZjazdu: nrZjazdu,
-        DzienTygodnia: dzienTygodnia,
         CzyOdpracowanie: czyOdpracowanie,
       })
       .then(() => onZapisz())
@@ -115,6 +114,7 @@ function LekcjaEdycja({
           IdPrzedmiotu: przedmiot.id,
           IdWykladowcy: wykladowca.id,
           IdSali: sala.id,
+          DzienTygodnia: dzienTygodnia,
           GodzinaOd: od,
           GodzinaDo: godzinaDo,
           Forma: forma,

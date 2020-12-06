@@ -16,7 +16,7 @@ namespace Plan.Core.Zapytania
             DolaczEncje("Lekcja.Przedmiot");
             DolaczEncje("Lekcja.Sala");
             UstawKryteria(x => x.NrGrupy == NrGrupy &&
-                              (DzienTygodnia == null || x.DzienTygodnia == DzienTygodnia) &&
+                              (DzienTygodnia == null || x.Lekcja.DzienTygodnia == DzienTygodnia) &&
                               (NrZjazdu == null || x.NrZjazdu == NrZjazdu));
             DodajMapowanie(x => new LekcjaWidokDTO
             {
@@ -30,7 +30,7 @@ namespace Plan.Core.Zapytania
                 Forma = x.Lekcja.Forma,
                 CzyOdpracowanie = x.CzyOdpracowanie,
                 NrZjazdu = x.NrZjazdu,
-                DzienTygodnia = x.DzienTygodnia
+                DzienTygodnia = x.Lekcja.DzienTygodnia
             });
         }
     }

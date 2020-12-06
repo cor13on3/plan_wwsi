@@ -35,7 +35,7 @@ namespace Plan.Testy
                 Forma = FormaLekcji.Wyklad
             });
 
-            _lekcjaService.Verify(x => x.Dodaj(2, 1, 3, "08:00:00", "09:35:00", FormaLekcji.Wyklad), Times.Once);
+            _lekcjaService.Verify(x => x.Dodaj(2, 1, 3, 0, "08:00:00", "09:35:00", FormaLekcji.Wyklad), Times.Once);
         }
 
         [TestMethod]
@@ -45,12 +45,11 @@ namespace Plan.Testy
             {
                 IdLekcji = 1,
                 NrZjazdu = 2,
-                DzienTygodnia = 0,
                 CzyOdpracowanie = false,
                 NrGrupy = "Z101"
             });
 
-            _lekcjaService.Verify(x => x.PrzypiszGrupe(1, "Z101", 2, 0, false), Times.Once);
+            _lekcjaService.Verify(x => x.PrzypiszGrupe(1, "Z101", 2, false), Times.Once);
         }
 
         [TestMethod]

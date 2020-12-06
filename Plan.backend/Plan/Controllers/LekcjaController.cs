@@ -23,14 +23,14 @@ namespace Plan.API.Controllers
         [Authorize]
         public int DodajLekcje([FromBody] KomendaDodajLekcje req)
         {
-            return _lekcjaService.Dodaj(req.IdPrzedmiotu, req.IdWykladowcy, req.IdSali, req.GodzinaOd, req.GodzinaDo, req.Forma);
+            return _lekcjaService.Dodaj(req.IdPrzedmiotu, req.IdWykladowcy, req.IdSali, req.DzienTygodnia, req.GodzinaOd, req.GodzinaDo, req.Forma);
         }
 
         [HttpPost("przypisz-grupe")]
         [Authorize]
         public void PrzypiszGrupe([FromBody] KomendaPrzypiszGrupeLekcji req)
         {
-            _lekcjaService.PrzypiszGrupe(req.IdLekcji, req.NrGrupy, req.NrZjazdu, req.DzienTygodnia, req.CzyOdpracowanie);
+            _lekcjaService.PrzypiszGrupe(req.IdLekcji, req.NrGrupy, req.NrZjazdu, req.CzyOdpracowanie);
         }
 
         [HttpGet("daj-plan/{data}/{grupa}")]

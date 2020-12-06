@@ -114,14 +114,15 @@ namespace Plan.Core.Services
 
         }
 
-        public int Dodaj(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
+        public int Dodaj(int przedmiotId, int wykladowcaId, int salaId, int dzienTygodnia, string godzinaOd, string godzinaDo, FormaLekcji forma)
         {
-            WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
+            WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo, dzienTygodnia);
             var lekcja = new Lekcja
             {
                 IdPrzedmiotu = przedmiotId,
                 IdWykladowcy = wykladowcaId,
                 IdSali = salaId,
+                DzienTygodnia = dzienTygodnia,
                 GodzinaOd = godzinaOd,
                 GodzinaDo = godzinaDo,
                 Forma = forma
@@ -132,7 +133,7 @@ namespace Plan.Core.Services
             return id;
         }
 
-        public void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu, int dzienTygodnia, bool czyOdpracowanie)
+        public void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu,  bool czyOdpracowanie)
         {
             if (_baza.DajTabele<Lekcja>().Znajdz(lekcjaId) == null)
                 throw new BladBiznesowy($"Lekcja o id {lekcjaId} nie istnieje.");
@@ -140,8 +141,6 @@ namespace Plan.Core.Services
                 throw new BladBiznesowy($"Grupa o numerze {nrGrupy} nie istnieje.");
             if (nrZjazdu < 0)
                 throw new BladBiznesowy("Podano niepoprawny numer zjazdu.");
-            if (dzienTygodnia < 0 || dzienTygodnia > 6)
-                throw new BladBiznesowy("Podano niepoprawny dzień tygodnia.");
             var zjazdy = _baza.DajTabele<GrupaZjazd>().Wybierz(new ZapytanieZjadyGrupy
             {
                 NumerGrupy = nrGrupy
@@ -158,7 +157,6 @@ namespace Plan.Core.Services
                 IdLekcji = lekcjaId,
                 NrGrupy = nrGrupy,
                 NrZjazdu = nrZjazdu,
-                DzienTygodnia = dzienTygodnia,
                 CzyOdpracowanie = czyOdpracowanie
             });
             _baza.Zapisz();
@@ -192,7 +190,7 @@ namespace Plan.Core.Services
             _baza.Zapisz();
         }
 
-        private void WalidujDane(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo)
+        private void WalidujDane(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, int? dzienTygodnia = null)
         {
             if (przedmiotId <= 0)
                 throw new BladBiznesowy($"Wybierz przedmiot.");
@@ -204,6 +202,8 @@ namespace Plan.Core.Services
                 throw new BladBiznesowy($"Wykładowca o id {wykladowcaId} nie istnieje.");
             if (salaId <= 0)
                 throw new BladBiznesowy($"Wybierz salę.");
+            if (dzienTygodnia != null && (dzienTygodnia < 0 || dzienTygodnia > 6))
+                throw new BladBiznesowy($"Podano nieprawidłowy dzień tygodnia. Uzyj wartości 0-6 gdzie 0 oznacza niedzielę.");
             if (_baza.DajTabele<Sala>().Znajdz(salaId) == null)
                 throw new BladBiznesowy($"Sala o id {salaId} nie istnieje.");
             try

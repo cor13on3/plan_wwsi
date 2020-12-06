@@ -7,6 +7,7 @@ namespace Plan.Core.Entities
     public class Lekcja
     {
         public int IdLekcji { get; set; }
+        public int DzienTygodnia { get; set; }
         public string GodzinaOd { get; set; }
         public string GodzinaDo { get; set; }
         public FormaLekcji Forma { get; set; }

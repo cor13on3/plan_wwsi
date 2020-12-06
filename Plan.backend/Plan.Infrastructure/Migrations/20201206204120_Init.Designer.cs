@@ -10,8 +10,8 @@ using Plan.Serwis.BazaDanych;
 namespace Plan.Infrastructure.Migrations
 {
     [DbContext(typeof(PlanContext))]
-    [Migration("20201102231515_LekcjaGrupaKeys")]
-    partial class LekcjaGrupaKeys
+    [Migration("20201206204120_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -200,6 +200,9 @@ namespace Plan.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("DzienTygodnia")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Forma")
                         .IsRequired()
                         .HasColumnType("text");
@@ -241,13 +244,10 @@ namespace Plan.Infrastructure.Migrations
                     b.Property<int>("NrZjazdu")
                         .HasColumnType("integer");
 
-                    b.Property<int>("DzienTygodnia")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("CzyOdpracowanie")
                         .HasColumnType("boolean");
 
-                    b.HasKey("IdLekcji", "NrGrupy", "NrZjazdu", "DzienTygodnia");
+                    b.HasKey("IdLekcji", "NrGrupy", "NrZjazdu");
 
                     b.HasIndex("NrGrupy");
 

@@ -101,7 +101,7 @@ namespace Plan.Testy.Services
         {
             _repoPrzedmiot.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Przedmiot)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, 0, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia),
                 "Przedmiot o id 1 nie istnieje.");
         }
 
@@ -111,7 +111,7 @@ namespace Plan.Testy.Services
             _repoPrzedmiot.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Przedmiot());
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Wykladowca)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, 0, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia),
                 "Wykładowca o id 2 nie istnieje.");
         }
 
@@ -122,7 +122,7 @@ namespace Plan.Testy.Services
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Wykladowca());
             _repoSala.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Sala)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, 0, "08:00:00", "09:35:00", FormaLekcji.Cwiczenia),
                 "Sala o id 3 nie istnieje.");
         }
 
@@ -133,7 +133,7 @@ namespace Plan.Testy.Services
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Wykladowca());
             _repoSala.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Sala());
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, "080000", "093500", FormaLekcji.Cwiczenia),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj(1, 2, 3, 0, "080000", "093500", FormaLekcji.Cwiczenia),
                 "Podano niepoprawny format godziny. Podaj godzinę w formacie HH:mm (np. 09:45)");
         }
 
@@ -144,7 +144,7 @@ namespace Plan.Testy.Services
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Wykladowca());
             _repoSala.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Sala());
 
-            _service.Dodaj(1, 2, 3, "08:00", "09:35", FormaLekcji.Cwiczenia);
+            _service.Dodaj(1, 2, 3, 0, "08:00", "09:35", FormaLekcji.Cwiczenia);
 
             _repoLekcja.Verify(x => x.Dodaj(It.Is<Lekcja>(x =>
                 x.IdPrzedmiotu == 1 &&
@@ -161,7 +161,7 @@ namespace Plan.Testy.Services
         {
             _repoLekcja.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Lekcja)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", 2, 3, true)
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", 2, true)
             , "Lekcja o id 1 nie istnieje.");
         }
 
@@ -171,7 +171,7 @@ namespace Plan.Testy.Services
             _repoLekcja.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Lekcja());
             _repoGrupa.Setup(x => x.Znajdz(It.IsAny<string>())).Returns((Grupa)null);
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", 2, 3, true)
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", 2, true)
             , "Grupa o numerze Z101 nie istnieje.");
         }
 
@@ -180,17 +180,8 @@ namespace Plan.Testy.Services
         {
             _repoLekcja.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Lekcja());
             _repoGrupa.Setup(x => x.Znajdz(It.IsAny<string>())).Returns(new Grupa());
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", -1, 3, true)
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", -1, true)
             , "Podano niepoprawny numer zjazdu.");
-        }
-
-        [TestMethod]
-        public void PrzypiszGrupe_WyjatekZlyDzienTygodnia()
-        {
-            _repoLekcja.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Lekcja());
-            _repoGrupa.Setup(x => x.Znajdz(It.IsAny<string>())).Returns(new Grupa());
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", 1, 13, true)
-            , "Podano niepoprawny dzień tygodnia.");
         }
 
         [TestMethod]
@@ -211,7 +202,7 @@ namespace Plan.Testy.Services
                 }
             });
 
-            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", 1, 0, true),
+            AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.PrzypiszGrupe(1, "Z101", 1, true),
                 "Brak ustalonej daty odpracowania zjazdu nr 1 dla grupy Z101. Dodaj zjazd z datą odpracowania.");
         }
 
@@ -234,13 +225,12 @@ namespace Plan.Testy.Services
                 }
             });
 
-            _service.PrzypiszGrupe(1, "Z101", 2, 1, true);
+            _service.PrzypiszGrupe(1, "Z101", 2, true);
 
             _repoLekcjaGrupa.Verify(x => x.Dodaj(It.Is<LekcjaGrupa>(x =>
                 x.IdLekcji == 1 &&
                 x.NrGrupy == "Z101" &&
                 x.NrZjazdu == 2 &&
-                x.DzienTygodnia == 1 &&
                 x.CzyOdpracowanie
             )), Times.Once);
             _db.Verify(x => x.Zapisz(), Times.Once);

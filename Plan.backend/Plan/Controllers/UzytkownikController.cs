@@ -18,9 +18,9 @@ namespace Plan.API.Controllers
         }
 
         [HttpPost("dodaj")]
-        public void Dodaj([FromBody] KomendaDodajUzytkownika req)
+        public async Task Dodaj([FromBody] KomendaDodajUzytkownika req)
         {
-            _uzytkownikService.Dodaj(req.Imie, req.Nazwisko, req.Email, req.Haslo);
+            await _uzytkownikService.Dodaj(req.Imie, req.Nazwisko, req.Email, req.Haslo);
         }
 
         [HttpGet("czy-zalogowany")]

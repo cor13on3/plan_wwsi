@@ -11,7 +11,7 @@ namespace Plan.Core.Zapytania
             DolaczEncje("Lekcja.Wykladowca");
             DolaczEncje("Lekcja.Przedmiot");
             DolaczEncje("Lekcja.Sala");
-            UstawKryteria(x => x.Grupa.TrybStudiow == tryb && x.Grupa.Semestr == semestr && x.DzienTygodnia == dzienTygodnia);
+            UstawKryteria(x => x.Grupa.TrybStudiow == tryb && x.Grupa.Semestr == semestr && x.Lekcja.DzienTygodnia == dzienTygodnia);
             DodajMapowanie(x => new LekcjaDTO
             {
                 IdLekcji = x.Lekcja.IdLekcji,

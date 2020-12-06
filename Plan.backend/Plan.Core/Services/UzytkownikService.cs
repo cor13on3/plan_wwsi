@@ -28,7 +28,7 @@ namespace Plan.Core.Services
                 Imie = imie,
                 Nazwisko = nazwisko
             };
-            _userManager.CreateAsync(user, haslo).Wait();
+            await _userManager.CreateAsync(user, haslo);
         }
 
         public async Task<DaneUzytkownikaDTO> Zaloguj(string email, string haslo)
