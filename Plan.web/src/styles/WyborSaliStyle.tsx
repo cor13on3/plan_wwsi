@@ -9,8 +9,8 @@ const WyborPrzedmiotuStyle = styled.div`
 
   .element {
     display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: baseline;
+    grid-template-columns: 36px 1fr auto;
+    align-items: center;
 
     button {
       justify-self: end;

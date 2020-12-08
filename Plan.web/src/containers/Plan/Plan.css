@@ -58,6 +58,12 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.87);
 }
 
+.lekcja-zjazdy {
+  display: grid;
+  grid-template-columns: 1fr 36px;
+  align-items: center;
+}
+
 p {
   line-height: 8px;
 }

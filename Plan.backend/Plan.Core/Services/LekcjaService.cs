@@ -133,7 +133,7 @@ namespace Plan.Core.Services
             return id;
         }
 
-        public void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu,  bool czyOdpracowanie)
+        public void PrzypiszGrupe(int lekcjaId, string nrGrupy, int nrZjazdu, bool czyOdpracowanie)
         {
             if (_baza.DajTabele<Lekcja>().Znajdz(lekcjaId) == null)
                 throw new BladBiznesowy($"Lekcja o id {lekcjaId} nie istnieje.");
@@ -160,7 +160,30 @@ namespace Plan.Core.Services
                 CzyOdpracowanie = czyOdpracowanie
             });
             _baza.Zapisz();
+        }
 
+        public void WypiszGrupe(int idLekcji, string nrGrupy, int nrZjazdu, bool czyOdpracowanie)
+        {
+            var repo = _baza.DajTabele<LekcjaGrupa>();
+            var wynik = repo.WybierzPierwszy(x => x.IdLekcji == idLekcji &&
+                                                                x.NrGrupy == nrGrupy &&
+                                                                x.NrZjazdu == nrZjazdu &&
+                                                                x.CzyOdpracowanie == czyOdpracowanie);
+            if (wynik == null)
+                throw new BladBiznesowy("Grupa nie uczestniczy w danej lekcji w podanym zjeździe.");
+            repo.Usun(wynik);
+            PorzadkujNieuzywaneLekcje(repo, idLekcji);
+            _baza.Zapisz();
+        }
+
+        void PorzadkujNieuzywaneLekcje(IRepozytorium<LekcjaGrupa> repo, int idLekcji)
+        {
+            var lekcja = repo.WybierzPierwszy(x => x.IdLekcji == idLekcji);
+            if (lekcja == null)
+            {
+                var repoLekcja = _baza.DajTabele<Lekcja>();
+                repoLekcja.Usun(idLekcji);
+            }
         }
 
         public void Usun(int lekcjaId)

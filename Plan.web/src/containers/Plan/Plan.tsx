@@ -16,6 +16,7 @@ import {
   Select,
 } from "@material-ui/core";
 import { ErrorStyle } from "../../styles/ErrorStyle";
+import { DeleteOutline } from "@material-ui/icons";
 
 interface LekcjaWidok {
   idLekcji: number;
@@ -109,6 +110,23 @@ function Plan() {
       .catch((err: Blad) => setBlad(err.Tresc));
   }
 
+  function usun(idLekcji: number, zjazdy: number[]) {
+    let promises: Promise<any>[] = [];
+    zjazdy.forEach((z) => {
+      promises.push(
+        httpClient.POST("/api/lekcja/wypisz-grupe", {
+          IdLekcji: idLekcji,
+          NrGrupy: grupa,
+          NrZjazdu: z,
+          CzyOdpracowanie: tryb === "Odpracowania",
+        })
+      );
+    });
+    Promise.all(promises)
+      .then(() => odswiezListe())
+      .catch((err: Blad) => setBlad(err.Tresc));
+  }
+
   function dajLekcje(dzienTygodnia: number) {
     var lekcje = plan.find((x) => x.dzienTygodnia === dzienTygodnia)?.lekcje;
     if (lekcje && lekcje.length > 0)
@@ -123,12 +141,15 @@ function Plan() {
           <span>{l.lekcja.wykladowca}</span>
           <span>Sala {l.lekcja.sala}</span>
           {tryb === "Standardowy" && (
-            <>
+            <div className="lekcja-zjazdy">
               <span>
                 Zjazdy:
                 {l.zjazdy.sort((a, b) => a - b).join(", ")}
               </span>
-            </>
+              <Button onClick={() => usun(l.lekcja.idLekcji, l.zjazdy)}>
+                <DeleteOutline color="secondary" />
+              </Button>
+            </div>
           )}
           <p></p>
         </div>

@@ -20,4 +20,12 @@ namespace Plan.API.Komendy
         public int NrZjazdu { get; set; }
         public bool CzyOdpracowanie { get; set; }
     }
+
+    public class KomendaWypiszGrupeZLekcji
+    {
+        public int IdLekcji { get; set; }
+        public string NrGrupy { get; set; }
+        public int NrZjazdu { get; set; }
+        public bool CzyOdpracowanie { get; set; }
+    }
 }

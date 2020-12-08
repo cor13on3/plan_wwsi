@@ -1,4 +1,5 @@
 import { Button, TextField } from "@material-ui/core";
+import { DeleteOutline } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { SalaWidok } from "../../helpers/enums";
 import { Blad, httpClient } from "../../helpers/httpClient";
@@ -40,6 +41,15 @@ function WyborSali(props: WyborSaliProps) {
     props.onWybierz(wybrany);
   }
 
+  function usun(id: number) {
+    httpClient
+      .DELETE(`/api/sala/${id}`)
+      .then(() => {
+        odswiezListe();
+      })
+      .catch((err: Blad) => setBlad(err.Tresc));
+  }
+
   return (
     <WyborSaliStyle>
       {blad && <ErrorStyle>{blad}</ErrorStyle>}
@@ -47,6 +57,9 @@ function WyborSali(props: WyborSaliProps) {
       <div>
         {lista.map((x) => (
           <div className="element">
+            <Button onClick={() => usun(x.id)}>
+              <DeleteOutline color="secondary" />
+            </Button>
             <span>{x.nazwa}</span>
             <Button color="secondary" onClick={() => onWybierz(x)}>
               WYBIERZ

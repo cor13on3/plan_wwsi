@@ -33,6 +33,13 @@ namespace Plan.API.Controllers
             _lekcjaService.PrzypiszGrupe(req.IdLekcji, req.NrGrupy, req.NrZjazdu, req.CzyOdpracowanie);
         }
 
+        [HttpPost("wypisz-grupe")]
+        [Authorize]
+        public void WypiszGrupe([FromBody] KomendaWypiszGrupeZLekcji req)
+        {
+            _lekcjaService.WypiszGrupe(req.IdLekcji, req.NrGrupy, req.NrZjazdu, req.CzyOdpracowanie);
+        }
+
         [HttpGet("daj-plan/{data}/{grupa}")]
         public LekcjaWidokDTO[] DajPlanNaDzien(DateTime data, string grupa)
         {
