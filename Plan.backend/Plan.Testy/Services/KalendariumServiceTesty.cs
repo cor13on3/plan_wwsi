@@ -26,9 +26,9 @@ namespace Plan.Testy.Services
             _repoGrupaZjazd = new Mock<IRepozytorium<GrupaZjazd>>();
             _repoZjazd = new Mock<IRepozytorium<Zjazd>>();
             _repoGrupa = new Mock<IRepozytorium<Grupa>>();
-            _db.Setup(x => x.DajTabele<GrupaZjazd>()).Returns(_repoGrupaZjazd.Object);
-            _db.Setup(x => x.DajTabele<Zjazd>()).Returns(_repoZjazd.Object);
-            _db.Setup(x => x.DajTabele<Grupa>()).Returns(_repoGrupa.Object);
+            _db.Setup(x => x.DajRepozytorium<GrupaZjazd>()).Returns(_repoGrupaZjazd.Object);
+            _db.Setup(x => x.DajRepozytorium<Zjazd>()).Returns(_repoZjazd.Object);
+            _db.Setup(x => x.DajRepozytorium<Grupa>()).Returns(_repoGrupa.Object);
             _service = new KalendariumService(_db.Object);
         }
 

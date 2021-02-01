@@ -7,22 +7,23 @@ using System.Linq;
 
 namespace Plan.Infrastructure.DB
 {
-    public class EfBazaDanych : IBazaDanych, IDisposable
+    public class EntityFrameworkBazaDanych : IBazaDanych, IDisposable
     {
         private PlanContext _db = null;
-        private Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
+        private Dictionary<Type, object> repozytoria = new Dictionary<Type, object>();
 
-        public EfBazaDanych(IConfiguration configuration)
+        public EntityFrameworkBazaDanych(IConfiguration configuration)
         {
             _db = new PlanContext(configuration);
         }
 
-        public IRepozytorium<T> DajTabele<T>() where T : class
+        public IRepozytorium<T> DajRepozytorium<T>() where T : class
         {
-            if (_repositories.Keys.Contains(typeof(T)) == true)
-                return _repositories[typeof(T)] as IRepozytorium<T>;
-            IRepozytorium<T> repo = new EfRepozytorium<T>(_db);
-            _repositories.Add(typeof(T), repo);
+            Type typ = typeof(T);
+            if (repozytoria.Keys.Contains(typ))
+                return repozytoria[typ] as IRepozytorium<T>;
+            IRepozytorium<T> repo = new EntityFrameworkAdapter<T>(_db);
+            repozytoria.Add(typ, repo);
             return repo;
         }
 
@@ -32,16 +33,17 @@ namespace Plan.Infrastructure.DB
         }
 
 
-        private bool disposed = false;
+        private bool _disposed = false;
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                     _db.Dispose();
             }
-            this.disposed = true;
+            _disposed = true;
         }
+
         public void Dispose()
         {
             Dispose(true);

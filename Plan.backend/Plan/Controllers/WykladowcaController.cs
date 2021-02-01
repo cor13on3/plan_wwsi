@@ -52,7 +52,7 @@ namespace Plan.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize]
-        public void Delete(int id)
+        public void Usun(int id)
         {
             _wykladowcaService.Usun(id);
         }

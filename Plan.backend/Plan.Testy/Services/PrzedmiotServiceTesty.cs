@@ -21,7 +21,7 @@ namespace Plan.Testy.Services
         {
             _db = new Mock<IBazaDanych>();
             _repo = new Mock<IRepozytorium<Przedmiot>>();
-            _db.Setup(x => x.DajTabele<Przedmiot>()).Returns(_repo.Object);
+            _db.Setup(x => x.DajRepozytorium<Przedmiot>()).Returns(_repo.Object);
             _service = new PrzedmiotService(_db.Object);
         }
 

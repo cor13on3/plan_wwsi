@@ -2,7 +2,7 @@
 {
     public interface IBazaDanych
     {
-        IRepozytorium<T> DajTabele<T>() where T : class;
+        IRepozytorium<T> DajRepozytorium<T>() where T : class;
         void Zapisz();
     }
 }

@@ -98,9 +98,13 @@ function Plan() {
   }, [grupa, tryb, wybranyZjazdOdpr]);
 
   function odswiezListe() {
+    if (tryb === "Odpracowania" && !wybranyZjazdOdpr) {
+      setPlan([]);
+      return;
+    }
     const url =
-      tryb === "Odpracowania" && wybranyZjazdOdpr
-        ? `/api/lekcja/daj-plan-odpracowania/${grupa}/${wybranyZjazdOdpr.nr}`
+      tryb === "Odpracowania"
+        ? `/api/lekcja/daj-plan-odpracowania/${grupa}/${wybranyZjazdOdpr?.nr}`
         : `/api/lekcja/daj-plan-na-tydzien/${grupa}`;
     httpClient
       .GET(url)

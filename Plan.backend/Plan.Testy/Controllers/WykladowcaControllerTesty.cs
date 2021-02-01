@@ -78,7 +78,7 @@ namespace Plan.Testy
         [TestMethod]
         public void Delete_WykonujeUsuniecie()
         {
-            _controller.Delete(1);
+            _controller.Usun(1);
 
             _wykladowcaService.Verify(x => x.Usun(1), Times.Once);
         }

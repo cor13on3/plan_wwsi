@@ -8,12 +8,12 @@ using System.Linq.Expressions;
 
 namespace Plan.Infrastructure.DB
 {
-    public class EfRepozytorium<T> : IRepozytorium<T> where T : class
+    public class EntityFrameworkAdapter<T> : IRepozytorium<T> where T : class
     {
         internal PlanContext context;
         internal DbSet<T> dbSet;
 
-        public EfRepozytorium(PlanContext context)
+        public EntityFrameworkAdapter(PlanContext context)
         {
             this.context = context;
             this.dbSet = context.Set<T>();
@@ -24,14 +24,14 @@ namespace Plan.Infrastructure.DB
             return dbSet.Find(id);
         }
 
-        public T WybierzPierwszy(Expression<Func<T, bool>> kryteria)
-        {
-            return dbSet.FirstOrDefault(kryteria);
-        }
-
         public void Dodaj(T entity)
         {
             dbSet.Add(entity);
+        }
+
+        public T WybierzPierwszy(Expression<Func<T, bool>> kryteria)
+        {
+            return dbSet.FirstOrDefault(kryteria);
         }
 
         public void Edytuj(T entityToUpdate)

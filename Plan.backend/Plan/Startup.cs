@@ -50,8 +50,8 @@ namespace Plan.API
             services.AddScoped<IUzytkownikService, UzytkownikService>();
             services.AddScoped<ISpecjalnoscService, SpecjalnoscService>();
             // TODO: Rozwazyæ sprytne rozwi¹zanie ¿eby nie by³o tu referencji do infry
-            services.AddScoped<IBazaDanych, EfBazaDanych>();
-            services.AddScoped(typeof(IRepozytorium<>), typeof(EfRepozytorium<>));
+            services.AddScoped<IBazaDanych, EntityFrameworkBazaDanych>();
+            services.AddScoped(typeof(IRepozytorium<>), typeof(EntityFrameworkAdapter<>));
 
             services.AddIdentity<Uzytkownik, IdentityRole>().AddEntityFrameworkStores<PlanContext>();
             services.ConfigureApplicationCookie(options =>

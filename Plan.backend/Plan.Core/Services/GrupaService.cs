@@ -21,7 +21,7 @@ namespace Plan.Core.Services
         {
             if (string.IsNullOrEmpty(numer) || semestr < 0)
                 throw new BladBiznesowy("Uzupełnij dane");
-            var repo = _db.DajTabele<Grupa>();
+            var repo = _db.DajRepozytorium<Grupa>();
             if (repo.Znajdz(numer) != null)
                 throw new BladBiznesowy($"Istnieje już grupa o numerze {numer}");
             repo.Dodaj(new Grupa
@@ -36,21 +36,21 @@ namespace Plan.Core.Services
 
         public GrupaDTO[] Filtruj(TrybStudiow? tryb, StopienStudiow? stopien, int? semestr)
         {
-            var repo = _db.DajTabele<Grupa>();
+            var repo = _db.DajRepozytorium<Grupa>();
             var wynik = repo.Wybierz(new ZapytanieGrupy(tryb, stopien, semestr)).ToArray();
             return wynik;
         }
 
         public GrupaDTO[] Przegladaj()
         {
-            var repo = _db.DajTabele<Grupa>();
+            var repo = _db.DajRepozytorium<Grupa>();
             var wynik = repo.Wybierz(new ZapytanieGrupy()).ToArray();
             return wynik;
         }
 
         public GrupaDTO Daj(string numer)
         {
-            var repo = _db.DajTabele<Grupa>();
+            var repo = _db.DajRepozytorium<Grupa>();
             var grupa = repo.Znajdz(numer);
             if (grupa == null)
                 return null;
@@ -65,7 +65,7 @@ namespace Plan.Core.Services
 
         public void Usun(string numer)
         {
-            var repo = _db.DajTabele<Grupa>();
+            var repo = _db.DajRepozytorium<Grupa>();
             if (repo.Znajdz(numer) == null)
                 throw new BladBiznesowy($"Grupa o numerze {numer} nie istnieje.");
             repo.Usun(numer);

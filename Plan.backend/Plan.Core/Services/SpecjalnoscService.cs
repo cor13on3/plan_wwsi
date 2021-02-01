@@ -21,7 +21,7 @@ namespace Plan.Core.Services
         {
             if (string.IsNullOrEmpty(nazwa))
                 throw new BladBiznesowy("Podaj nazwę");
-            var repo = _baza.DajTabele<Specjalnosc>();
+            var repo = _baza.DajRepozytorium<Specjalnosc>();
             repo.Dodaj(new Specjalnosc
             {
                 Nazwa = nazwa,
@@ -31,14 +31,14 @@ namespace Plan.Core.Services
 
         public SpecjalnoscDTO[] Przegladaj()
         {
-            var repo = _baza.DajTabele<Specjalnosc>();
+            var repo = _baza.DajRepozytorium<Specjalnosc>();
             var wynik = repo.Wybierz(new ZapytanieSpecjalnosci());
             return wynik.ToArray();
         }
 
         public void Usun(int id)
         {
-            var repo = _baza.DajTabele<Specjalnosc>();
+            var repo = _baza.DajRepozytorium<Specjalnosc>();
             var specjalnosc = repo.Znajdz(id);
             if (specjalnosc == null)
                 throw new BladBiznesowy($"Specjalność o id {id} nie istnieje");

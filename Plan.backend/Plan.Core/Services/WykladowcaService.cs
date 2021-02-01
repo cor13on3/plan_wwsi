@@ -11,16 +11,16 @@ namespace Plan.Core.Services
 {
     public class WykladowcaService : IWykladowcaService
     {
-        private IBazaDanych _baza;
+        private IBazaDanych _db;
 
         public WykladowcaService(IBazaDanych baza)
         {
-            _baza = baza;
+            _db = baza;
         }
 
         public WykladowcaDTO Daj(int id)
         {
-            var wynik = _baza.DajTabele<Wykladowca>().Wybierz(new ZapytanieWykladowca { IdWykladowcy = id });
+            var wynik = _db.DajRepozytorium<Wykladowca>().Wybierz(new ZapytanieWykladowca { IdWykladowcy = id });
             if (wynik.Count() == 0)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
             return wynik.First();
@@ -28,13 +28,13 @@ namespace Plan.Core.Services
 
         public LekcjaWidokDTO[] DajPlan(int id, System.DateTime data)
         {
-            var zjazd = _baza.DajTabele<Zjazd>().WybierzPierwszy(x => x.DataOd <= data && data <= x.DataDo);
+            var zjazd = _db.DajRepozytorium<Zjazd>().WybierzPierwszy(x => x.DataOd <= data && data <= x.DataDo);
             if (zjazd == null)
                 return new LekcjaWidokDTO[0];
-            var grupy = _baza.DajTabele<GrupaZjazd>().Wybierz(new ZapytanieGrupyWZjezdzie { IdZjazdu = zjazd.IdZjazdu });
+            var grupy = _db.DajRepozytorium<GrupaZjazd>().Wybierz(new ZapytanieGrupyWZjezdzie { IdZjazdu = zjazd.IdZjazdu });
             IEnumerable<LekcjaWidokDTO> lista = new List<LekcjaWidokDTO>();
             foreach (var grupa in grupy)
-                lista = lista.Concat(_baza.DajTabele<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy
+                lista = lista.Concat(_db.DajRepozytorium<LekcjaGrupa>().Wybierz(new ZapytanieLekcjeGrupy
                 {
                     NrGrupy = grupa.NrGrupy,
                     NrZjazdu = grupa.NrZjazdu,
@@ -45,7 +45,7 @@ namespace Plan.Core.Services
 
         public WykladowcaWidokDTO[] Przegladaj(string fraza = null)
         {
-            var wynik = _baza.DajTabele<Wykladowca>().Wybierz(new ZapytanieWykladowcy());
+            var wynik = _db.DajRepozytorium<Wykladowca>().Wybierz(new ZapytanieWykladowcy());
             return wynik.ToArray();
         }
 
@@ -60,10 +60,10 @@ namespace Plan.Core.Services
                 Tytul = tytul,
                 Email = email,
             };
-            _baza.DajTabele<Wykladowca>().Dodaj(wykladowca);
+            _db.DajRepozytorium<Wykladowca>().Dodaj(wykladowca);
             foreach (var id in idSpecjalnosci)
             {
-                var specjalnosc = _baza.DajTabele<Specjalnosc>().Znajdz(id);
+                var specjalnosc = _db.DajRepozytorium<Specjalnosc>().Znajdz(id);
                 if (specjalnosc == null)
                     throw new BladBiznesowy($"Specjalność o id {id} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
@@ -71,24 +71,24 @@ namespace Plan.Core.Services
                     Wykladowca = wykladowca,
                     Specjalnosc = specjalnosc
                 };
-                _baza.DajTabele<WykladowcaSpecjalizacja>().Dodaj(ws);
+                _db.DajRepozytorium<WykladowcaSpecjalizacja>().Dodaj(ws);
             }
-            _baza.Zapisz();
+            _db.Zapisz();
         }
 
         public void Usun(int id)
         {
-            var repo = _baza.DajTabele<Wykladowca>();
-            var wykladowca = repo.Znajdz(id);
-            if (wykladowca == null)
+            var wykladowcy = _db.DajRepozytorium<Wykladowca>();
+            var rekord = wykladowcy.Znajdz(id);
+            if (rekord == null)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
-            repo.Usun(wykladowca);
-            _baza.Zapisz();
+            wykladowcy.Usun(rekord);
+            _db.Zapisz();
         }
 
         public void Zmien(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
         {
-            var repoWykladowca = _baza.DajTabele<Wykladowca>();
+            var repoWykladowca = _db.DajRepozytorium<Wykladowca>();
             var wykladowca = repoWykladowca.Znajdz(id);
             if (wykladowca == null)
                 throw new BladBiznesowy($"Wykładowca o id {id} nie istnieje.");
@@ -97,12 +97,12 @@ namespace Plan.Core.Services
             wykladowca.Nazwisko = nazwisko;
             wykladowca.Email = email;
             repoWykladowca.Edytuj(wykladowca);
-            var repoWyklSpec = _baza.DajTabele<WykladowcaSpecjalizacja>();
+            var repoWyklSpec = _db.DajRepozytorium<WykladowcaSpecjalizacja>();
             var wyklSpec = repoWyklSpec.Wybierz(new ZapytanieWykladowcaSpecjalizacja { IdWykladowcy = id });
             repoWyklSpec.UsunWiele(wyklSpec);
             foreach (var specId in idSpecjalnosci)
             {
-                var specjalnosc = _baza.DajTabele<Specjalnosc>().Znajdz(specId);
+                var specjalnosc = _db.DajRepozytorium<Specjalnosc>().Znajdz(specId);
                 if (specjalnosc == null)
                     throw new BladBiznesowy($"Specjalność o id {specId} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
@@ -112,7 +112,7 @@ namespace Plan.Core.Services
                 };
                 repoWyklSpec.Dodaj(ws);
             }
-            _baza.Zapisz();
+            _db.Zapisz();
         }
     }
 }

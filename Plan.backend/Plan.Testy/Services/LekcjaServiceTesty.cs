@@ -36,14 +36,14 @@ namespace Plan.Testy.Services
             _repoWykladowca = new Mock<IRepozytorium<Wykladowca>>();
             _repoSala = new Mock<IRepozytorium<Sala>>();
             _repoLekcja = new Mock<IRepozytorium<Lekcja>>();
-            _db.Setup(x => x.DajTabele<GrupaZjazd>()).Returns(_repoGrupaZjazd.Object);
-            _db.Setup(x => x.DajTabele<Zjazd>()).Returns(_repoZjazd.Object);
-            _db.Setup(x => x.DajTabele<Grupa>()).Returns(_repoGrupa.Object);
-            _db.Setup(x => x.DajTabele<LekcjaGrupa>()).Returns(_repoLekcjaGrupa.Object);
-            _db.Setup(x => x.DajTabele<Przedmiot>()).Returns(_repoPrzedmiot.Object);
-            _db.Setup(x => x.DajTabele<Wykladowca>()).Returns(_repoWykladowca.Object);
-            _db.Setup(x => x.DajTabele<Sala>()).Returns(_repoSala.Object);
-            _db.Setup(x => x.DajTabele<Lekcja>()).Returns(_repoLekcja.Object);
+            _db.Setup(x => x.DajRepozytorium<GrupaZjazd>()).Returns(_repoGrupaZjazd.Object);
+            _db.Setup(x => x.DajRepozytorium<Zjazd>()).Returns(_repoZjazd.Object);
+            _db.Setup(x => x.DajRepozytorium<Grupa>()).Returns(_repoGrupa.Object);
+            _db.Setup(x => x.DajRepozytorium<LekcjaGrupa>()).Returns(_repoLekcjaGrupa.Object);
+            _db.Setup(x => x.DajRepozytorium<Przedmiot>()).Returns(_repoPrzedmiot.Object);
+            _db.Setup(x => x.DajRepozytorium<Wykladowca>()).Returns(_repoWykladowca.Object);
+            _db.Setup(x => x.DajRepozytorium<Sala>()).Returns(_repoSala.Object);
+            _db.Setup(x => x.DajRepozytorium<Lekcja>()).Returns(_repoLekcja.Object);
             _service = new LekcjaService(_db.Object);
         }
 

@@ -25,9 +25,9 @@ namespace Plan.Testy.Services
             _repoWykladowca = new Mock<IRepozytorium<Wykladowca>>();
             _repoSpecjalnosc = new Mock<IRepozytorium<Specjalnosc>>();
             _repoWyklSpec = new Mock<IRepozytorium<WykladowcaSpecjalizacja>>();
-            _db.Setup(x => x.DajTabele<Wykladowca>()).Returns(_repoWykladowca.Object);
-            _db.Setup(x => x.DajTabele<Specjalnosc>()).Returns(_repoSpecjalnosc.Object);
-            _db.Setup(x => x.DajTabele<WykladowcaSpecjalizacja>()).Returns(_repoWyklSpec.Object);
+            _db.Setup(x => x.DajRepozytorium<Wykladowca>()).Returns(_repoWykladowca.Object);
+            _db.Setup(x => x.DajRepozytorium<Specjalnosc>()).Returns(_repoSpecjalnosc.Object);
+            _db.Setup(x => x.DajRepozytorium<WykladowcaSpecjalizacja>()).Returns(_repoWyklSpec.Object);
             _service = new WykladowcaService(_db.Object);
         }
 
