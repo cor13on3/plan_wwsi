@@ -33,5 +33,11 @@ namespace PlanWWSI.Views
             if (viewModel.Items.Count == 0)
                 viewModel.LoadItemsCommand.Execute(this);
         }
+
+        private void Entry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            viewModel.Fraza = e.NewTextValue;
+            viewModel.LoadItemsCommand.Execute(this);
+        }
     }
 }

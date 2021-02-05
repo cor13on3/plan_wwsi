@@ -13,6 +13,14 @@ namespace PlanWWSI.ViewModels
         public ObservableCollection<WykladowcaWidok> Items { get; set; }
         private HTTP _http;
 
+        private string _fraza;
+        public string Fraza
+        {
+            get { return _fraza; }
+            set { _fraza = value; OnPropertyChanged(nameof(Fraza)); }
+        }
+
+
         public WykladowcyViewModel()
         {
             Title = "Wykładowcy";
@@ -26,7 +34,7 @@ namespace PlanWWSI.ViewModels
             try
             {
                 Items.Clear();
-                var lista = await _http.GetAsync<WykladowcaWidok[]>($"/api/wykladowca");
+                var lista = await _http.GetAsync<WykladowcaWidok[]>($"/api/wykladowca?fraza={Fraza}");
                 foreach (var item in lista)
                 {
                     Items.Add(item);
