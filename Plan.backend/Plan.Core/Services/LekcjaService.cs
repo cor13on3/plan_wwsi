@@ -153,15 +153,16 @@ namespace Plan.Core.Services
 
         public void WypiszGrupe(int idLekcji, string nrGrupy, int nrZjazdu, bool czyOdpracowanie)
         {
-            var repo = _baza.DajRepozytorium<LekcjaGrupa>();
-            var wynik = repo.WybierzPierwszy(x => x.IdLekcji == idLekcji &&
-                                                                x.NrGrupy == nrGrupy &&
-                                                                x.NrZjazdu == nrZjazdu &&
-                                                                x.CzyOdpracowanie == czyOdpracowanie);
+            var lekcjeGrupy = _baza.DajRepozytorium<LekcjaGrupa>();
+            var wynik = lekcjeGrupy.WybierzPierwszy(x => 
+                x.IdLekcji == idLekcji &&
+                x.NrGrupy == nrGrupy &&
+                x.NrZjazdu == nrZjazdu &&
+                x.CzyOdpracowanie == czyOdpracowanie);
             if (wynik == null)
                 throw new BladBiznesowy("Grupa nie uczestniczy w danej lekcji.");
-            repo.Usun(wynik);
-            PorzadkujNieuzywaneLekcje(repo, idLekcji);
+            lekcjeGrupy.Usun(wynik);
+            PorzadkujNieuzywaneLekcje(lekcjeGrupy, idLekcji);
             _baza.Zapisz();
         }
 

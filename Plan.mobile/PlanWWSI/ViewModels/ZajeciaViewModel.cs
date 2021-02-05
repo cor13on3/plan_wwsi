@@ -38,14 +38,14 @@ namespace PlanWWSI.ViewModels
         {
             Title = "Zajęcia";
             Items = new ObservableCollection<LekcjaWidok>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-            PobierzZjazdyCommand = new Command(async () => await ExecutePobierzZjazdyCommand());
+            LoadItemsCommand = new Command(async (object p) => await ExecuteLoadItemsCommand((ContentPage)p));
+            PobierzZjazdyCommand = new Command(async (object p) => await ExecutePobierzZjazdyCommand((ContentPage)p));
             _httpClient = new HTTP();
             if (string.IsNullOrEmpty(NumerGrupy))
                 NumerGrupy = Application.Current.Properties["grupa"].ToString();
         }
 
-        async Task ExecuteLoadItemsCommand()
+        async Task ExecuteLoadItemsCommand(ContentPage page)
         {
             try
             {
@@ -64,16 +64,23 @@ namespace PlanWWSI.ViewModels
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Debug.WriteLine(ex);
+                await page.DisplayAlert("Wystąpił błąd", "Spróbuj ponownie", "OK");
             }
         }
 
-        async Task ExecutePobierzZjazdyCommand()
+        async Task ExecutePobierzZjazdyCommand(ContentPage page)
         {
-            _zjazdy = await _httpClient.GetAsync<ZjazdWidokDTO[]>($"/api/kalendarium/{NumerGrupy}");
-            UstawZjazdInfo();
+            try
+            {
+                _zjazdy = await _httpClient.GetAsync<ZjazdWidokDTO[]>($"/api/kalendarium/{NumerGrupy}");
+                UstawZjazdInfo();
+            }
+            catch (Exception)
+            {
+                await page.DisplayAlert("Wystąpił błąd", "Spróbuj ponownie", "OK");
+            }
         }
 
         private void UstawZjazdInfo()

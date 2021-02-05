@@ -10,7 +10,7 @@ namespace Plan.Core.IServices
     public interface IGrupaService
     {
         void Dodaj(string numer, int semestr, TrybStudiow trybStudiow, StopienStudiow stopienStudiow);
-        GrupaDTO[] Przegladaj();
+        GrupaDTO[] Przegladaj(string fraza);
         GrupaDTO[] Filtruj(TrybStudiow? tryb, StopienStudiow? stopien, int? semestr);
         void Usun(string numer);
         GrupaDTO Daj(string numer);

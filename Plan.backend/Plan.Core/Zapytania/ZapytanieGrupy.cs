@@ -5,11 +5,12 @@ namespace Plan.Core.Zapytania
 {
     public class ZapytanieGrupy : ZapytanieBase<Grupa, GrupaDTO>
     {
-        public ZapytanieGrupy(TrybStudiow? tryb = null, StopienStudiow? stopien = null, int? semestr = null)
+        public ZapytanieGrupy(TrybStudiow? tryb = null, StopienStudiow? stopien = null, int? semestr = null, string fraza = null)
         {
             UstawKryteria(x => (tryb == null || x.TrybStudiow == tryb) &&
                                (stopien == null || x.StopienStudiow == stopien) &&
-                               (semestr == null || x.Semestr == semestr));
+                               (semestr == null || x.Semestr == semestr) &&
+                               (string.IsNullOrWhiteSpace(fraza) || x.NrGrupy.ToLower().Contains(fraza.ToLower())));
             DodajMapowanie(x => new GrupaDTO
             {
                 Numer = x.NrGrupy,

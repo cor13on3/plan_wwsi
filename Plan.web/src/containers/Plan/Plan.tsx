@@ -5,7 +5,7 @@ import formatujGodzine from "../../helpers/formatujGodzine";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { GrupaWidok } from "../../helpers/types";
 import LekcjaEdycja from "./LekcjaEdycja";
-import "./Plan.css";
+import { PlanStyle } from "../../styles/PlanStyle";
 import dajDzienTygodnia from "../../helpers/dajDzienTygodnia";
 import {
   Button,
@@ -82,8 +82,8 @@ function Plan() {
     if (trybStudiow !== SELECT_PUSTY) {
       httpClient
         .GET(`/api/grupa/filtruj/${trybStudiow}`)
-        .then((res: GrupaWidok[]) => {
-          setGrupy(res);
+        .then((dane: GrupaWidok[]) => {
+          setGrupy(dane);
         })
         .catch((err: Blad) => setBlad(err.Tresc));
     }
@@ -131,31 +131,34 @@ function Plan() {
       .catch((err: Blad) => setBlad(err.Tresc));
   }
 
+  function dajZjazdy(zjazdy: number[]) {
+    if (zjazdy.length === 8) return "1 - 8";
+    return zjazdy.sort((a, b) => a - b).join(", ");
+  }
+
   function dajLekcje(dzienTygodnia: number) {
     var lekcje = plan.find((x) => x.dzienTygodnia === dzienTygodnia)?.lekcje;
     if (lekcje && lekcje.length > 0)
       return lekcje.map((l, i) => (
         <div className="lekcja" key={i}>
-          <span>
+          {tryb === "Standardowy" ? (
+            <span className="m">Zjazdy: {dajZjazdy(l.zjazdy)}</span>
+          ) : (
+            <span />
+          )}
+          <span className="l">
             {formatujGodzine(l.lekcja.od)} - {formatujGodzine(l.lekcja.do)}
           </span>
-          <span>
+          <span className="m">
             {l.lekcja.nazwa} ({l.lekcja.forma.toString().toLowerCase()})
           </span>
-          <span>{l.lekcja.wykladowca}</span>
-          <span>Sala {l.lekcja.sala}</span>
-          {tryb === "Standardowy" && (
-            <div className="lekcja-zjazdy">
-              <span>
-                Zjazdy:
-                {l.zjazdy.sort((a, b) => a - b).join(", ")}
-              </span>
-              <Button onClick={() => usun(l.lekcja.idLekcji, l.zjazdy)}>
-                <DeleteOutline color="secondary" />
-              </Button>
-            </div>
-          )}
-          <p></p>
+          <span className="m">{l.lekcja.wykladowca}</span>
+          <div className="lekcja-sala">
+            <span className="m">Sala {l.lekcja.sala}</span>
+            <Button onClick={() => usun(l.lekcja.idLekcji, l.zjazdy)}>
+              <DeleteOutline color="secondary" />
+            </Button>
+          </div>
         </div>
       ));
     return <div />;
@@ -167,7 +170,7 @@ function Plan() {
   }
 
   return (
-    <div className="plan">
+    <PlanStyle>
       {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="plan-header">
         <span className="xxl">Zarządzanie planem zajęć</span>
@@ -365,7 +368,7 @@ function Plan() {
           onZapisz={onZapisz}
         />
       </Drawer>
-    </div>
+    </PlanStyle>
   );
 }
 

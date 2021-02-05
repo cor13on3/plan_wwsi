@@ -2,15 +2,11 @@
 using PlanWWSI.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace PlanWWSI.ViewModels
 {
-
-
     public class WykladowcyViewModel : BaseViewModel
     {
         public Command LoadItemsCommand { get; set; }
@@ -21,11 +17,11 @@ namespace PlanWWSI.ViewModels
         {
             Title = "Wykładowcy";
             Items = new ObservableCollection<WykladowcaWidok>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            LoadItemsCommand = new Command(async (object p) => await ExecuteLoadItemsCommand((ContentPage)p));
             _http = new HTTP();
         }
 
-        async Task ExecuteLoadItemsCommand()
+        async Task ExecuteLoadItemsCommand(ContentPage page)
         {
             try
             {
@@ -36,9 +32,9 @@ namespace PlanWWSI.ViewModels
                     Items.Add(item);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Debug.WriteLine(ex);
+                await page.DisplayAlert("Wystąpił błąd", "Spróbuj ponownie", "OK");
             }
 
         }

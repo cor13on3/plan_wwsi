@@ -31,8 +31,10 @@ namespace Plan.Core.Zapytania
 
     public class ZapytanieWykladowcy : ZapytanieBase<Wykladowca, WykladowcaWidokDTO>
     {
-        public ZapytanieWykladowcy()
+        public ZapytanieWykladowcy(string fraza)
         {
+            if (!string.IsNullOrWhiteSpace(fraza))
+                UstawKryteria(x => x.Nazwisko.ToLower().Contains(fraza.ToLower()) || x.Email.ToLower().Contains(fraza.ToLower()) || x.Tytul.ToLower().Contains(fraza.ToLower()));
             DodajMapowanie(w => new WykladowcaWidokDTO
             {
                 Id = w.IdWykladowcy,

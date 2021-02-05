@@ -26,9 +26,9 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
-        public GrupaDTO[] Przegladaj()
+        public GrupaDTO[] Przegladaj([FromQuery] string fraza)
         {
-            var lista = _grupaService.Przegladaj();
+            var lista = _grupaService.Przegladaj(fraza);
             return lista;
         }
 

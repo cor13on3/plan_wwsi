@@ -1,4 +1,4 @@
-import { Button, Drawer } from "@material-ui/core";
+import { Button, Drawer, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import ContextMenu from "../../components/ContextMenu";
 import { Blad, httpClient } from "../../helpers/httpClient";
@@ -12,14 +12,15 @@ function Kadra() {
   const [blad, setBlad] = useState("");
   const [czyEdycja, setCzyEdycja] = useState(false);
   const [edytowany, setEdytowany] = useState(null as number | null);
+  const [fraza, setFraza] = useState("");
 
   useEffect(() => {
     odswiezListe();
-  }, []);
+  }, [fraza]);
 
   function odswiezListe() {
     httpClient
-      .GET("/api/wykladowca")
+      .GET(`/api/wykladowca?fraza=${fraza}`)
       .then((res: WykladowcaWidok[]) => setLista(res))
       .catch((err: Blad) => setBlad(err.Tresc));
   }
@@ -56,6 +57,15 @@ function Kadra() {
         >
           DODAJ
         </Button>
+      </div>
+      <div className="szukajka">
+        <TextField
+          value={fraza}
+          onChange={(e) => setFraza(e.target.value)}
+          variant="outlined"
+          placeholder="Szukaj.."
+          autoFocus
+        />
       </div>
       <div className="lista">
         <div className="kadra_lista_header disabled">

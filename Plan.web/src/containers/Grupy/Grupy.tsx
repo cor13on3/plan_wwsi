@@ -1,4 +1,4 @@
-import { Button, Drawer } from "@material-ui/core";
+import { Button, Drawer, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import ContextMenu from "../../components/ContextMenu";
 import { StopienStudiow } from "../../helpers/enums";
@@ -6,23 +6,24 @@ import { Blad, httpClient } from "../../helpers/httpClient";
 import { GrupaWidok } from "../../helpers/types";
 import { ErrorStyle } from "../../styles/ErrorStyle";
 import GrupaEdycja from "./GrupaEdycja";
-import "./Grupy.css";
+import { GrupyStyle } from "../../styles/GrupyStyle";
 
 function Grupy() {
   const [blad, setBlad] = useState("");
   const [lista, setLista] = useState([] as GrupaWidok[]);
   const [czyEdycja, setCzyEdycja] = useState(false);
+  const [fraza, setFraza] = useState("");
 
   function odswiezListe() {
     httpClient
-      .GET("/api/grupa")
+      .GET(`/api/grupa?fraza=${fraza}`)
       .then((res: GrupaWidok[]) => setLista(res))
       .catch((err: Blad) => setBlad(err.Tresc));
   }
 
   useEffect(() => {
     odswiezListe();
-  }, []);
+  }, [fraza]);
 
   function pokazEdycje() {
     setCzyEdycja(true);
@@ -48,7 +49,7 @@ function Grupy() {
   }
 
   return (
-    <div className="grupy">
+    <GrupyStyle>
       {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="grupy_header">
         <span className="xxl">Zarządzanie grupami</span>
@@ -59,6 +60,15 @@ function Grupy() {
         >
           DODAJ
         </Button>
+      </div>
+      <div className="szukajka">
+        <TextField
+          value={fraza}
+          onChange={(e) => setFraza(e.target.value)}
+          variant="outlined"
+          placeholder="Szukaj.."
+          autoFocus
+        />
       </div>
       <div className="lista">
         <div className="lista_header disabled">
@@ -86,7 +96,7 @@ function Grupy() {
       >
         <GrupaEdycja onZapisz={onZapisz} />
       </Drawer>
-    </div>
+    </GrupyStyle>
   );
 }
 

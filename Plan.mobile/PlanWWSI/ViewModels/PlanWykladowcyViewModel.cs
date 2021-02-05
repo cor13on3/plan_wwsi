@@ -2,7 +2,6 @@
 using PlanWWSI.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -13,6 +12,7 @@ namespace PlanWWSI.ViewModels
         public WykladowcaWidok Wykladowca { get; set; }
         public ObservableCollection<LekcjaWidok> Items { get; }
         public Command LoadItemsCommand { get; }
+        public Command LoadItemDetailsCommand { get; }
 
         private HTTP _httpClient;
 
@@ -23,16 +23,25 @@ namespace PlanWWSI.ViewModels
             set { _data = value; OnPropertyChanged(nameof(Data)); }
         }
 
+        private WykladowcaModel _szczegoly;
+        public WykladowcaModel Szczegoly
+        {
+            get { return _szczegoly; }
+            set { _szczegoly = value; OnPropertyChanged(nameof(Szczegoly)); }
+        }
+
+
         public PlanWykladowcyViewModel(WykladowcaWidok wykladowca)
         {
             Wykladowca = wykladowca;
             Title = Wykladowca.Nazwa;
             Items = new ObservableCollection<LekcjaWidok>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            LoadItemsCommand = new Command(async (object p) => await ExecuteLoadItemsCommand((ContentPage)p));
+            LoadItemDetailsCommand = new Command(async (object p) => await ExecuteLoadItemDetailsCommand((ContentPage)p));
             _httpClient = new HTTP();
         }
 
-        async Task ExecuteLoadItemsCommand()
+        async Task ExecuteLoadItemsCommand(ContentPage page)
         {
             try
             {
@@ -50,9 +59,22 @@ namespace PlanWWSI.ViewModels
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Debug.WriteLine(ex);
+                await page.DisplayAlert("Wystąpił błąd", "Spróbuj ponownie", "OK");
+            }
+        }
+
+        async Task ExecuteLoadItemDetailsCommand(ContentPage page)
+        {
+            try
+            {
+                var dto = await _httpClient.GetAsync<WykladowcaDTO>($"/api/wykladowca/{Wykladowca.Id}");
+                Szczegoly = new WykladowcaModel(dto);
+            }
+            catch (Exception)
+            {
+                await page.DisplayAlert("Wystąpił błąd", "Spróbuj ponownie", "OK");
             }
         }
     }

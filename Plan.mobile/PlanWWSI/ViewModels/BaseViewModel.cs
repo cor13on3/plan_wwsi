@@ -10,11 +10,6 @@ namespace PlanWWSI.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        protected IDataStore<T> GetDataStore<T>() where T : ModelBase
-        {
-            return DependencyService.Get<IDataStore<T>>() ?? new MockDataStore<T>();
-        }
-
         bool isBusy = false;
         public bool IsBusy
         {

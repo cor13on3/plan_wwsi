@@ -12,8 +12,6 @@ namespace PlanWWSI
         public App()
         {
             InitializeComponent();
-
-            // DependencyService.Register<MockDataStore>();
             if (Properties.ContainsKey("grupa"))
                 MainPage = new MainPage();
             else

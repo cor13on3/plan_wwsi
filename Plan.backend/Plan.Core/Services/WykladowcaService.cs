@@ -4,6 +4,7 @@ using Plan.Core.Exceptions;
 using Plan.Core.IDatabase;
 using Plan.Core.IServices;
 using Plan.Core.Zapytania;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,7 +27,7 @@ namespace Plan.Core.Services
             return wynik.First();
         }
 
-        public LekcjaWidokDTO[] DajPlan(int id, System.DateTime data)
+        public LekcjaWidokDTO[] DajPlan(int id, DateTime data)
         {
             var zjazd = _db.DajRepozytorium<Zjazd>().WybierzPierwszy(x => x.DataOd <= data && data <= x.DataDo);
             if (zjazd == null)
@@ -43,9 +44,9 @@ namespace Plan.Core.Services
             return lista.Where(x => x.IdWykladowcy == id).ToArray();
         }
 
-        public WykladowcaWidokDTO[] Przegladaj(string fraza = null)
+        public WykladowcaWidokDTO[] Przegladaj(string fraza)
         {
-            var wynik = _db.DajRepozytorium<Wykladowca>().Wybierz(new ZapytanieWykladowcy());
+            var wynik = _db.DajRepozytorium<Wykladowca>().Wybierz(new ZapytanieWykladowcy(fraza));
             return wynik.ToArray();
         }
 

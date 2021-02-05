@@ -18,14 +18,14 @@ namespace PlanWWSI.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            viewModel.LoadItemsCommand.Execute(null);
-            viewModel.PobierzZjazdyCommand.Execute(null);
+            viewModel.LoadItemsCommand.Execute(this);
+            viewModel.PobierzZjazdyCommand.Execute(this);
         }
 
         private void OnDateChange(object sender, DateChangedEventArgs args)
         {
             viewModel.Data = args.NewDate;
-            viewModel.LoadItemsCommand.Execute(null);
+            viewModel.LoadItemsCommand.Execute(this);
         }
 
         private void OnWsteczClicked(object sender, System.EventArgs e)

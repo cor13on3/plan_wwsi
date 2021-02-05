@@ -26,9 +26,9 @@ namespace Plan.API.Controllers
         }
 
         [HttpGet]
-        public WykladowcaWidokDTO[] Przegladaj()
+        public WykladowcaWidokDTO[] Przegladaj([FromQuery] string fraza)
         {
-            return _wykladowcaService.Przegladaj();
+            return _wykladowcaService.Przegladaj(fraza);
         }
 
         [HttpGet("plan/{id}/{data}")]

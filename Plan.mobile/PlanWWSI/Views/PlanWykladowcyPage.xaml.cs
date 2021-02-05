@@ -24,13 +24,14 @@ namespace PlanWWSI.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            viewModel.LoadItemsCommand.Execute(null);
+            viewModel.LoadItemsCommand.Execute(this);
+            viewModel.LoadItemDetailsCommand.Execute(this);
         }
 
         private void OnDateChange(object sender, DateChangedEventArgs args)
         {
             viewModel.Data = args.NewDate;
-            viewModel.LoadItemsCommand.Execute(null);
+            viewModel.LoadItemsCommand.Execute(this);
         }
     }
 }

@@ -41,10 +41,10 @@ namespace Plan.Core.Services
             return wynik;
         }
 
-        public GrupaDTO[] Przegladaj()
+        public GrupaDTO[] Przegladaj(string fraza)
         {
             var repo = _db.DajRepozytorium<Grupa>();
-            var wynik = repo.Wybierz(new ZapytanieGrupy()).ToArray();
+            var wynik = repo.Wybierz(new ZapytanieGrupy(fraza: fraza)).ToArray();
             return wynik;
         }
 
