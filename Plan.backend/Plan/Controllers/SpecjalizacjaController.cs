@@ -5,35 +5,35 @@ using Plan.Core.IServices;
 
 namespace Plan.API.Controllers
 {
-    [Route("api/specjalnosc")]
+    [Route("api/specjalizacja")]
     [ApiController]
-    public class SpecjalnoscController : ControllerBase
+    public class SpecjalizacjaController : ControllerBase
     {
-        private ISpecjalnoscService _specjalnoscService;
+        private ISpecjalizacjaService _specService;
 
-        public SpecjalnoscController(ISpecjalnoscService specjalnoscService)
+        public SpecjalizacjaController(ISpecjalizacjaService specService)
         {
-            _specjalnoscService = specjalnoscService;
+            _specService = specService;
         }
 
         [HttpPost]
         [Authorize]
         public void Dodaj([FromBody] string nazwa)
         {
-            _specjalnoscService.Dodaj(nazwa);
+            _specService.Dodaj(nazwa);
         }
 
         [HttpGet]
-        public SpecjalnoscDTO[] Przegladaj()
+        public SpecjalizacjaDTO[] Przegladaj()
         {
-            return _specjalnoscService.Przegladaj();
+            return _specService.Przegladaj();
         }
 
         [HttpDelete("{id}")]
         [Authorize]
         public void Usun(int id)
         {
-            _specjalnoscService.Usun(id);
+            _specService.Usun(id);
         }
     }
 }

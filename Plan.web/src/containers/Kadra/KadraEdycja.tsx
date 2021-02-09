@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { ErrorStyle } from "../../styles/ErrorStyle";
 import { KadraEdycjaStyle } from "../../styles/KadraEdycjaStyle";
-import WyborSpecjalnosci, { Specjalnosc } from "./WyborSpecjalnosci";
+import WyborSpecjalizacji, { Specjalizacja } from "./WyborSpecjalizacji";
 
 interface Wykladowca {
   id: number;
@@ -17,7 +17,7 @@ interface Wykladowca {
   imie: string;
   nazwisko: string;
   email: string;
-  specjalnosci: Specjalnosc[];
+  specjalizacje: Specjalizacja[];
 }
 
 interface Props {
@@ -27,14 +27,14 @@ interface Props {
 }
 
 function KadraEdycja(props: Props) {
-  const [edycjaSpecjalnosci, setEdycjaSpecjalnosci] = useState(false);
+  const [edycjaSpecjalizacji, setEdycjaSpecjalizacji] = useState(false);
   const [blad, setBlad] = useState("");
   const [edytowany, setEdytowany] = useState({
     id: -1,
     imie: "",
     nazwisko: "",
     email: "",
-    specjalnosci: [],
+    specjalizacje: [],
     tytul: "",
   } as Wykladowca);
 
@@ -47,19 +47,19 @@ function KadraEdycja(props: Props) {
     }
   }, [props.id]);
 
-  function dajSpecjalnosci() {
-    return edytowany.specjalnosci.map((x) => x.nazwa).join(", ");
+  function dajSpecjalizacje() {
+    return edytowany.specjalizacje.map((x) => x.nazwa).join(", ");
   }
 
-  function onWybranoSpecjalnosci(lista: Specjalnosc[]) {
-    setEdytowany({ ...edytowany, specjalnosci: lista });
-    setEdycjaSpecjalnosci(false);
+  function onWybranoSpecjalizacje(lista: Specjalizacja[]) {
+    setEdytowany({ ...edytowany, specjalizacje: lista });
+    setEdycjaSpecjalizacji(false);
   }
 
   function zapisz() {
     const dto = {
       ...edytowany,
-      specjalnosci: edytowany.specjalnosci.map((x) => x.id),
+      specjalizacje: edytowany.specjalizacje.map((x) => x.id),
     };
     if (props.id) {
       httpClient
@@ -104,9 +104,9 @@ function KadraEdycja(props: Props) {
         <TextField
           variant="outlined"
           onChange={() => {}}
-          value={dajSpecjalnosci()}
+          value={dajSpecjalizacje()}
           label="Specjalizacje"
-          onClick={() => setEdycjaSpecjalnosci(true)}
+          onClick={() => setEdycjaSpecjalizacji(true)}
         />
         <TextField
           variant="outlined"
@@ -126,16 +126,16 @@ function KadraEdycja(props: Props) {
         </div>
       </form>
       <Dialog
-        open={edycjaSpecjalnosci}
-        onClose={() => setEdycjaSpecjalnosci(false)}
+        open={edycjaSpecjalizacji}
+        onClose={() => setEdycjaSpecjalizacji(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">Specjalizacje</DialogTitle>
         <DialogContent>
-          <WyborSpecjalnosci
-            specjalnosci={edytowany.specjalnosci}
-            onWybrano={(lista) => onWybranoSpecjalnosci(lista)}
+          <WyborSpecjalizacji
+            specjalizacje={edytowany.specjalizacje}
+            onWybrano={(lista) => onWybranoSpecjalizacje(lista)}
           />
         </DialogContent>
       </Dialog>

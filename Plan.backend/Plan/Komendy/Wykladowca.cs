@@ -10,7 +10,7 @@ namespace Plan.API.Komendy
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
         public string Email { get; set; }
-        public int[] Specjalnosci { get; set; }
+        public int[] Specjalizacje { get; set; }
     }
 
     public class KomendaEdytujWykladowce
@@ -19,6 +19,6 @@ namespace Plan.API.Komendy
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
         public string Email { get; set; }
-        public int[] Specjalnosci { get; set; }
+        public int[] Specjalizacje { get; set; }
     }
 }

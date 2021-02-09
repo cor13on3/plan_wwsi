@@ -15,7 +15,7 @@ namespace Plan.Serwis.BazaDanych
         public virtual DbSet<LekcjaGrupa> LekcjaGrupa { get; set; }
         public virtual DbSet<Przedmiot> Przedmiot { get; set; }
         public virtual DbSet<Sala> Sala { get; set; }
-        public virtual DbSet<Specjalnosc> Specjalnosc { get; set; }
+        public virtual DbSet<Specjalizacja> Specjalizacja { get; set; }
         public virtual DbSet<WykladowcaSpecjalizacja> WyklSpec { get; set; }
         public virtual DbSet<Wykladowca> Wykladowca { get; set; }
         public virtual DbSet<Zjazd> Zjazd { get; set; }
@@ -63,9 +63,9 @@ namespace Plan.Serwis.BazaDanych
                 entity.HasKey(e => e.IdSali);
             });
 
-            modelBuilder.Entity<Specjalnosc>(entity =>
+            modelBuilder.Entity<Specjalizacja>(entity =>
             {
-                entity.HasKey(e => e.IdSpecjalnosci);
+                entity.HasKey(e => e.IdSpecjalizacji);
             });
 
             modelBuilder.Entity<Wykladowca>(entity =>
@@ -131,7 +131,7 @@ namespace Plan.Serwis.BazaDanych
 
             modelBuilder.Entity<WykladowcaSpecjalizacja>(entity =>
             {
-                entity.HasKey(e => new { e.IdWykladowcy, e.IdSpecjalnosci });
+                entity.HasKey(e => new { e.IdWykladowcy, e.IdSpecjalizacji });
             });
 
             modelBuilder.Entity<WykladowcaSpecjalizacja>()
@@ -140,9 +140,9 @@ namespace Plan.Serwis.BazaDanych
             .HasForeignKey(ws => ws.IdWykladowcy);
 
             modelBuilder.Entity<WykladowcaSpecjalizacja>()
-            .HasOne(ws => ws.Specjalnosc)
+            .HasOne(ws => ws.Specjalizacja)
             .WithMany(s => s.WyklSpecList)
-            .HasForeignKey(ws => ws.IdSpecjalnosci);
+            .HasForeignKey(ws => ws.IdSpecjalizacji);
 
             OnModelCreatingPartial(modelBuilder);
         }

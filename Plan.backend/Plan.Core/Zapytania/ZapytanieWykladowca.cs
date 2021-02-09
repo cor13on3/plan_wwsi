@@ -11,14 +11,14 @@ namespace Plan.Core.Zapytania
 
         public ZapytanieWykladowca()
         {
-            DolaczEncje("WyklSpecList.Specjalnosc");
+            DolaczEncje("WyklSpecList.Specjalizacja");
             UstawKryteria(x => x.IdWykladowcy == IdWykladowcy);
             DodajMapowanie(x => new WykladowcaDTO
             {
-                Specjalnosci = x.WyklSpecList.Select(y => new SpecjalnoscDTO
+                Specjalizacje = x.WyklSpecList.Select(y => new SpecjalizacjaDTO
                 {
-                    Id = y.IdSpecjalnosci,
-                    Nazwa = y.Specjalnosc.Nazwa
+                    Id = y.IdSpecjalizacji,
+                    Nazwa = y.Specjalizacja.Nazwa
                 }).ToArray(),
                 Imie = x.Imie,
                 Id = x.IdWykladowcy,

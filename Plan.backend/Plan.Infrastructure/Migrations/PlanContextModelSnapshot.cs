@@ -245,7 +245,7 @@ namespace Plan.Infrastructure.Migrations
                     b.Property<bool>("CzyOdpracowanie")
                         .HasColumnType("boolean");
 
-                    b.HasKey("IdLekcji", "NrGrupy", "NrZjazdu");
+                    b.HasKey("IdLekcji", "NrGrupy", "NrZjazdu", "CzyOdpracowanie");
 
                     b.HasIndex("NrGrupy");
 
@@ -286,9 +286,9 @@ namespace Plan.Infrastructure.Migrations
                     b.ToTable("Sala");
                 });
 
-            modelBuilder.Entity("Plan.Core.Entities.Specjalnosc", b =>
+            modelBuilder.Entity("Plan.Core.Entities.Specjalizacja", b =>
                 {
-                    b.Property<int>("IdSpecjalnosci")
+                    b.Property<int>("IdSpecjalizacji")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -296,9 +296,9 @@ namespace Plan.Infrastructure.Migrations
                     b.Property<string>("Nazwa")
                         .HasColumnType("text");
 
-                    b.HasKey("IdSpecjalnosci");
+                    b.HasKey("IdSpecjalizacji");
 
-                    b.ToTable("Specjalnosc");
+                    b.ToTable("Specjalizacja");
                 });
 
             modelBuilder.Entity("Plan.Core.Entities.Uzytkownik", b =>
@@ -400,12 +400,12 @@ namespace Plan.Infrastructure.Migrations
                     b.Property<int>("IdWykladowcy")
                         .HasColumnType("integer");
 
-                    b.Property<int>("IdSpecjalnosci")
+                    b.Property<int>("IdSpecjalizacji")
                         .HasColumnType("integer");
 
-                    b.HasKey("IdWykladowcy", "IdSpecjalnosci");
+                    b.HasKey("IdWykladowcy", "IdSpecjalizacji");
 
-                    b.HasIndex("IdSpecjalnosci");
+                    b.HasIndex("IdSpecjalizacji");
 
                     b.ToTable("WyklSpec");
                 });
@@ -536,9 +536,9 @@ namespace Plan.Infrastructure.Migrations
 
             modelBuilder.Entity("Plan.Core.Entities.WykladowcaSpecjalizacja", b =>
                 {
-                    b.HasOne("Plan.Core.Entities.Specjalnosc", "Specjalnosc")
+                    b.HasOne("Plan.Core.Entities.Specjalizacja", "Specjalizacja")
                         .WithMany("WyklSpecList")
-                        .HasForeignKey("IdSpecjalnosci")
+                        .HasForeignKey("IdSpecjalizacji")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

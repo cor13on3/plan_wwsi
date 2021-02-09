@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Plan.Core.Entities
 {
-    public class Specjalnosc
+    public class Specjalizacja
     {
-        public int IdSpecjalnosci { get; set; }
+        public int IdSpecjalizacji { get; set; }
         public string Nazwa { get; set; }
 
         public List<WykladowcaSpecjalizacja> WyklSpecList { get; set; }

@@ -50,7 +50,7 @@ namespace Plan.Core.Services
             return wynik.ToArray();
         }
 
-        public void Dodaj(string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
+        public void Dodaj(string tytul, string imie, string nazwisko, string email, int[] idSpecjalizacji)
         {
             if (string.IsNullOrEmpty(imie) || string.IsNullOrEmpty(nazwisko) || string.IsNullOrEmpty(email))
                 throw new BladBiznesowy("Uzupełnij komplet informacji");
@@ -62,15 +62,15 @@ namespace Plan.Core.Services
                 Email = email,
             };
             _db.DajRepozytorium<Wykladowca>().Dodaj(wykladowca);
-            foreach (var id in idSpecjalnosci)
+            foreach (var id in idSpecjalizacji)
             {
-                var specjalnosc = _db.DajRepozytorium<Specjalnosc>().Znajdz(id);
-                if (specjalnosc == null)
-                    throw new BladBiznesowy($"Specjalność o id {id} nie istnieje.");
+                var spec = _db.DajRepozytorium<Specjalizacja>().Znajdz(id);
+                if (spec == null)
+                    throw new BladBiznesowy($"Specjalizacja o id {id} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
                 {
                     Wykladowca = wykladowca,
-                    Specjalnosc = specjalnosc
+                    Specjalizacja = spec
                 };
                 _db.DajRepozytorium<WykladowcaSpecjalizacja>().Dodaj(ws);
             }
@@ -87,7 +87,7 @@ namespace Plan.Core.Services
             _db.Zapisz();
         }
 
-        public void Zmien(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalnosci)
+        public void Zmien(int id, string tytul, string imie, string nazwisko, string email, int[] idSpecjalizacji)
         {
             var repoWykladowca = _db.DajRepozytorium<Wykladowca>();
             var wykladowca = repoWykladowca.Znajdz(id);
@@ -101,15 +101,15 @@ namespace Plan.Core.Services
             var repoWyklSpec = _db.DajRepozytorium<WykladowcaSpecjalizacja>();
             var wyklSpec = repoWyklSpec.Wybierz(new ZapytanieWykladowcaSpecjalizacja { IdWykladowcy = id });
             repoWyklSpec.UsunWiele(wyklSpec);
-            foreach (var specId in idSpecjalnosci)
+            foreach (var specId in idSpecjalizacji)
             {
-                var specjalnosc = _db.DajRepozytorium<Specjalnosc>().Znajdz(specId);
-                if (specjalnosc == null)
-                    throw new BladBiznesowy($"Specjalność o id {specId} nie istnieje.");
+                var specj = _db.DajRepozytorium<Specjalizacja>().Znajdz(specId);
+                if (specj == null)
+                    throw new BladBiznesowy($"Specjalizacja o id {specId} nie istnieje.");
                 var ws = new WykladowcaSpecjalizacja
                 {
                     Wykladowca = wykladowca,
-                    Specjalnosc = specjalnosc
+                    Specjalizacja = specj
                 };
                 repoWyklSpec.Dodaj(ws);
             }

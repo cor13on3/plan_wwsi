@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace Plan.Core.Services
 {
-    public class SpecjalnoscService : ISpecjalnoscService
+    public class SpecjalizacjaService : ISpecjalizacjaService
     {
         private IBazaDanych _baza;
 
-        public SpecjalnoscService(IBazaDanych baza)
+        public SpecjalizacjaService(IBazaDanych baza)
         {
             _baza = baza;
         }
@@ -21,28 +21,28 @@ namespace Plan.Core.Services
         {
             if (string.IsNullOrEmpty(nazwa))
                 throw new BladBiznesowy("Podaj nazwę");
-            var repo = _baza.DajRepozytorium<Specjalnosc>();
-            repo.Dodaj(new Specjalnosc
+            var repo = _baza.DajRepozytorium<Specjalizacja>();
+            repo.Dodaj(new Specjalizacja
             {
                 Nazwa = nazwa,
             });
             _baza.Zapisz();
         }
 
-        public SpecjalnoscDTO[] Przegladaj()
+        public SpecjalizacjaDTO[] Przegladaj()
         {
-            var repo = _baza.DajRepozytorium<Specjalnosc>();
-            var wynik = repo.Wybierz(new ZapytanieSpecjalnosci());
+            var repo = _baza.DajRepozytorium<Specjalizacja>();
+            var wynik = repo.Wybierz(new ZapytanieSpecjalizacje());
             return wynik.ToArray();
         }
 
         public void Usun(int id)
         {
-            var repo = _baza.DajRepozytorium<Specjalnosc>();
-            var specjalnosc = repo.Znajdz(id);
-            if (specjalnosc == null)
-                throw new BladBiznesowy($"Specjalność o id {id} nie istnieje");
-            repo.Usun(specjalnosc);
+            var repo = _baza.DajRepozytorium<Specjalizacja>();
+            var spec = repo.Znajdz(id);
+            if (spec == null)
+                throw new BladBiznesowy($"Specjalizacja o id {id} nie istnieje");
+            repo.Usun(spec);
             _baza.Zapisz();
         }
     }

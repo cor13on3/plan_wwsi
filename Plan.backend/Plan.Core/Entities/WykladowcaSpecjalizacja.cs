@@ -9,7 +9,7 @@ namespace Plan.Core.Entities
         public int IdWykladowcy { get; set; }
         public Wykladowca Wykladowca { get; set; }
 
-        public int IdSpecjalnosci { get; set; }
-        public Specjalnosc Specjalnosc { get; set; }
+        public int IdSpecjalizacji { get; set; }
+        public Specjalizacja Specjalizacja { get; set; }
     }
 }

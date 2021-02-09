@@ -22,7 +22,7 @@ namespace PlanWWSI.Models
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
         public string Email { get; set; }
-        public Specjalizacja[] Specjalnosci { get; set; }
+        public Specjalizacja[] Specjalizacje { get; set; }
     }
 
     public class WykladowcaModel
@@ -35,7 +35,7 @@ namespace PlanWWSI.Models
         {
             Nazwa = $"{dto.Tytul}. {dto.Imie} {dto.Nazwisko}";
             Email = dto.Email;
-            Specjalizacje = string.Join(",", dto.Specjalnosci.Select(x => x.Nazwa).ToArray());
+            Specjalizacje = string.Join(",", dto.Specjalizacje.Select(x => x.Nazwa).ToArray());
         }
     }
 }

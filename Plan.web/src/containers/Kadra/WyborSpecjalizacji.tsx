@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { httpClient } from "../../helpers/httpClient";
 
-const WyborSpecjalnosciStyle = styled.div`
+const WyborSpecjalizacjiStyle = styled.div`
   display: grid;
   grid-template-rows: auto 1fr 1fr;
   row-gap: 12px;
@@ -25,32 +25,32 @@ const WyborSpecjalnosciStyle = styled.div`
   }
 `;
 
-export interface Specjalnosc {
+export interface Specjalizacja {
   id: number;
   nazwa: string;
 }
 
-interface WyborSpecjalnosciProps {
-  specjalnosci: Specjalnosc[];
-  onWybrano: (lista: Specjalnosc[]) => void;
+interface WyborSpecjalizacjiProps {
+  specjalizacje: Specjalizacja[];
+  onWybrano: (lista: Specjalizacja[]) => void;
 }
 
-function WyborSpecjalnosci(props: WyborSpecjalnosciProps) {
-  const [lista, setLista] = useState([] as Specjalnosc[]);
-  const [wybrane, setWybrane] = useState(props.specjalnosci);
+function WyborSpecjalizacji(props: WyborSpecjalizacjiProps) {
+  const [lista, setLista] = useState([] as Specjalizacja[]);
+  const [wybrane, setWybrane] = useState(props.specjalizacje);
   const [nowa, setNowa] = useState("");
 
   function odswiezListe() {
     httpClient
-      .GET("/api/specjalnosc")
-      .then((res: Specjalnosc[]) => setLista(res));
+      .GET("/api/specjalizacja")
+      .then((res: Specjalizacja[]) => setLista(res));
   }
 
   useEffect(() => {
     odswiezListe();
   }, []);
 
-  function zmienWybrane(element: Specjalnosc, checked: boolean) {
+  function zmienWybrane(element: Specjalizacja, checked: boolean) {
     const copy = [...wybrane];
     if (checked) {
       copy.push(element);
@@ -62,20 +62,20 @@ function WyborSpecjalnosci(props: WyborSpecjalnosciProps) {
   }
 
   function dodaj() {
-    httpClient.POST("/api/specjalnosc", nowa).then(() => {
+    httpClient.POST("/api/specjalizacja", nowa).then(() => {
       setNowa("");
       odswiezListe();
     });
   }
 
   function usun(id: number) {
-    httpClient.DELETE(`/api/specjalnosc/${id}`).then(() => {
+    httpClient.DELETE(`/api/specjalizacja/${id}`).then(() => {
       odswiezListe();
     });
   }
 
   return (
-    <WyborSpecjalnosciStyle>
+    <WyborSpecjalizacjiStyle>
       <div>
         {lista.map((x, i) => (
           <div className="element" key={i}>
@@ -104,8 +104,8 @@ function WyborSpecjalnosci(props: WyborSpecjalnosciProps) {
       >
         WYBIERZ
       </Button>
-    </WyborSpecjalnosciStyle>
+    </WyborSpecjalizacjiStyle>
   );
 }
 
-export default WyborSpecjalnosci;
+export default WyborSpecjalizacji;

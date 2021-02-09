@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Plan.Core.DTO
 {
-    public class SpecjalnoscDTO
+    public class SpecjalizacjaDTO
     {
         public int Id { get; set; }
         public string Nazwa { get; set; }
@@ -24,6 +24,6 @@ namespace Plan.Core.DTO
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
         public string Email { get; set; }
-        public SpecjalnoscDTO[] Specjalnosci { get; set; }
+        public SpecjalizacjaDTO[] Specjalizacje { get; set; }
     }
 }

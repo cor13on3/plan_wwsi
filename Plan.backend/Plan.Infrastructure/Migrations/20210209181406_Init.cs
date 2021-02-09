@@ -91,16 +91,16 @@ namespace Plan.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Specjalnosc",
+                name: "Specjalizacja",
                 columns: table => new
                 {
-                    IdSpecjalnosci = table.Column<int>(nullable: false)
+                    IdSpecjalizacji = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nazwa = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Specjalnosc", x => x.IdSpecjalnosci);
+                    table.PrimaryKey("PK_Specjalizacja", x => x.IdSpecjalizacji);
                 });
 
             migrationBuilder.CreateTable(
@@ -282,16 +282,16 @@ namespace Plan.Infrastructure.Migrations
                 columns: table => new
                 {
                     IdWykladowcy = table.Column<int>(nullable: false),
-                    IdSpecjalnosci = table.Column<int>(nullable: false)
+                    IdSpecjalizacji = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WyklSpec", x => new { x.IdWykladowcy, x.IdSpecjalnosci });
+                    table.PrimaryKey("PK_WyklSpec", x => new { x.IdWykladowcy, x.IdSpecjalizacji });
                     table.ForeignKey(
-                        name: "FK_WyklSpec_Specjalnosc_IdSpecjalnosci",
-                        column: x => x.IdSpecjalnosci,
-                        principalTable: "Specjalnosc",
-                        principalColumn: "IdSpecjalnosci",
+                        name: "FK_WyklSpec_Specjalizacja_IdSpecjalizacji",
+                        column: x => x.IdSpecjalizacji,
+                        principalTable: "Specjalizacja",
+                        principalColumn: "IdSpecjalizacji",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_WyklSpec_Wykladowca_IdWykladowcy",
@@ -332,13 +332,13 @@ namespace Plan.Infrastructure.Migrations
                 columns: table => new
                 {
                     NrZjazdu = table.Column<int>(nullable: false),
+                    CzyOdpracowanie = table.Column<bool>(nullable: false),
                     IdLekcji = table.Column<int>(nullable: false),
-                    NrGrupy = table.Column<string>(nullable: false),
-                    CzyOdpracowanie = table.Column<bool>(nullable: false)
+                    NrGrupy = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LekcjaGrupa", x => new { x.IdLekcji, x.NrGrupy, x.NrZjazdu });
+                    table.PrimaryKey("PK_LekcjaGrupa", x => new { x.IdLekcji, x.NrGrupy, x.NrZjazdu, x.CzyOdpracowanie });
                     table.ForeignKey(
                         name: "FK_LekcjaGrupa_Lekcja_IdLekcji",
                         column: x => x.IdLekcji,
@@ -416,9 +416,9 @@ namespace Plan.Infrastructure.Migrations
                 column: "NrGrupy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WyklSpec_IdSpecjalnosci",
+                name: "IX_WyklSpec_IdSpecjalizacji",
                 table: "WyklSpec",
-                column: "IdSpecjalnosci");
+                column: "IdSpecjalizacji");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -463,7 +463,7 @@ namespace Plan.Infrastructure.Migrations
                 name: "Grupa");
 
             migrationBuilder.DropTable(
-                name: "Specjalnosc");
+                name: "Specjalizacja");
 
             migrationBuilder.DropTable(
                 name: "Przedmiot");

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Plan.Core.IServices
 {
-    public interface ISpecjalnoscService
+    public interface ISpecjalizacjaService
     {
-        SpecjalnoscDTO[] Przegladaj();
+        SpecjalizacjaDTO[] Przegladaj();
         void Dodaj(string nazwa);
         void Usun(int id);
     }

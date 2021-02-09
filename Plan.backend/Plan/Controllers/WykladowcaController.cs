@@ -22,7 +22,7 @@ namespace Plan.API.Controllers
         [Authorize]
         public void Dodaj([FromBody] KomendaDodajWykladowce dto)
         {
-            _wykladowcaService.Dodaj(dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalnosci);
+            _wykladowcaService.Dodaj(dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalizacje);
         }
 
         [HttpGet]
@@ -47,7 +47,7 @@ namespace Plan.API.Controllers
         [Authorize]
         public void Zmien(int id, [FromBody] KomendaEdytujWykladowce dto)
         {
-            _wykladowcaService.Zmien(id, dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalnosci);
+            _wykladowcaService.Zmien(id, dto.Tytul, dto.Imie, dto.Nazwisko, dto.Email, dto.Specjalizacje);
         }
 
         [HttpDelete("{id}")]
