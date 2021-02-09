@@ -23,6 +23,7 @@ function Grupy() {
 
   useEffect(() => {
     odswiezListe();
+    // eslint-disable-next-line
   }, [fraza]);
 
   function pokazEdycje() {

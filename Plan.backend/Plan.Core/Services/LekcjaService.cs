@@ -178,7 +178,6 @@ namespace Plan.Core.Services
 
         public void Usun(int lekcjaId)
         {
-            // TODO: sprawdzić czy usuwając lekcję nie usunie się z automatu grupa, sala itd..
             var repo = _baza.DajRepozytorium<Lekcja>();
             if (repo.Znajdz(lekcjaId) == null)
                 throw new BladBiznesowy($"Nie istnieje lekcja o id {lekcjaId}");

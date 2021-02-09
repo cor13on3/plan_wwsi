@@ -15,7 +15,7 @@ namespace Plan.Testy.Services
     {
         private Mock<IBazaDanych> _db;
         private Mock<IRepozytorium<Wykladowca>> _repoWykladowca;
-        private Mock<IRepozytorium<Specjalnosc>> _repoSpecjalnosc;
+        private Mock<IRepozytorium<Specjalizacja>> _repoSpecjalizacja;
         private Mock<IRepozytorium<WykladowcaSpecjalizacja>> _repoWyklSpec;
         private WykladowcaService _service;
 
@@ -23,10 +23,10 @@ namespace Plan.Testy.Services
         {
             _db = new Mock<IBazaDanych>();
             _repoWykladowca = new Mock<IRepozytorium<Wykladowca>>();
-            _repoSpecjalnosc = new Mock<IRepozytorium<Specjalnosc>>();
+            _repoSpecjalizacja = new Mock<IRepozytorium<Specjalizacja>>();
             _repoWyklSpec = new Mock<IRepozytorium<WykladowcaSpecjalizacja>>();
             _db.Setup(x => x.DajRepozytorium<Wykladowca>()).Returns(_repoWykladowca.Object);
-            _db.Setup(x => x.DajRepozytorium<Specjalnosc>()).Returns(_repoSpecjalnosc.Object);
+            _db.Setup(x => x.DajRepozytorium<Specjalizacja>()).Returns(_repoSpecjalizacja.Object);
             _db.Setup(x => x.DajRepozytorium<WykladowcaSpecjalizacja>()).Returns(_repoWyklSpec.Object);
             _service = new WykladowcaService(_db.Object);
         }
@@ -62,7 +62,7 @@ namespace Plan.Testy.Services
                 new WykladowcaWidokDTO{Id = 1}
             });
 
-            var wynik = _service.Przegladaj();
+            var wynik = _service.Przegladaj(null);
 
             Assert.IsNotNull(wynik);
             Assert.AreEqual(1, wynik.Length);
@@ -81,19 +81,19 @@ namespace Plan.Testy.Services
         }
 
         [TestMethod]
-        public void Dodaj_WyjatekSpecjalnoscNieIstnieje()
+        public void Dodaj_WyjatekSpecjalizacjaNieIstnieje()
         {
-            _repoSpecjalnosc.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Specjalnosc)null);
+            _repoSpecjalizacja.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Specjalizacja)null);
 
             AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Dodaj("T1", "I1", "N1", "E1", new int[] { 1, 2 }),
-                "Specjalność o id 1 nie istnieje.");
+                "Specjalizacja o id 1 nie istnieje.");
         }
 
         [TestMethod]
         public void Dodaj_DodajeWykladowce()
         {
-            _repoSpecjalnosc.Setup(x => x.Znajdz(1)).Returns(new Specjalnosc { IdSpecjalnosci = 1 });
-            _repoSpecjalnosc.Setup(x => x.Znajdz(2)).Returns(new Specjalnosc { IdSpecjalnosci = 2 });
+            _repoSpecjalizacja.Setup(x => x.Znajdz(1)).Returns(new Specjalizacja { IdSpecjalizacji = 1 });
+            _repoSpecjalizacja.Setup(x => x.Znajdz(2)).Returns(new Specjalizacja { IdSpecjalizacji = 2 });
 
             _service.Dodaj("T1", "I1", "N1", "E1", new int[] { 1, 2 });
 
@@ -108,18 +108,18 @@ namespace Plan.Testy.Services
         [TestMethod]
         public void Dodaj_DodajePowiazanieWykladowcaSpecjalizacja()
         {
-            _repoSpecjalnosc.Setup(x => x.Znajdz(1)).Returns(new Specjalnosc { IdSpecjalnosci = 1 });
-            _repoSpecjalnosc.Setup(x => x.Znajdz(2)).Returns(new Specjalnosc { IdSpecjalnosci = 2 });
+            _repoSpecjalizacja.Setup(x => x.Znajdz(1)).Returns(new Specjalizacja { IdSpecjalizacji = 1 });
+            _repoSpecjalizacja.Setup(x => x.Znajdz(2)).Returns(new Specjalizacja { IdSpecjalizacji = 2 });
 
             _service.Dodaj("T1", "I1", "N1", "E1", new int[] { 1, 2 });
 
             _repoWyklSpec.Verify(x => x.Dodaj(It.Is<WykladowcaSpecjalizacja>(x =>
                 x.Wykladowca.Imie == "I1" &&
-                x.Specjalnosc.IdSpecjalnosci == 1
+                x.Specjalizacja.IdSpecjalizacji == 1
             )), Times.Once);
             _repoWyklSpec.Verify(x => x.Dodaj(It.Is<WykladowcaSpecjalizacja>(x =>
                 x.Wykladowca.Imie == "I1" &&
-                x.Specjalnosc.IdSpecjalnosci == 2
+                x.Specjalizacja.IdSpecjalizacji == 2
             )), Times.Once);
             _db.Verify(x => x.Zapisz(), Times.Once);
         }
@@ -154,13 +154,13 @@ namespace Plan.Testy.Services
         }
 
         [TestMethod]
-        public void ZmienWykladowce_WyjatekSpecjalnoscNieIstnieje()
+        public void ZmienWykladowce_WyjatekSpecjalizacjaNieIstnieje()
         {
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Wykladowca());
-            _repoSpecjalnosc.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Specjalnosc)null);
+            _repoSpecjalizacja.Setup(x => x.Znajdz(It.IsAny<int>())).Returns((Specjalizacja)null);
 
             AssertHelper.OczekiwanyWyjatek<BladBiznesowy>(() => _service.Zmien(1, "T1", "I1", "N1", "E1", new int[] { 1, 2 }),
-                "Specjalność o id 1 nie istnieje.");
+                "Specjalizacja o id 1 nie istnieje.");
         }
 
         [TestMethod]
@@ -190,8 +190,8 @@ namespace Plan.Testy.Services
         [TestMethod]
         public void ZmienWykladowce_ZmieniaPowiazania()
         {
-            _repoSpecjalnosc.Setup(x => x.Znajdz(1)).Returns(new Specjalnosc { IdSpecjalnosci = 1 });
-            _repoSpecjalnosc.Setup(x => x.Znajdz(2)).Returns(new Specjalnosc { IdSpecjalnosci = 2 });
+            _repoSpecjalizacja.Setup(x => x.Znajdz(1)).Returns(new Specjalizacja { IdSpecjalizacji = 1 });
+            _repoSpecjalizacja.Setup(x => x.Znajdz(2)).Returns(new Specjalizacja { IdSpecjalizacji = 2 });
             _repoWykladowca.Setup(x => x.Znajdz(It.IsAny<int>())).Returns(new Wykladowca
             {
                 IdWykladowcy = 1,
@@ -208,11 +208,11 @@ namespace Plan.Testy.Services
             _repoWyklSpec.Verify(x => x.UsunWiele(wyklSpec), Times.Once);
             _repoWyklSpec.Verify(x => x.Dodaj(It.Is<WykladowcaSpecjalizacja>(x =>
                 x.Wykladowca.Imie == "I0" &&
-                x.Specjalnosc.IdSpecjalnosci == 1
+                x.Specjalizacja.IdSpecjalizacji == 1
             )), Times.Once);
             _repoWyklSpec.Verify(x => x.Dodaj(It.Is<WykladowcaSpecjalizacja>(x =>
                 x.Wykladowca.Imie == "I0" &&
-                x.Specjalnosc.IdSpecjalnosci == 2
+                x.Specjalizacja.IdSpecjalizacji == 2
             )), Times.Once);
             _db.Verify(x => x.Zapisz(), Times.Once);
         }

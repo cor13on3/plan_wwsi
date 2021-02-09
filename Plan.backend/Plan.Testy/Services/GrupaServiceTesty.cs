@@ -64,7 +64,7 @@ namespace Plan.Testy.Services
             };
             _repo.Setup(x => x.Wybierz(It.IsAny<ZapytanieGrupy>())).Returns(lista);
 
-            var wynik = _service.Przegladaj();
+            var wynik = _service.Przegladaj(null);
             Assert.IsNotNull(wynik);
             Assert.AreEqual(1, wynik.Length);
         }

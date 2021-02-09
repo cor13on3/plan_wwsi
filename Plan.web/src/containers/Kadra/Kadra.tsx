@@ -16,6 +16,7 @@ function Kadra() {
 
   useEffect(() => {
     odswiezListe();
+    // eslint-disable-next-line
   }, [fraza]);
 
   function odswiezListe() {

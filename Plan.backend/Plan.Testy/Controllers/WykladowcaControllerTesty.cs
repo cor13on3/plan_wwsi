@@ -29,7 +29,7 @@ namespace Plan.Testy
             };
             _wykladowcaService.Setup(x => x.Przegladaj(null)).Returns(lista).Verifiable();
 
-            var wynik = _controller.Przegladaj();
+            var wynik = _controller.Przegladaj(null);
             Assert.IsNotNull(wynik);
             Assert.AreEqual(lista, wynik);
         }
@@ -54,7 +54,7 @@ namespace Plan.Testy
                 Imie = "I1",
                 Nazwisko = "N1",
                 Email = "E1",
-                Specjalnosci = new int[] { 1, 2 }
+                Specjalizacje = new int[] { 1, 2 }
             });
 
             _wykladowcaService.Verify(x => x.Dodaj("T1", "I1", "N1", "E1", new int[] { 1, 2 }), Times.Once);
@@ -69,7 +69,7 @@ namespace Plan.Testy
                 Imie = "I1",
                 Nazwisko = "N1",
                 Email = "E1",
-                Specjalnosci = new int[] { 1, 2 }
+                Specjalizacje = new int[] { 1, 2 }
             });
 
             _wykladowcaService.Verify(x => x.Zmien(1, "T1", "I1", "N1", "E1", new int[] { 1, 2 }), Times.Once);
