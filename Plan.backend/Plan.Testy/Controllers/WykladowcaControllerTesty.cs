@@ -27,9 +27,9 @@ namespace Plan.Testy
             {
                 new WykladowcaWidokDTO()
             };
-            _wykladowcaService.Setup(x => x.Przegladaj(null)).Returns(lista).Verifiable();
+            _wykladowcaService.Setup(x => x.Przegladaj("fraza")).Returns(lista).Verifiable();
 
-            var wynik = _controller.Przegladaj(null);
+            var wynik = _controller.Przegladaj("fraza");
             Assert.IsNotNull(wynik);
             Assert.AreEqual(lista, wynik);
         }

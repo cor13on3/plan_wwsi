@@ -2,6 +2,7 @@
 using Plan.Core.DTO;
 using Plan.Core.IServices;
 using Plan.Komendy;
+using System;
 using System.Threading.Tasks;
 
 namespace Plan.API.Controllers
@@ -20,6 +21,9 @@ namespace Plan.API.Controllers
         [HttpPost("dodaj")]
         public async Task Dodaj([FromBody] KomendaDodajUzytkownika req)
         {
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            if (ip != "127.0.0.1")
+                throw new UnauthorizedAccessException();
             await _uzytkownikService.Dodaj(req.Imie, req.Nazwisko, req.Email, req.Haslo);
         }
 

@@ -34,7 +34,7 @@ namespace Plan.Serwis.BazaDanych
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            
             modelBuilder.Entity<Grupa>(entity =>
             {
                 entity.HasKey(e => e.NrGrupy);

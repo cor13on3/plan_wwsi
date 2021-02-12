@@ -26,10 +26,11 @@ function Logowanie({ onZalogowano }: LogowanieProps) {
 
   return (
     <LogowanieStyle>
-      {blad ? <ErrorStyle>{blad}</ErrorStyle> : <div />}
+      {blad ? <ErrorStyle id="blad">{blad}</ErrorStyle> : <div />}
       <div className="panel">
         <p className="xl">Zaloguj się</p>
         <TextField
+          id="email"
           variant="outlined"
           color="secondary"
           label="Email"
@@ -37,6 +38,7 @@ function Logowanie({ onZalogowano }: LogowanieProps) {
           onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
+          id="haslo"
           type="password"
           variant="outlined"
           color="secondary"

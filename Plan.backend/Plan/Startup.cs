@@ -67,7 +67,7 @@ namespace Plan.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // TODO: Przy takim rozwi¹zaniu baza aktualizuje siê od razu po uruchomieniu serwera.
+            // TODO: Przy takim rozwi¹zaniu baza aktualizuje siê przy pierwszym ¿¹daniu po uruchomieniu serwera.
             using (var context = new PlanContext(Configuration))
             {
                 context.Database.Migrate();
