@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Plan.API.Controllers;
@@ -6,8 +8,10 @@ using Plan.Core.DTO;
 using Plan.Core.Entities;
 using Plan.Core.IServices;
 using Plan.Komendy;
+using System;
+using System.Net;
 
-namespace Plan.Testy
+namespace Plan.Testy.Controllers
 {
     [TestClass]
     public class UzytkownikControllerTesty
@@ -21,10 +25,39 @@ namespace Plan.Testy
             _uzytkownikService = new Mock<IUzytkownikService>();
             _controller = new UzytkownikController(_uzytkownikService.Object);
         }
-        
+
+        //[TestMethod]
+        //public void Dodaj_WyjatekAutoryzacji()
+        //{
+        //    _controller.ControllerContext = new ControllerContext
+        //    {
+        //        HttpContext = new DefaultHttpContext
+        //        {
+        //            Connection = { RemoteIpAddress = IPAddress.Parse("128.1.1.32") }
+        //        }
+        //    };
+        //    Assert.ThrowsException<UnauthorizedAccessException>(() =>
+        //    {
+        //        _controller.Dodaj(new KomendaDodajUzytkownika
+        //        {
+        //            Imie = "I1",
+        //            Nazwisko = "N1",
+        //            Email = "E1",
+        //            Haslo = "H1"
+        //        });
+        //    });
+        //}
+
         [TestMethod]
         public void Dodaj_WywolujeDodanie()
         {
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    Connection = { RemoteIpAddress = IPAddress.Parse("127.0.0.1") }
+                }
+            };
             _controller.Dodaj(new KomendaDodajUzytkownika
             {
                 Imie = "I1",

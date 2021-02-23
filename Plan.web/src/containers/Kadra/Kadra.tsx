@@ -4,7 +4,7 @@ import ContextMenu from "../../components/ContextMenu";
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { WykladowcaWidok } from "../../helpers/types";
 import { ErrorStyle } from "../../styles/ErrorStyle";
-import "./Kadra.css";
+import { KadraStyle } from "../../styles/KadraStyle";
 import KadraEdycja from "./KadraEdycja";
 
 function Kadra() {
@@ -47,7 +47,7 @@ function Kadra() {
   }
 
   return (
-    <div className="kadra">
+    <KadraStyle>
       {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="kadra_header">
         <span className="xxl">Zarządzanie kadrą</span>
@@ -61,6 +61,7 @@ function Kadra() {
       </div>
       <div className="szukajka">
         <TextField
+          id="szukajka"
           value={fraza}
           onChange={(e) => setFraza(e.target.value)}
           variant="outlined"
@@ -74,9 +75,9 @@ function Kadra() {
           <span>EMAIL</span>
         </div>
         {lista.map((x, i) => (
-          <div className="wykladowca" key={i}>
-            <span>{x.nazwa}</span>
-            <span>{x.email}</span>
+          <div id="row" className="wykladowca" key={i}>
+            <span id="rowNazwa">{x.nazwa}</span>
+            <span id="rowEmail">{x.email}</span>
             <ContextMenu
               items={[
                 {
@@ -99,7 +100,7 @@ function Kadra() {
       >
         <KadraEdycja id={edytowany} onZapisz={onZapisz} onAnuluj={onAnuluj} />
       </Drawer>
-    </div>
+    </KadraStyle>
   );
 }
 

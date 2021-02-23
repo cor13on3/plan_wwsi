@@ -69,6 +69,7 @@ function WyborSali(props: WyborSaliProps) {
       </div>
       <div className="element-dodaj">
         <TextField
+          id="salaNazwa"
           label="Nazwa"
           value={nazwa}
           onChange={(e) => setNazwa(e.target.value)}

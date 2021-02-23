@@ -91,8 +91,17 @@ function WyborSpecjalizacji(props: WyborSpecjalizacjiProps) {
         ))}
       </div>
       <div className="dodaj">
-        <TextField value={nowa} onChange={(e) => setNowa(e.target.value)} />
-        <Button variant="text" color="secondary" onClick={dodaj}>
+        <TextField
+          id="specjalizacja"
+          value={nowa}
+          onChange={(e) => setNowa(e.target.value)}
+        />
+        <Button
+          id="specjalizacjaDodaj"
+          variant="text"
+          color="secondary"
+          onClick={dodaj}
+        >
           DODAJ
         </Button>
       </div>

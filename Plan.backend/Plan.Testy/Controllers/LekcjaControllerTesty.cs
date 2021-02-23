@@ -7,7 +7,7 @@ using Plan.Core.Entities;
 using Plan.Core.IServices;
 using System;
 
-namespace Plan.Testy
+namespace Plan.Testy.Controllers
 {
     [TestClass]
     public class LekcjaControllerTesty

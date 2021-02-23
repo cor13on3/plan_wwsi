@@ -92,7 +92,7 @@ function LekcjaEdycja({
   }
 
   function zapisz() {
-    if (wybraneZjazdy.length === 0) {
+    if (!zjazdOdpracowywany && wybraneZjazdy.length === 0) {
       setBlad("Wybierz zjazdy");
       return;
     }
@@ -174,6 +174,7 @@ function LekcjaEdycja({
       <p className="l">Lub dodaj nowe:</p>
       <form>
         <TextField
+          id="przedmiot"
           disabled={idLekcji > 0}
           label="Przedmiot"
           variant="outlined"
@@ -186,6 +187,7 @@ function LekcjaEdycja({
           }}
         />
         <Autocomplete
+          id="wykladowca"
           disabled={idLekcji > 0}
           value={wykladowca}
           options={wykladowcy}
@@ -196,6 +198,7 @@ function LekcjaEdycja({
           onChange={(e, v) => v && setWykladowca(v)}
         />
         <TextField
+          id="sala"
           disabled={idLekcji > 0}
           label="Sala"
           variant="outlined"
@@ -209,6 +212,7 @@ function LekcjaEdycja({
         />
         {!zjazdOdpracowywany && (
           <Autocomplete
+            id="zjazdy"
             multiple
             disableCloseOnSelect
             options={zjazdy}
@@ -227,6 +231,7 @@ function LekcjaEdycja({
         )}
         <div>
           <TextField
+            id="lekcjaOd"
             disabled={idLekcji > 0}
             variant="outlined"
             type="time"
@@ -236,6 +241,7 @@ function LekcjaEdycja({
           />
           <span> - </span>
           <TextField
+            id="lekcjaDo"
             disabled={idLekcji > 0}
             variant="outlined"
             type="time"
@@ -247,6 +253,7 @@ function LekcjaEdycja({
         <FormControl variant="outlined">
           <InputLabel>Forma zajęć</InputLabel>
           <Select
+            id="lekcjaForma"
             disabled={idLekcji > 0}
             label="Forma zajęć"
             value={forma}

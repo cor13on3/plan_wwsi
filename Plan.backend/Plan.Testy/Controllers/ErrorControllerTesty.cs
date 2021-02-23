@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plan.Testy
+namespace Plan.Testy.Controllers
 {
     [TestClass]
     public class ErrorControllerTesty

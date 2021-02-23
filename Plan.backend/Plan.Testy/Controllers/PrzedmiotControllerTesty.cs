@@ -4,7 +4,7 @@ using Plan.API.Controllers;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
 
-namespace Plan.Testy
+namespace Plan.Testy.Controllers
 {
     [TestClass]
     public class PrzedmiotControllerTesty

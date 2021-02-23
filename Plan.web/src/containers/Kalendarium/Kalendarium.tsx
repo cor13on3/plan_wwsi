@@ -21,12 +21,8 @@ import ContextMenu from "../../components/ContextMenu";
 import { ErrorStyle } from "../../styles/ErrorStyle";
 
 function Kalendarium() {
-  const [stopien, setStopien] = useState(
-    StopienStudiow.Inzynierskie as StopienStudiow | "Wybierz"
-  );
-  const [tryb, setTryb] = useState(
-    TrybStudiow.Niestacjonarne as TrybStudiow | "Wybierz"
-  );
+  const [stopien, setStopien] = useState(StopienStudiow.Inzynierskie);
+  const [tryb, setTryb] = useState(TrybStudiow.Niestacjonarne);
   const [semestr, setSemestr] = useState("1");
   const [grupy, setGrupy] = useState([] as string[]);
   const [blad, setBlad] = useState("");
@@ -41,9 +37,7 @@ function Kalendarium() {
   }
 
   useEffect(() => {
-    if (stopien !== "Wybierz" && tryb !== "Wybierz" && semestr !== "Wybierz") {
-      odswiezListe();
-    }
+    odswiezListe();
     // eslint-disable-next-line
   }, [stopien, tryb, semestr]);
 
@@ -59,11 +53,9 @@ function Kalendarium() {
   }, [grupy]);
 
   function dajOpis() {
-    if (stopien === "Wybierz" || tryb === "Wybierz" || semestr === "Wybierz")
-      return "";
+    if (grupy.length === 0) return "Brak grup dla wybranych kryteriów";
     let opis = `Kalendarium dla ${semestr}. semestru studiów ${stopien} (${tryb})`;
-    if (grupy.length > 0) opis += ` (grupy: ${grupy.join(", ")})`;
-    else opis += " (brak grup)";
+    opis += ` (grupy: ${grupy.join(", ")})`;
     return opis;
   }
 
@@ -88,7 +80,9 @@ function Kalendarium() {
     <div className="kalendarium">
       {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="kalendarium_header">
-        <span className="xxl">Zarządzanie zjazdami</span>
+        <span id="tytul" className="xxl">
+          Zarządzanie zjazdami
+        </span>
         <Button
           variant="contained"
           color="secondary"
@@ -102,6 +96,7 @@ function Kalendarium() {
           <FormControl variant="outlined">
             <InputLabel>Stopień studiów</InputLabel>
             <Select
+              id="stopienStudiow"
               value={stopien}
               onChange={(e) => setStopien(e.target.value as StopienStudiow)}
               label="Stopień studiów"
@@ -120,6 +115,7 @@ function Kalendarium() {
           <FormControl variant="outlined">
             <InputLabel>Tryb studiów</InputLabel>
             <Select
+              id="trybStudiow"
               value={tryb}
               onChange={(e) => setTryb(e.target.value as TrybStudiow)}
               label="Tryb studiów"
@@ -133,6 +129,7 @@ function Kalendarium() {
           <FormControl variant="outlined">
             <InputLabel>Semestr</InputLabel>
             <Select
+              id="semestr"
               value={semestr}
               onChange={(e) => setSemestr(e.target.value as string)}
               label="Semestr"
@@ -148,19 +145,21 @@ function Kalendarium() {
           </FormControl>
         </div>
         <div className="zjazd_lista">
-          <span className="xl">{dajOpis()}</span>
+          <span id="zjazdyOpis" className="xl">
+            {dajOpis()}
+          </span>
           <div className="zjazd_lista_header disabled">
             <span>NR</span>
             <span>DATA</span>
           </div>
           {lista.map((x, i) => (
-            <div key={i} className="zjazd">
-              <span>
+            <div id="row" key={i} className="zjazd">
+              <span id="rowNr">
                 {x.nr}. {x.czyOdpracowanie && "(odpracowanie)"}
               </span>
-              <span>{formatujDate(x.dataOd)}</span>
+              <span id="rowZjazdOd">{formatujDate(x.dataOd)}</span>
               <span> - </span>
-              <span>{formatujDate(x.dataDo)}</span>
+              <span id="rowZjazdDo">{formatujDate(x.dataDo)}</span>
               <ContextMenu
                 items={[
                   {

@@ -80,6 +80,7 @@ function KadraEdycja(props: Props) {
       <p className="xl">NOWY WYKŁADOWCA</p>
       <form>
         <TextField
+          id="nazwisko"
           label="Nazwisko"
           variant="outlined"
           value={edytowany.nazwisko}
@@ -88,20 +89,23 @@ function KadraEdycja(props: Props) {
           }
         />
         <TextField
+          id="imie"
           variant="outlined"
           label="Imie"
           value={edytowany.imie}
           onChange={(e) => setEdytowany({ ...edytowany, imie: e.target.value })}
         />
         <TextField
+          id="tytul"
           variant="outlined"
-          label="Tytuły"
+          label="Tytuł"
           value={edytowany.tytul}
           onChange={(e) =>
             setEdytowany({ ...edytowany, tytul: e.target.value })
           }
         />
         <TextField
+          id="specjalizacje"
           variant="outlined"
           onChange={() => {}}
           value={dajSpecjalizacje()}
@@ -109,6 +113,7 @@ function KadraEdycja(props: Props) {
           onClick={() => setEdycjaSpecjalizacji(true)}
         />
         <TextField
+          id="email"
           variant="outlined"
           label="Email"
           value={edytowany.email}

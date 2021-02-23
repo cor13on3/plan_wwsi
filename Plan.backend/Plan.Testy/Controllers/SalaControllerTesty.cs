@@ -6,7 +6,7 @@ using Plan.Core.DTO;
 using Plan.Core.Entities;
 using Plan.Core.IServices;
 
-namespace Plan.Testy
+namespace Plan.Testy.Controllers
 {
     [TestClass]
     public class SalaControllerTesty

@@ -46,6 +46,7 @@ function KalendariumEdycja(props: KalendariumEdycjaProps) {
       <p className="xl">PRZYPISANIE ZJAZDU</p>
       <form>
         <TextField
+          id="nrKolejny"
           label="Numer kolejny"
           variant="outlined"
           value={nr}

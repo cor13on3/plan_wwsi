@@ -64,6 +64,7 @@ function Grupy() {
       </div>
       <div className="szukajka">
         <TextField
+          id="szukajka"
           value={fraza}
           onChange={(e) => setFraza(e.target.value)}
           variant="outlined"
@@ -79,11 +80,19 @@ function Grupy() {
           <span>TRYB</span>
         </div>
         {lista.map((grupa, i) => (
-          <div className="grupa" key={i}>
-            <span className="l">{grupa.numer}</span>
-            <span className="l">{grupa.semestr}</span>
-            <span className="l">{dajStopien(grupa.stopienStudiow)}</span>
-            <span className="l">{grupa.trybStudiow.toLowerCase()}</span>
+          <div id="row" className="grupa" key={i}>
+            <span id="rowNumer" className="l">
+              {grupa.numer}
+            </span>
+            <span id="rowSemestr" className="l">
+              {grupa.semestr}
+            </span>
+            <span id="rowStopien" className="l">
+              {dajStopien(grupa.stopienStudiow)}
+            </span>
+            <span id="rowTryb" className="l">
+              {grupa.trybStudiow.toLowerCase()}
+            </span>
             <ContextMenu
               items={[{ title: "Usuń", action: () => usun(grupa.numer) }]}
             />

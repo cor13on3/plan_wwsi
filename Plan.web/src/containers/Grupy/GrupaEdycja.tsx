@@ -50,6 +50,7 @@ const GrupaEdycja = (props: Props) => {
         <TextField
           variant="outlined"
           label="Numer"
+          id="NrGrupy"
           value={grupa.nrGrupy}
           onChange={(e) => setGrupa({ ...grupa, nrGrupy: e.target.value })}
           autoFocus
@@ -57,6 +58,7 @@ const GrupaEdycja = (props: Props) => {
         <TextField
           variant="outlined"
           placeholder="Semestr"
+          id="SemestrGrupy"
           value={grupa.semestr}
           onChange={(e) =>
             setGrupa({ ...grupa, semestr: Number.parseInt(e.target.value) })
@@ -73,6 +75,7 @@ const GrupaEdycja = (props: Props) => {
               })
             }
             label="Tryb studiów"
+            id="TrybStudiow"
           >
             <MenuItem value={TrybStudiow.Niestacjonarne}>
               Niestacjonarne
@@ -91,6 +94,7 @@ const GrupaEdycja = (props: Props) => {
               })
             }
             label="Stopień studiów"
+            id="StopienStudiow"
           >
             <MenuItem value={StopienStudiow.Inzynierskie}>
               Inżynierskie

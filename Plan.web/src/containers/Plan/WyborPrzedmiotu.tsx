@@ -69,6 +69,7 @@ function WyborPrzedmiotu(props: WyborPrzedmiotuProps) {
       </div>
       <div className="element-dodaj">
         <TextField
+          id="przedmiotNazwa"
           label="Nazwa"
           value={nazwa}
           onChange={(e) => setNazwa(e.target.value)}

@@ -41,12 +41,9 @@ interface PlanDnia {
 
 function Plan() {
   const SELECT_PUSTY = "Wybierz";
-
-  const [trybStudiow, setTrybStudiow] = useState(
-    TrybStudiow.Niestacjonarne as TrybStudiow | string
-  );
+  const [trybStudiow, setTrybStudiow] = useState(TrybStudiow.Niestacjonarne);
   const [grupy, setGrupy] = useState([] as GrupaWidok[]);
-  const [grupa, setGrupa] = useState("Z715");
+  const [grupa, setGrupa] = useState("");
   const [tryb, setTryb] = useState(
     "Standardowy" as "Standardowy" | "Odpracowania"
   );
@@ -67,7 +64,6 @@ function Plan() {
         .then((res: ZjazdGrupyWidok[]) => {
           const zjazdy = res.filter((x) => x.czyOdpracowanie);
           setZjazdyOdpracowujace(zjazdy);
-          if (zjazdy.length > 0) setWybranyZjazdOdpr(zjazdy[0]);
         })
         .catch((err: Blad) => setBlad(err.Tresc));
     } else {
@@ -79,14 +75,12 @@ function Plan() {
   useEffect(() => {
     setPlan([]);
     setGrupa(SELECT_PUSTY);
-    if (trybStudiow !== SELECT_PUSTY) {
-      httpClient
-        .GET(`/api/grupa/filtruj/${trybStudiow}`)
-        .then((dane: GrupaWidok[]) => {
-          setGrupy(dane);
-        })
-        .catch((err: Blad) => setBlad(err.Tresc));
-    }
+    httpClient
+      .GET(`/api/grupa/filtruj/${trybStudiow}`)
+      .then((dane: GrupaWidok[]) => {
+        setGrupy(dane);
+      })
+      .catch((err: Blad) => setBlad(err.Tresc));
   }, [trybStudiow]);
 
   useEffect(() => {
@@ -98,7 +92,7 @@ function Plan() {
   }, [grupa, tryb, wybranyZjazdOdpr]);
 
   function odswiezListe() {
-    if (tryb === "Odpracowania" && !wybranyZjazdOdpr) {
+    if (!grupa || (tryb === "Odpracowania" && !wybranyZjazdOdpr)) {
       setPlan([]);
       return;
     }
@@ -140,7 +134,7 @@ function Plan() {
     var lekcje = plan.find((x) => x.dzienTygodnia === dzienTygodnia)?.lekcje;
     if (lekcje && lekcje.length > 0)
       return lekcje.map((l, i) => (
-        <div className="lekcja" key={i}>
+        <div id="lekcja" className="lekcja" key={i}>
           {tryb === "Standardowy" ? (
             <span className="m">Zjazdy: {dajZjazdy(l.zjazdy)}</span>
           ) : (
@@ -173,17 +167,19 @@ function Plan() {
     <PlanStyle>
       {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="plan-header">
-        <span className="xxl">Zarządzanie planem zajęć</span>
+        <span id="tytul" className="xxl">
+          Zarządzanie planem zajęć
+        </span>
       </div>
       <div className="plan_filters">
         <FormControl variant="outlined">
           <InputLabel>Tryb studiów</InputLabel>
           <Select
+            id="trybStudiow"
             value={trybStudiow}
             onChange={(e) => setTrybStudiow(e.target.value as TrybStudiow)}
             label="Tryb studiów"
           >
-            <MenuItem value={SELECT_PUSTY}>Wybierz</MenuItem>
             <MenuItem value={TrybStudiow.Niestacjonarne}>
               Niestacjonarne
             </MenuItem>
@@ -193,6 +189,7 @@ function Plan() {
         <FormControl variant="outlined">
           <InputLabel>Grupa</InputLabel>
           <Select
+            id="grupa"
             label="Grupa"
             value={grupa}
             onChange={(e) => setGrupa(e.target.value as string)}
@@ -208,13 +205,13 @@ function Plan() {
         <FormControl variant="outlined">
           <InputLabel>Tryb planu</InputLabel>
           <Select
+            id="trybPlanu"
             value={tryb}
             onChange={(e) =>
               setTryb(e.target.value as "Standardowy" | "Odpracowania")
             }
             label="Tryb planu"
           >
-            <MenuItem value={SELECT_PUSTY}>Wybierz</MenuItem>
             <MenuItem value="Standardowy">Standardowy</MenuItem>
             <MenuItem value="Odpracowania">Odpracowania</MenuItem>
           </Select>
@@ -224,6 +221,7 @@ function Plan() {
             <FormControl variant="outlined">
               <InputLabel>Zjazd</InputLabel>
               <Select
+                id="zjazdOdpr"
                 value={wybranyZjazdOdpr?.nr}
                 onChange={(e) =>
                   setWybranyZjazdOdpr(
@@ -240,7 +238,7 @@ function Plan() {
               </Select>
             </FormControl>
             {wybranyZjazdOdpr && (
-              <span className="xl">
+              <span id="dataOdpr" className="xl">
                 ({formatujDate(wybranyZjazdOdpr.dataOd)} -{" "}
                 {formatujDate(wybranyZjazdOdpr.dataDo)})
               </span>
@@ -249,13 +247,13 @@ function Plan() {
         )}
       </div>
 
-      {trybStudiow !== SELECT_PUSTY && grupa !== SELECT_PUSTY && (
+      {grupa !== SELECT_PUSTY && (
         <div>
           {trybStudiow === TrybStudiow.Niestacjonarne ? (
             <div className="tydzien3">
               <div className="dzien">
                 <b>{dajDzienTygodnia(5)}</b>
-                <div>{dajLekcje(5)}</div>
+                <div className="dzien-lekcje">{dajLekcje(5)}</div>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -267,7 +265,7 @@ function Plan() {
               </div>
               <div className="dzien">
                 <b>{dajDzienTygodnia(6)}</b>
-                <div>{dajLekcje(6)}</div>
+                <div className="dzien-lekcje">{dajLekcje(6)}</div>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -279,7 +277,7 @@ function Plan() {
               </div>
               <div className="dzien">
                 <b>{dajDzienTygodnia(0)}</b>
-                <div>{dajLekcje(0)}</div>
+                <div className="dzien-lekcje">{dajLekcje(0)}</div>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -294,7 +292,7 @@ function Plan() {
             <div className="tydzien5">
               <div className="dzien">
                 <b>{dajDzienTygodnia(1)}</b>
-                {dajLekcje(1)}
+                <div className="dzien-lekcje"> {dajLekcje(1)}</div>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -306,7 +304,7 @@ function Plan() {
               </div>
               <div className="dzien">
                 <b>{dajDzienTygodnia(2)}</b>
-                {dajLekcje(2)}
+                <div className="dzien-lekcje">{dajLekcje(2)}</div>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -318,7 +316,7 @@ function Plan() {
               </div>
               <div className="dzien">
                 <b>{dajDzienTygodnia(3)}</b>
-                {dajLekcje(3)}
+                <div className="dzien-lekcje">{dajLekcje(3)}</div>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -330,7 +328,7 @@ function Plan() {
               </div>
               <div className="dzien">
                 <b>{dajDzienTygodnia(4)}</b>
-                {dajLekcje(4)}
+                <div className="dzien-lekcje">{dajLekcje(4)}</div>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -342,7 +340,7 @@ function Plan() {
               </div>
               <div className="dzien">
                 <b>{dajDzienTygodnia(5)}</b>
-                {dajLekcje(5)}
+                <div className="dzien-lekcje">{dajLekcje(5)}</div>
                 <Button
                   variant="contained"
                   color="secondary"

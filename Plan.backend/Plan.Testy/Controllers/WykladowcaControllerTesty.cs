@@ -5,7 +5,7 @@ using Plan.API.Komendy;
 using Plan.Core.DTO;
 using Plan.Core.IServices;
 
-namespace Plan.Testy
+namespace Plan.Testy.Controllers
 {
     [TestClass]
     public class WykladowcaControllerTesty

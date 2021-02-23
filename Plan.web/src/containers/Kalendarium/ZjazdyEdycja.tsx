@@ -60,7 +60,11 @@ function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
             <span>{formatujDate(x.dataOd)}</span>
             <span> - </span>
             <span>{formatujDate(x.dataDo)}</span>
-            <Button color="secondary" onClick={() => onWybierz(x)}>
+            <Button
+              id="zjazdWybierz"
+              color="secondary"
+              onClick={() => onWybierz(x)}
+            >
               Wybierz
             </Button>
           </div>
@@ -69,6 +73,7 @@ function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
       <div className="element-dodaj">
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
+            id="zjazdOd"
             disableToolbar
             variant="inline"
             format="yyyy-MM-dd"
@@ -81,6 +86,7 @@ function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
         <span> - </span>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
+            id="zjazdDo"
             disableToolbar
             variant="inline"
             format="yyyy-MM-dd"
