@@ -6,11 +6,12 @@
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Padding="8">
-                <Label Text="{Binding Szczegoly.Nazwa}" 
+                <Label AutomationId="SzczegWyklNazwa"
+                       Text="{Binding Szczegoly.Nazwa}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="24" />
-                <Label Text="{Binding Szczegoly.Email}" 
+                <Label AutomationId="SzczegWyklEmail" Text="{Binding Szczegoly.Email}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="20" />
@@ -18,14 +19,14 @@
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="20" />
-                <Label Text="{Binding Szczegoly.Specjalizacje}" 
+                <Label AutomationId="SzczegWyklSpec" Text="{Binding Szczegoly.Specjalizacje}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="20" 
                        Margin="8,0,0,0"/>
                 
             </StackLayout>
-            <DatePicker Date="{Binding Data, Mode=TwoWay}" Format="dddd, dd-MM-yyyy" Margin="8, 0" DateSelected="OnDateChange"  />
+            <DatePicker AutomationId="datepicker" Date="{Binding Data, Mode=TwoWay}" Format="dddd, dd-MM-yyyy" Margin="8, 0" DateSelected="OnDateChange"  />
             <ListView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"

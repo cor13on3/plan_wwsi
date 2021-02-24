@@ -33,9 +33,9 @@ namespace PlanWWSI.Models
 
         public WykladowcaModel(WykladowcaDTO dto)
         {
-            Nazwa = $"{dto.Tytul}. {dto.Imie} {dto.Nazwisko}";
+            Nazwa = $"{dto.Tytul} {dto.Imie} {dto.Nazwisko}";
             Email = dto.Email;
-            Specjalizacje = string.Join(",", dto.Specjalizacje.Select(x => x.Nazwa).ToArray());
+            Specjalizacje = string.Join(", ", dto.Specjalizacje.Select(x => x.Nazwa).ToArray());
         }
     }
 }

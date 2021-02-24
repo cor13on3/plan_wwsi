@@ -17,7 +17,7 @@ namespace Plan.Core.Zapytania
                 IdLekcji = x.Lekcja.IdLekcji,
                 GodzinaOd = x.Lekcja.GodzinaOd,
                 GodzinaDo = x.Lekcja.GodzinaDo,
-                Wykladowca = $"{x.Lekcja.Wykladowca.Tytul}. {x.Lekcja.Wykladowca.Imie[0]} {x.Lekcja.Wykladowca.Nazwisko}",
+                Wykladowca = $"{x.Lekcja.Wykladowca.Tytul} {x.Lekcja.Wykladowca.Imie[0]}. {x.Lekcja.Wykladowca.Nazwisko}",
                 IdWykladowcy = x.Lekcja.Wykladowca.IdWykladowcy,
                 Sala = x.Lekcja.Sala.Nazwa,
                 IdSali = x.Lekcja.IdSali,

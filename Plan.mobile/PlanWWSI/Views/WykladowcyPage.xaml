@@ -9,7 +9,7 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <Entry Text="{Binding Fraza, Mode=TwoWay}" TextChanged="Entry_TextChanged" Placeholder="Szukaj.." Margin="10"/>
+            <Entry AutomationId="Szukajka"  Text="{Binding Fraza, Mode=TwoWay}" TextChanged="Entry_TextChanged" Placeholder="Szukaj.." Margin="10"/>
             <ListView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"
@@ -24,11 +24,13 @@
                         <ViewCell>
                             <StackLayout Padding="10">
                                 <Label Text="{Binding Nazwa}" 
+                                AutomationId="WykladowcaNazwa"
                                 d:Text="{Binding .}"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
                                 FontSize="24"/>
                                 <Label Text="{Binding Email}" 
+                                AutomationId="WykladowcaEmail"
                                 d:Text="{Binding .}"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
