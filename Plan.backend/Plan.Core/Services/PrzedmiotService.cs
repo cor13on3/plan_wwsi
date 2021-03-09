@@ -33,7 +33,7 @@ namespace Plan.Core.Services
         {
             var repo = _baza.DajRepozytorium<Przedmiot>();
             var wynik = repo.Wybierz(new ZapytaniePrzedmioty());
-            return wynik.ToArray();
+            return wynik.OrderBy(x => x.Nazwa).ToArray();
         }
 
         public void Usun(int id)

@@ -12,8 +12,8 @@ namespace Plan.Core.IDatabase
         void Edytuj(T encja);
         void Usun(object id);
         void Usun(T encja);
-        void UsunWiele(IEnumerable<T> encje);
         void Usun(Expression<Func<T, bool>> kryteria);
+        void UsunWiele(IEnumerable<T> encje);
         IEnumerable<TDTO> Wybierz<TDTO>(IZapytanie<T, TDTO> zapytanie);
     }
 }

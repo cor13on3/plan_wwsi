@@ -15,7 +15,7 @@ namespace Plan.Core.Entities
         public int IdPrzedmiotu { get; set; }
         public Przedmiot Przedmiot { get; set; }
 
-        public int IdSali { get; set; }
+        public int? IdSali { get; set; }
         public Sala Sala { get; set; }
 
         public int IdWykladowcy { get; set; }

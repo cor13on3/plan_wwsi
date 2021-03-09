@@ -60,6 +60,7 @@ const GrupaEdycja = (props: Props) => {
           placeholder="Semestr"
           id="SemestrGrupy"
           value={grupa.semestr}
+          type="number"
           onChange={(e) =>
             setGrupa({ ...grupa, semestr: Number.parseInt(e.target.value) })
           }

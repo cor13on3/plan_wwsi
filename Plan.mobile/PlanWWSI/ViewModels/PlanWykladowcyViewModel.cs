@@ -55,7 +55,8 @@ namespace PlanWWSI.ViewModels
                         Nazwa = item.Nazwa,
                         Godziny = $"{item.Od} - {item.Do}",
                         Sala = item.Sala,
-                        Forma = item.Forma
+                        Forma = item.Forma,
+                        JestSala = item.Sala != null
                     });
                 }
             }

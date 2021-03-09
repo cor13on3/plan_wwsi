@@ -31,7 +31,6 @@ namespace PlanWWSI.Views
                         MenuPages.Add(id, new NavigationPage(new WykladowcyPage()));
                         break;
                     case (int)MenuItemType.ZmienGrupe:
-                        Application.Current.Properties.Remove("grupa");
                         MenuPages.Add(id, new NavigationPage(new LoginPage()));
                         break;
                 }

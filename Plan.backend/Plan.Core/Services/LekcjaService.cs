@@ -116,12 +116,15 @@ namespace Plan.Core.Services
             {
                 IdPrzedmiotu = przedmiotId,
                 IdWykladowcy = wykladowcaId,
-                IdSali = salaId,
                 DzienTygodnia = dzienTygodnia,
                 GodzinaOd = godzinaOd,
                 GodzinaDo = godzinaDo,
                 Forma = forma
             };
+            if (salaId > 0)
+                lekcja.IdSali = salaId;
+            else
+                lekcja.IdSali = null;
             _baza.DajRepozytorium<Lekcja>().Dodaj(lekcja);
             _baza.Zapisz();
             var id = lekcja.IdLekcji;
@@ -154,7 +157,7 @@ namespace Plan.Core.Services
         public void WypiszGrupe(int idLekcji, string nrGrupy, int nrZjazdu, bool czyOdpracowanie)
         {
             var lekcjeGrupy = _baza.DajRepozytorium<LekcjaGrupa>();
-            var wynik = lekcjeGrupy.WybierzPierwszy(x => 
+            var wynik = lekcjeGrupy.WybierzPierwszy(x =>
                 x.IdLekcji == idLekcji &&
                 x.NrGrupy == nrGrupy &&
                 x.NrZjazdu == nrZjazdu &&
@@ -185,23 +188,6 @@ namespace Plan.Core.Services
             _baza.Zapisz();
         }
 
-        public void Zmien(int lekcjaId, int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, FormaLekcji forma)
-        {
-            WalidujDane(przedmiotId, wykladowcaId, salaId, godzinaOd, godzinaDo);
-            IRepozytorium<Lekcja> repo = _baza.DajRepozytorium<Lekcja>();
-            var lekcja = repo.Znajdz(lekcjaId);
-            if (lekcja == null)
-                throw new BladBiznesowy($"Nie istnieje lekcja o id {lekcjaId}");
-            lekcja.IdPrzedmiotu = przedmiotId;
-            lekcja.IdWykladowcy = wykladowcaId;
-            lekcja.IdSali = salaId;
-            lekcja.GodzinaOd = godzinaOd;
-            lekcja.GodzinaDo = godzinaDo;
-            lekcja.Forma = forma;
-            repo.Edytuj(lekcja);
-            _baza.Zapisz();
-        }
-
         private void WalidujDane(int przedmiotId, int wykladowcaId, int salaId, string godzinaOd, string godzinaDo, int? dzienTygodnia = null)
         {
             if (przedmiotId <= 0)
@@ -212,11 +198,9 @@ namespace Plan.Core.Services
                 throw new BladBiznesowy($"Wybierz wykładowcę.");
             if (_baza.DajRepozytorium<Wykladowca>().Znajdz(wykladowcaId) == null)
                 throw new BladBiznesowy($"Wykładowca o id {wykladowcaId} nie istnieje.");
-            if (salaId <= 0)
-                throw new BladBiznesowy($"Wybierz salę.");
             if (dzienTygodnia != null && (dzienTygodnia < 0 || dzienTygodnia > 6))
                 throw new BladBiznesowy($"Podano nieprawidłowy dzień tygodnia. Uzyj wartości 0-6 gdzie 0 oznacza niedzielę.");
-            if (_baza.DajRepozytorium<Sala>().Znajdz(salaId) == null)
+            if (salaId > 0 && _baza.DajRepozytorium<Sala>().Znajdz(salaId) == null)
                 throw new BladBiznesowy($"Sala o id {salaId} nie istnieje.");
             try
             {

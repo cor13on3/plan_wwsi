@@ -27,20 +27,22 @@ namespace Plan.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+#if DEBUG
+            services.AddCors(o => o.AddPolicy("LocalhostPolicy", builder =>
             {
-                // TODO: Obeznaæ CORS
                 builder.WithOrigins("http://localhost:3000")
                        .AllowAnyMethod()
                        .AllowAnyHeader()
                        .AllowCredentials();
             }));
+#endif
             services.AddControllers().AddJsonOptions(o =>
             {
                 o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
             services.AddDbContext<PlanContext>();
             services.AddSpaStaticFiles(c => c.RootPath = "admin");
+
             services.AddScoped<IWykladowcaService, WykladowcaService>();
             services.AddScoped<IGrupaService, GrupaService>();
             services.AddScoped<IKalendariumService, KalendariumService>();
@@ -49,7 +51,6 @@ namespace Plan.API
             services.AddScoped<ILekcjaService, LekcjaService>();
             services.AddScoped<IUzytkownikService, UzytkownikService>();
             services.AddScoped<ISpecjalizacjaService, SpecjalizacjaService>();
-            // TODO: Rozwazyæ sprytne rozwi¹zanie ¿eby nie by³o tu referencji do infry
             services.AddScoped<IBazaDanych, EntityFrameworkBazaDanych>();
             services.AddScoped(typeof(IRepozytorium<>), typeof(EntityFrameworkAdapter<>));
 
@@ -67,13 +68,14 @@ namespace Plan.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // TODO: Przy takim rozwi¹zaniu baza aktualizuje siê przy pierwszym ¿¹daniu po uruchomieniu serwera.
             using (var context = new PlanContext(Configuration))
             {
                 context.Database.Migrate();
             }
             app.UseExceptionHandler("/error");
-            app.UseCors("MyPolicy");
+#if DEBUG
+            app.UseCors("LocalhostPolicy");
+#endif
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

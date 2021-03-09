@@ -28,5 +28,6 @@
         public FormaLekcji Forma { get; set; }
         public string Godziny { get; set; }
         public string Sala { get; set; }
+        public bool JestSala { get; set; }
     }
 }

@@ -80,6 +80,7 @@ function KadraEdycja(props: Props) {
       <p className="xl">NOWY WYKŁADOWCA</p>
       <form>
         <TextField
+          autoFocus
           id="nazwisko"
           label="Nazwisko"
           variant="outlined"

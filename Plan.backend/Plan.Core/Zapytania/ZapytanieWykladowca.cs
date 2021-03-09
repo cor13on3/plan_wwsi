@@ -39,7 +39,8 @@ namespace Plan.Core.Zapytania
             {
                 Id = w.IdWykladowcy,
                 Nazwa = $"{w.Tytul} {w.Imie[0]}. {w.Nazwisko}",
-                Email = w.Email
+                Email = w.Email,
+                Nazwisko = w.Nazwisko
             });
         }
     }

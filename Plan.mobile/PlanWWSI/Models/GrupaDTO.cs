@@ -4,8 +4,9 @@ using System.Text;
 
 namespace PlanWWSI.Models
 {
-    public class ModelBase
+    public class GrupaDTO
     {
-        public string Id { get; set; }
+        public string Numer { get; set; }
+        public int Semestr { get; set; }
     }
 }

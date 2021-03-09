@@ -13,10 +13,12 @@ export const KadraStyle = styled.div`
 
   .lista {
     padding: 16px;
+    height: 496px;
+    overflow: auto;
   }
 
   .kadra_lista_header {
-    padding: 8px 12px;
+    padding: 8px 32px;
     display: grid;
     grid-template-columns: 512px 1fr;
   }

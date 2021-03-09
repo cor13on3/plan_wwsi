@@ -6,27 +6,25 @@
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Padding="8">
-                <Label AutomationId="SzczegWyklNazwa"
-                       Text="{Binding Szczegoly.Nazwa}" 
-                       LineBreakMode="NoWrap" 
-                       Style="{DynamicResource ListItemTextStyle}" 
-                       FontSize="24" />
                 <Label AutomationId="SzczegWyklEmail" Text="{Binding Szczegoly.Email}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
-                       FontSize="20" />
+                       FontSize="18" />
                 <Label Text="Specjalizacje:" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
-                       FontSize="20" />
+                       FontSize="16" />
                 <Label AutomationId="SzczegWyklSpec" Text="{Binding Szczegoly.Specjalizacje}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
-                       FontSize="20" 
-                       Margin="8,0,0,0"/>
-                
+                       FontSize="18" />
             </StackLayout>
-            <DatePicker AutomationId="datepicker" Date="{Binding Data, Mode=TwoWay}" Format="dddd, dd-MM-yyyy" Margin="8, 0" DateSelected="OnDateChange"  />
+                <Label Text="Zajęcia wykładowcy:" 
+                       LineBreakMode="NoWrap" 
+                       Style="{DynamicResource ListItemTextStyle}" 
+                       FontSize="16"
+                       Margin="8,8,0,0"/>
+            <DatePicker AutomationId="datepicker" Date="{Binding Data, Mode=TwoWay}" Format="dddd, dd-MM-yyyy" Margin="8, 0" DateSelected="OnDateChange"/>
             <ListView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"
@@ -44,14 +42,15 @@
                                 Style="{DynamicResource ListItemTextStyle}" 
                                 FontSize="24" 
                                 AutomationId="PlanItem"/>
-                                <Label Text="{Binding Sala}" 
-                                LineBreakMode="NoWrap"
-                                Style="{DynamicResource ListItemDetailTextStyle}"
-                                FontSize="16" />
                                 <Label Text="{Binding Godziny}" 
                                 LineBreakMode="NoWrap"
                                 Style="{DynamicResource ListItemDetailTextStyle}"
                                 FontSize="16" />
+                                <Label Text="{Binding Sala}" 
+                                LineBreakMode="NoWrap"
+                                Style="{DynamicResource ListItemDetailTextStyle}"
+                                FontSize="16"
+                                IsVisible="{Binding JestSala}"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

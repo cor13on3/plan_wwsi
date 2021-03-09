@@ -50,6 +50,7 @@ function KalendariumEdycja(props: KalendariumEdycjaProps) {
           label="Numer kolejny"
           variant="outlined"
           value={nr}
+          type="number"
           onChange={(e) => setNr(Number.parseInt(e.target.value))}
         />
         <div className="data">

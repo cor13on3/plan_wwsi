@@ -11,7 +11,7 @@
         <StackLayout Spacing="20" Padding="15">
             <Label Text="Podaj numer grupy" FontSize="Medium" />
             <Entry Text="{Binding NumerGrupy}" d:Text="Numer grupy" FontSize="Medium" AutomationId="NrGrupyInput" />
-            <Button Text="ZAPISZ" Command="{Binding ZapiszCommand}" AutomationId="NrGrupySubmit"/>
+            <Button Text="ZAPISZ" Clicked="Button_Clicked" AutomationId="NrGrupySubmit"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

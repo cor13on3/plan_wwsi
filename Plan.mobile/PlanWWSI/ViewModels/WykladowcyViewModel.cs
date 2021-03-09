@@ -35,12 +35,14 @@ namespace PlanWWSI.ViewModels
             {
                 Items.Clear();
                 var lista = await _http.GetAsync<WykladowcaWidok[]>($"/api/wykladowca?fraza={Fraza}");
+                if (lista == null)
+                    return;
                 foreach (var item in lista)
                 {
                     Items.Add(item);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await page.DisplayAlert("Wystąpił błąd", "Spróbuj ponownie", "OK");
             }

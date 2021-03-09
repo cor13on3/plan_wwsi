@@ -76,7 +76,7 @@ namespace Plan.Serwis.BazaDanych
 
             modelBuilder.Entity<GrupaZjazd>(entity =>
             {
-                entity.HasKey(e => new { e.IdZjazdu, e.NrGrupy });
+                entity.HasKey(e => new { e.IdZjazdu, e.NrGrupy, e.NrZjazdu, e.CzyOdpracowanie });
             });
 
             modelBuilder.Entity<GrupaZjazd>()
@@ -110,7 +110,8 @@ namespace Plan.Serwis.BazaDanych
             modelBuilder.Entity<Lekcja>()
             .HasOne(l => l.Sala)
             .WithMany(s => s.LekcjaList)
-            .HasForeignKey(l => l.IdSali);
+            .HasForeignKey(l => l.IdSali)
+            .IsRequired(false);
 
 
             modelBuilder.Entity<LekcjaGrupa>(entity =>

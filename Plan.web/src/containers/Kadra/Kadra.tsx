@@ -22,7 +22,9 @@ function Kadra() {
   function odswiezListe() {
     httpClient
       .GET(`/api/wykladowca?fraza=${fraza}`)
-      .then((res: WykladowcaWidok[]) => setLista(res))
+      .then((res: WykladowcaWidok[]) => {
+        setLista(res);
+      })
       .catch((err: Blad) => setBlad(err.Tresc));
   }
 
@@ -69,11 +71,11 @@ function Kadra() {
           autoFocus
         />
       </div>
+      <div className="kadra_lista_header disabled">
+        <span>NAZWISKO</span>
+        <span>EMAIL</span>
+      </div>
       <div className="lista">
-        <div className="kadra_lista_header disabled">
-          <span>NAZWISKO</span>
-          <span>EMAIL</span>
-        </div>
         {lista.map((x, i) => (
           <div id="row" className="wykladowca" key={i}>
             <span id="rowNazwa">{x.nazwa}</span>

@@ -80,6 +80,7 @@ function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
             margin="normal"
             label="Data od"
             value={dataOd}
+            invalidDateMessage="Niepoprawna data"
             onChange={(e, v) => v && setDataOd(v)}
           />
         </MuiPickersUtilsProvider>
@@ -93,6 +94,7 @@ function ZjazdyEdycja({ onWybierz }: ZjazdyEdycjaProps) {
             margin="normal"
             label="Data do"
             value={dataDo}
+            invalidDateMessage="Niepoprawna data"
             onChange={(e, v) => v && setDataDo(v)}
           />
         </MuiPickersUtilsProvider>

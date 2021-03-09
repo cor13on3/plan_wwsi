@@ -51,6 +51,8 @@ namespace PlanWWSI.ViewModels
             {
                 Items.Clear();
                 var lista = await _httpClient.GetAsync<LekcjaWidokDTO[]>($"/api/lekcja/daj-plan/{Data:yyyy-MM-dd}/{NumerGrupy}");
+                if (lista == null)
+                    return;
                 foreach (var item in lista)
                 {
                     Items.Add(new LekcjaWidok
@@ -60,7 +62,8 @@ namespace PlanWWSI.ViewModels
                         Godziny = $"{item.Od} - {item.Do}",
                         Sala = item.Sala,
                         Wykladowca = item.Wykladowca,
-                        Forma = item.Forma
+                        Forma = item.Forma,
+                        JestSala = item.Sala != null
                     });
                 }
             }
@@ -75,6 +78,8 @@ namespace PlanWWSI.ViewModels
             try
             {
                 _zjazdy = await _httpClient.GetAsync<ZjazdWidokDTO[]>($"/api/kalendarium/{NumerGrupy}");
+                if (_zjazdy == null)
+                    return;
                 UstawZjazdInfo();
             }
             catch (Exception)
@@ -97,6 +102,8 @@ namespace PlanWWSI.ViewModels
         public void UstawPoprzedniDzien()
         {
             var poprzedniDzien = Data.AddDays(-1);
+            if (poprzedniDzien.DayOfWeek == DayOfWeek.Thursday)
+                poprzedniDzien = poprzedniDzien.AddDays(-1);
             var aktualnyZjazd = _zjazdy.FirstOrDefault(x => x.DataOd <= Data && Data <= x.DataDo);
             if (aktualnyZjazd != null && poprzedniDzien >= aktualnyZjazd.DataOd)
                 Data = poprzedniDzien;
@@ -112,6 +119,8 @@ namespace PlanWWSI.ViewModels
         public void UstawKolejnyDzien()
         {
             var kolejnyDzien = Data.AddDays(1);
+            if (kolejnyDzien.DayOfWeek == DayOfWeek.Thursday)
+                kolejnyDzien = kolejnyDzien.AddDays(1);
             var aktualnyZjazd = _zjazdy.FirstOrDefault(x => x.DataOd <= Data && Data <= x.DataDo);
             if (aktualnyZjazd != null && kolejnyDzien <= aktualnyZjazd.DataDo)
                 Data = kolejnyDzien;

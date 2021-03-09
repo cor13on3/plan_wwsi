@@ -1,5 +1,4 @@
 ﻿using PlanWWSI.ViewModels;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -8,11 +7,18 @@ namespace PlanWWSI.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
+        private LoginViewModel vm;
+
         public LoginPage()
         {
             InitializeComponent();
-            var vm = new LoginViewModel();
+            vm = new LoginViewModel();
             this.BindingContext = vm;
+        }
+
+        private void Button_Clicked(object sender, System.EventArgs e)
+        {
+            vm.ZapiszCommand.Execute(this);
         }
     }
 }

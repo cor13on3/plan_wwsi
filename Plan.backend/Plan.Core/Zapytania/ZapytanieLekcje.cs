@@ -20,7 +20,7 @@ namespace Plan.Core.Zapytania
                 Wykladowca = $"{x.Lekcja.Wykladowca.Tytul} {x.Lekcja.Wykladowca.Imie[0]}. {x.Lekcja.Wykladowca.Nazwisko}",
                 IdWykladowcy = x.Lekcja.Wykladowca.IdWykladowcy,
                 Sala = x.Lekcja.Sala.Nazwa,
-                IdSali = x.Lekcja.IdSali,
+                IdSali = x.Lekcja.IdSali.Value,
                 Przedmiot = x.Lekcja.Przedmiot.Nazwa,
                 IdPrzedmiotu = x.Lekcja.IdPrzedmiotu,
                 Forma = x.Lekcja.Forma,

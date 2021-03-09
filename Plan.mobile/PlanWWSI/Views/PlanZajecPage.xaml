@@ -23,7 +23,6 @@
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
                 RefreshCommand="{Binding LoadItemsCommand}"
-                IsPullToRefreshEnabled="true"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 CachingStrategy="RecycleElement">
             <ListView.ItemTemplate>
@@ -40,16 +39,17 @@
                                 LineBreakMode="NoWrap"
                                 Style="{DynamicResource ListItemDetailTextStyle}"
                                 FontSize="16" />
-                            <Label AutomationId="LekcjaSala" Text="{Binding Sala}" 
-                                d:Text="Item descripton"
-                                LineBreakMode="NoWrap"
-                                Style="{DynamicResource ListItemDetailTextStyle}"
-                                FontSize="16" />
                             <Label AutomationId="LekcjaCzas" Text="{Binding Godziny}" 
                                 d:Text="Item descripton"
                                 LineBreakMode="NoWrap"
                                 Style="{DynamicResource ListItemDetailTextStyle}"
                                 FontSize="16" />
+                            <Label AutomationId="LekcjaSala" Text="{Binding Sala}"
+                                IsVisible="{Binding JestSala}"
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap"
+                                Style="{DynamicResource ListItemDetailTextStyle}"
+                                FontSize="12" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

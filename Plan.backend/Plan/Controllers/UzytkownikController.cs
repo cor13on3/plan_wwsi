@@ -22,7 +22,7 @@ namespace Plan.API.Controllers
         public async Task Dodaj([FromBody] KomendaDodajUzytkownika req)
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
-            if (ip != "127.0.0.1")
+            if (ip != "127.0.0.1" && ip != "::1")
                 throw new UnauthorizedAccessException();
             await _uzytkownikService.Dodaj(req.Imie, req.Nazwisko, req.Email, req.Haslo);
         }

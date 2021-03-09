@@ -43,14 +43,16 @@ namespace Plan.Infrastructure.DB
         public void Usun(object id)
         {
             T rekord = dbSet.Find(id);
-            Usun(rekord);
+            if (context.Entry(rekord).State == EntityState.Detached)
+                dbSet.Attach(rekord);
+            dbSet.Remove(rekord);
         }
 
-        public void Usun(T encja)
+        public void Usun(T element)
         {
-            if (context.Entry(encja).State == EntityState.Detached)
-                dbSet.Attach(encja);
-            dbSet.Remove(encja);
+            if (context.Entry(element).State == EntityState.Detached)
+                dbSet.Attach(element);
+            dbSet.Remove(element);
         }
 
         public void Usun(Expression<Func<T, bool>> kryteria)
@@ -63,18 +65,22 @@ namespace Plan.Infrastructure.DB
             dbSet.Remove(rekord);
         }
 
-        public void UsunWiele(IEnumerable<T> entities)
+        public void UsunWiele(IEnumerable<T> elementy)
         {
-            foreach (var entity in entities)
-                Usun(entity);
+            foreach (var element in elementy)
+            {
+                if (context.Entry(element).State == EntityState.Detached)
+                    dbSet.Attach(element);
+                dbSet.Remove(element);
+            }
         }
 
         public IEnumerable<TDTO> Wybierz<TDTO>(IZapytanie<T, TDTO> spec)
         {
             var aggregateQuery = spec.Skladowe.Aggregate(dbSet.AsQueryable(), (current, include) => current.Include(include));
             aggregateQuery = spec.SkladoweString.Aggregate(aggregateQuery, (current, include) => current.Include(include));
-
             var query = aggregateQuery.Where(spec.Kryteria).Select(spec.Mapowanie);
+
             return query.ToArray();
         }
     }

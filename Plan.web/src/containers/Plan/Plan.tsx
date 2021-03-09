@@ -126,7 +126,10 @@ function Plan() {
   }
 
   function dajZjazdy(zjazdy: number[]) {
-    if (zjazdy.length === 8) return "1 - 8";
+    if (trybStudiow === TrybStudiow.Niestacjonarne && zjazdy.length === 8)
+      return "1 - 8";
+    else if (trybStudiow === TrybStudiow.Stacjonarne && zjazdy.length === 14)
+      return "1 - 14";
     return zjazdy.sort((a, b) => a - b).join(", ");
   }
 
@@ -148,7 +151,11 @@ function Plan() {
           </span>
           <span className="m">{l.lekcja.wykladowca}</span>
           <div className="lekcja-sala">
-            <span className="m">Sala {l.lekcja.sala}</span>
+            {l.lekcja.sala ? (
+              <span className="m">Sala {l.lekcja.sala}</span>
+            ) : (
+              <span />
+            )}
             <Button onClick={() => usun(l.lekcja.idLekcji, l.zjazdy)}>
               <DeleteOutline color="secondary" />
             </Button>
@@ -322,18 +329,6 @@ function Plan() {
                   color="secondary"
                   className="dodajBtn"
                   onClick={() => setEdytowanyDzien(3)}
-                >
-                  +
-                </Button>
-              </div>
-              <div className="dzien">
-                <b>{dajDzienTygodnia(4)}</b>
-                <div className="dzien-lekcje">{dajLekcje(4)}</div>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className="dodajBtn"
-                  onClick={() => setEdytowanyDzien(4)}
                 >
                   +
                 </Button>

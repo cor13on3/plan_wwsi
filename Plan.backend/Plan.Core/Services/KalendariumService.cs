@@ -56,14 +56,14 @@ namespace Plan.Core.Services
             {
                 NumerGrupy = nrGrupy
             });
-            return wynik.ToArray();
+            return wynik.OrderBy(x => x.Nr).ToArray();
         }
 
         public ZjazdWidokDTO[] PrzegladajZjazdy()
         {
             var repo = _baza.DajRepozytorium<Zjazd>();
             var wynik = repo.Wybierz(new ZapytanieZjady());
-            return wynik.ToArray();
+            return wynik.OrderBy(x => x.DataOd).ToArray();
         }
 
         public void PrzyporzadkujGrupyDoZjazdu(ZjazdKolejny wybranyZjazd, string[] numeryGrup)

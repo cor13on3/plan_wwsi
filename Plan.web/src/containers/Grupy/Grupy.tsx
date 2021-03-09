@@ -17,7 +17,9 @@ function Grupy() {
   function odswiezListe() {
     httpClient
       .GET(`/api/grupa?fraza=${fraza}`)
-      .then((res: GrupaWidok[]) => setLista(res))
+      .then((res: GrupaWidok[]) => {
+        setLista(res);
+      })
       .catch((err: Blad) => setBlad(err.Tresc));
   }
 
@@ -72,13 +74,13 @@ function Grupy() {
           autoFocus
         />
       </div>
+      <div className="lista_header disabled">
+        <span>NUMER</span>
+        <span>SEMESTR</span>
+        <span>STOPIEŃ</span>
+        <span>TRYB</span>
+      </div>
       <div className="lista">
-        <div className="lista_header disabled">
-          <span>NUMER</span>
-          <span>SEMESTR</span>
-          <span>STOPIEŃ</span>
-          <span>TRYB</span>
-        </div>
         {lista.map((grupa, i) => (
           <div id="row" className="grupa" key={i}>
             <span id="rowNumer" className="l">

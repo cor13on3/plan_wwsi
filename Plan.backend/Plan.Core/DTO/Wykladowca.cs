@@ -15,6 +15,7 @@ namespace Plan.Core.DTO
         public int Id { get; set; }
         public string Nazwa { get; set; }
         public string Email { get; set; }
+        public string Nazwisko { get; set; }
     }
 
     public class WykladowcaDTO

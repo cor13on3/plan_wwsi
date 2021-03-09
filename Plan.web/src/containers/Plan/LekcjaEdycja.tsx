@@ -68,7 +68,9 @@ function LekcjaEdycja({
       httpClient
         .GET(`/api/kalendarium/${grupa}`)
         .then((res: ZjazdGrupyWidok[]) => {
-          setZjazdy(res.filter((x) => !x.czyOdpracowanie).map((x) => x.nr));
+          const z = res.filter((x) => !x.czyOdpracowanie).map((x) => x.nr);
+          setZjazdy(z);
+          setWybraneZjazdy(z);
         })
         .catch((err: Blad) => setBlad(err.Tresc));
     }
@@ -105,7 +107,7 @@ function LekcjaEdycja({
         });
       }
     } else {
-      if (!przedmiot.id || !wykladowca.id || !sala.id) {
+      if (!przedmiot.id || !wykladowca.id) {
         setBlad("Uzupełnij dane");
         return;
       }
@@ -216,6 +218,8 @@ function LekcjaEdycja({
             multiple
             disableCloseOnSelect
             options={zjazdy}
+            value={wybraneZjazdy}
+            noOptionsText="Brak zjazdów dla danej grupy"
             getOptionLabel={(w) => w.toString()}
             renderInput={(params) => (
               <TextField {...params} label="Zjazdy" variant="outlined" />

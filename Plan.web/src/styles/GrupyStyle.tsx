@@ -17,12 +17,14 @@ export const GrupyStyle = styled.div`
 
   .lista {
     padding: 16px;
+    height: 496px;
+    overflow: auto;
   }
 
   .lista_header {
-    padding: 8px 12px;
+    padding: 8px 32px;
     display: grid;
-    grid-template-columns: 128px 1fr 128px 1fr 64px;
+    grid-template-columns: 128px 1fr 128px 1fr 86px;
   }
 
   .grupa {

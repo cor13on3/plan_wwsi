@@ -11,8 +11,8 @@ async function dodajUzytkownikaTestowego() {
     body: JSON.stringify({
       Imie: "Alojzy",
       Nazwisko: "Testowy",
-      Email: "admin",
-      Haslo: "Dupa1234!",
+      Email: "test@planwwsi.pl",
+      Haslo: "Haslo123!",
     }),
     credentials: "include",
   });
@@ -30,8 +30,8 @@ test("Nie wpuszcza do aplikacji bez zalogowania", async (t) => {});
 
 test("Błąd przy nieudanym logowaniu", async (t) => {
   await t
-    .typeText("#email", "admin1", { replace: true })
-    .typeText("#haslo", "Dupa1234!1", { replace: true })
+    .typeText("#email", "test@planwwsi.pl", { replace: true })
+    .typeText("#haslo", "BledneHaslo123!", { replace: true })
     .click(Selector("button"))
     .expect(Selector("#blad").textContent)
     .eql("Podano nieprawidłowy e-mail lub hasło.")
@@ -41,8 +41,8 @@ test("Błąd przy nieudanym logowaniu", async (t) => {
 
 test("Dane użytkownika po udanym logowaniu", async (t) => {
   await t
-    .typeText("#email", "admin", { replace: true })
-    .typeText("#haslo", "Dupa1234!", { replace: true })
+    .typeText("#email", "test@planwwsi.pl", { replace: true })
+    .typeText("#haslo", "Haslo123!", { replace: true })
     .click(Selector("button"))
     .expect(Selector(".zalogowany").child("p").textContent)
     .eql("Zalogowano jako Alojzy Testowy");

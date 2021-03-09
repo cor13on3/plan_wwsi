@@ -47,7 +47,7 @@ namespace Plan.Core.Services
         public WykladowcaWidokDTO[] Przegladaj(string fraza)
         {
             var wynik = _db.DajRepozytorium<Wykladowca>().Wybierz(new ZapytanieWykladowcy(fraza));
-            return wynik.ToArray();
+            return wynik.OrderBy(x => x.Nazwisko).ToArray();
         }
 
         public void Dodaj(string tytul, string imie, string nazwisko, string email, int[] idSpecjalizacji)
