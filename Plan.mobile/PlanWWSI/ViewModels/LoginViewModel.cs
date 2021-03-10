@@ -1,8 +1,7 @@
-﻿using PlanWWSI.Models;
+﻿using PlanWWSI.API;
 using PlanWWSI.Services;
 using PlanWWSI.Views;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;

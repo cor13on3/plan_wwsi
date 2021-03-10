@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Xamarin.Forms;
-using PlanWWSI.Services;
-using PlanWWSI.Models;
 
 namespace PlanWWSI.ViewModels
 {

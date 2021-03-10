@@ -1,20 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Xamarin.Forms;
 using Xamarin.UITest;
-using Xamarin.UITest.Queries;
 
 namespace PlanWWSI.Testy
 {
     [TestFixture(Platform.Android)]
-    public class Tests
+    public class AplikacjaTesty
     {
         IApp app;
         Platform platform;
 
-        public Tests(Platform platform)
+        public AplikacjaTesty(Platform platform)
         {
             this.platform = platform;
         }
@@ -147,23 +144,5 @@ namespace PlanWWSI.Testy
             Assert.AreEqual("a.kowalski@wwsi.edu.pl", app.Query("SzczegWyklEmail")[0].Text);
             Assert.AreEqual("Programowanie", app.Query("SzczegWyklSpec")[0].Text);
         }
-
-        //[Test]
-        //public void WyswietlaPlanZajecWykladowcy()
-        //{
-        //    app.EnterText("NrGrupyInput", "Z715");
-        //    app.Tap("NrGrupySubmit");
-        //    app.WaitForElement("PlanWyborDaty");
-
-        //    app.SwipeLeftToRight(0.99);
-        //    app.Tap(x => x.Text("Wykładowcy"));
-        //    app.WaitForElement("WykladowcaNazwa");
-        //    app.Tap("WykladowcaNazwa");
-        //    app.WaitForElement("SzczegWyklNazwa");
-
-        //    app.Tap(c => c.Marked("datepicker"));
-        //    app.Query(x => x.Class("DatePicker").Invoke("updateDate", 2020, 9, 2));
-        //    app.Tap("OK");
-        //}
     }
 }

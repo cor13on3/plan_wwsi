@@ -27,6 +27,15 @@ namespace Plan.API.Controllers
             await _uzytkownikService.Dodaj(req.Imie, req.Nazwisko, req.Email, req.Haslo);
         }
 
+        [HttpGet("dodaj")]
+        public async Task DodajGet([FromQuery] string imie, [FromQuery] string nazwisko, [FromQuery] string email, [FromQuery] string haslo)
+        {
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            if (ip != "127.0.0.1" && ip != "::1")
+                throw new UnauthorizedAccessException();
+            await _uzytkownikService.Dodaj(imie, nazwisko, email, haslo);
+        }
+
         [HttpGet("czy-zalogowany")]
         public bool CzyZalogowany()
         {

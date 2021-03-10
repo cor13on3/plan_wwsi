@@ -7,7 +7,6 @@ import {
 import { Blad, httpClient } from "../../helpers/httpClient";
 import { GrupaWidok } from "../../helpers/types";
 import KalendariumEdycja from "./KalendariumEdycja";
-import "./Kalendarium.css";
 import formatujDate from "../../helpers/formatujDate";
 import {
   Button,
@@ -19,6 +18,7 @@ import {
 } from "@material-ui/core";
 import ContextMenu from "../../components/ContextMenu";
 import { ErrorStyle } from "../../styles/ErrorStyle";
+import { KalendariumStyle } from "../../styles/KalendariumStyle";
 
 function Kalendarium() {
   const [stopien, setStopien] = useState(StopienStudiow.Inzynierskie);
@@ -77,7 +77,7 @@ function Kalendarium() {
   }
 
   return (
-    <div className="kalendarium">
+    <KalendariumStyle>
       {blad && <ErrorStyle>{blad}</ErrorStyle>}
       <div className="kalendarium_header">
         <span id="tytul" className="xxl">
@@ -179,7 +179,7 @@ function Kalendarium() {
           <KalendariumEdycja grupy={grupy} onZapisz={onZapisz} />
         </Drawer>
       </div>
-    </div>
+    </KalendariumStyle>
   );
 }
 

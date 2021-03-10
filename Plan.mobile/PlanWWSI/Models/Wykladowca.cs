@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using PlanWWSI.API;
+using System.Linq;
 
 namespace PlanWWSI.Models
 {
@@ -7,22 +8,6 @@ namespace PlanWWSI.Models
         public int Id { get; set; }
         public string Nazwa { get; set; }
         public string Email { get; set; }
-    }
-
-    public class Specjalizacja
-    {
-        public int Id { get; set; }
-        public string Nazwa { get; set; }
-    }
-
-    public class WykladowcaDTO
-    {
-        public int Id { get; set; }
-        public string Tytul { get; set; }
-        public string Imie { get; set; }
-        public string Nazwisko { get; set; }
-        public string Email { get; set; }
-        public Specjalizacja[] Specjalizacje { get; set; }
     }
 
     public class WykladowcaModel

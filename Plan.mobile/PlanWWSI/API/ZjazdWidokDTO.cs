@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PlanWWSI.Models
+namespace PlanWWSI.API
 {
     public class ZjazdWidokDTO
     {

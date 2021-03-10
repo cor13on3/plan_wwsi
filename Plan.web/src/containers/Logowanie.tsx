@@ -10,8 +10,8 @@ interface LogowanieProps {
 }
 
 function Logowanie({ onZalogowano }: LogowanieProps) {
-  const [email, setEmail] = useState("test@planwwsi.pl");
-  const [haslo, setHaslo] = useState("Haslo123!");
+  const [email, setEmail] = useState("");
+  const [haslo, setHaslo] = useState("");
   const [blad, setBlad] = useState("");
 
   function zaloguj() {

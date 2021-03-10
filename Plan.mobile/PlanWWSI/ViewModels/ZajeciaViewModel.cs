@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using PlanWWSI.Models;
 using PlanWWSI.Services;
 using System.Linq;
+using PlanWWSI.API;
 
 namespace PlanWWSI.ViewModels
 {
