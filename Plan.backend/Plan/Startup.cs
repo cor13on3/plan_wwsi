@@ -27,7 +27,6 @@ namespace Plan.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-#if DEBUG
             services.AddCors(o => o.AddPolicy("LocalhostPolicy", builder =>
             {
                 builder.WithOrigins("http://localhost:3000")
@@ -35,7 +34,6 @@ namespace Plan.API
                        .AllowAnyHeader()
                        .AllowCredentials();
             }));
-#endif
             services.AddControllers().AddJsonOptions(o =>
             {
                 o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
